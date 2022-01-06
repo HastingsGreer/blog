@@ -4,7 +4,6 @@ Add here global page variables to use throughout your website.
 +++
 author = "Hastings Greer"
 mintoclevel = 2
-prepath = "blog"
 
 # Add here files or directories that should be ignored by Franklin, otherwise
 # these files might be copied and, if markdown, processed by Franklin which
@@ -18,6 +17,8 @@ website_title = "Franklin Template"
 website_descr = "Example website using Franklin"
 website_url   = "https://tlienart.github.io/FranklinTemplates.jl/"
 +++
+
+@def prepath = "blog"
 
 <!--
 Add here global latex commands to use throughout your pages.
