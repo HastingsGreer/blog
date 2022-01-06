@@ -4,6 +4,4 @@
 # I am not confident that stuff goes on this page
 
 
-
-You can also quote stuff
-
+Stuff mostly goes on the pages to the left

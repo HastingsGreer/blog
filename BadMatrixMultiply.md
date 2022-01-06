@@ -8,15 +8,20 @@
 
   \fig{/assets/BadMatrixMultiply/Header.jpg}
 
+\toc
+
+---
+
 [My codegolf.stackexchange post](https://codegolf.stackexchange.com/questions/211918/bad-matrix-multiplication-that-gives-the-right-answer)
+
 [Github Repository with experiments](https://github.com/HastingsGreer/badMatrixMultiplication)
 
-Executive summary:
-------------------
+## Executive summary
+
 I went on an adventure finding NxN matrices $A$ and $B$ where $ AB = 10A + B $.
 
-Symbolic work:
-----------------------------
+## Symbolic work
+
 First of all, for a given candidate A, B is fixed:
 $$ AB = 10A + B\\    A = 10AB^{-1} + I\\    I = 10B^{-1} + A^{-1}\\    B = 10(I - A^{-1})^{-1}\\    B = 10(I + (A - I)^{-1}) $$
 

@@ -9,6 +9,16 @@
 
 # Rendering the Mandelbrot Set
 
+\toc
+
+---
+
+[Python repository](https://github.com/HastingsGreer/MandelBrotGL)
+
+[Julia repository](https://github.com/HastingsGreer/julia_mandelbrot)
+
+## Early efforts: Python and OpenCL
 
 
-P
+
+
