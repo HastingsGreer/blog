@@ -56,7 +56,7 @@ In the julia code, we now take a more sensible approach and itertively seek out 
 
 
 
-## Julia and quadtree adaptive rendering!!
+## Julia and quadtree adaptive rendering
 
 This is a proper adventure now: thi
 

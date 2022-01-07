@@ -35,7 +35,9 @@ _ICCV 2021_ https://arxiv.org/abs/2105.04459
 
 ## Video Presentation
 
-[<img src="https://img.youtube.com/vi/7kZsJ3zWDCA/maxresdefault.jpg" width="50%">](https://youtu.be/7kZsJ3zWDCA)
+~~~
+<iframe width="560" height="315" src="https://www.youtube.com/embed/7kZsJ3zWDCA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+~~~
 
 
 ## Running our code
