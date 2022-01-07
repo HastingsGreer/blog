@@ -198,7 +198,7 @@ a:link,
 a:visited { color: inherit; }
 
 
-a:link:not(header-anchor) {
+a:link:not(.header-anchor) {
   text-decoration: none;
   background: -webkit-linear-gradient(#fffff8, #fffff8), -webkit-linear-gradient(#fffff8, #fffff8), -webkit-linear-gradient(#333, #333);
   background: linear-gradient(#fffff8, #fffff8), linear-gradient(#fffff8, #fffff8), linear-gradient(#333, #333);
@@ -209,7 +209,7 @@ a:link:not(header-anchor) {
   text-shadow: 0.03em 0 #fffff8, -0.03em 0 #fffff8, 0 0.03em #fffff8, 0 -0.03em #fffff8, 0.06em 0 #fffff8, -0.06em 0 #fffff8, 0.09em 0 #fffff8, -0.09em 0 #fffff8, 0.12em 0 #fffff8, -0.12em 0 #fffff8, 0.15em 0 #fffff8, -0.15em 0 #fffff8;
   background-position: 0% 93%, 100% 93%, 0% 93%;
 }
-@media screen and (-webkit-min-device-pixel-ratio: 0) { a:link:not(header-anchor) { background-position-y: 87%, 87%, 87%; } }
+@media screen and (-webkit-min-device-pixel-ratio: 0) { a:link:not(.header-anchor) { background-position-y: 87%, 87%, 87%; } }
 
 a:link::selection {
   text-shadow: 0.03em 0 #b4d5fe, -0.03em 0 #b4d5fe, 0 0.03em #b4d5fe, 0 -0.03em #b4d5fe, 0.06em 0 #b4d5fe, -0.06em 0 #b4d5fe, 0.09em 0 #b4d5fe, -0.09em 0 #b4d5fe, 0.12em 0 #b4d5fe, -0.12em 0 #b4d5fe, 0.15em 0 #b4d5fe, -0.15em 0 #b4d5fe;
