@@ -2,6 +2,7 @@
 
 /* Import ET Book styles
    adapted from https://github.com/edwardtufte/et-book/blob/gh-pages/et-book.css */
+
 @font-face {
   font-family: "et-book";
   src: url("../assets/et-book/et-book-roman-line-figures/et-book-roman-line-figures.eot");
@@ -33,6 +34,7 @@
   font-weight: normal;
   font-style: normal;
 }
+
 /* Tufte CSS styles */
 html { font-size: 15px; }
 
@@ -195,7 +197,8 @@ figure.fullwidth figcaption { margin-right: 24%; }
 a:link,
 a:visited { color: inherit; }
 
-a:link:not(.header-anchor) {
+
+a:link:not(header-anchor) {
   text-decoration: none;
   background: -webkit-linear-gradient(#fffff8, #fffff8), -webkit-linear-gradient(#fffff8, #fffff8), -webkit-linear-gradient(#333, #333);
   background: linear-gradient(#fffff8, #fffff8), linear-gradient(#fffff8, #fffff8), linear-gradient(#333, #333);
@@ -206,8 +209,7 @@ a:link:not(.header-anchor) {
   text-shadow: 0.03em 0 #fffff8, -0.03em 0 #fffff8, 0 0.03em #fffff8, 0 -0.03em #fffff8, 0.06em 0 #fffff8, -0.06em 0 #fffff8, 0.09em 0 #fffff8, -0.09em 0 #fffff8, 0.12em 0 #fffff8, -0.12em 0 #fffff8, 0.15em 0 #fffff8, -0.15em 0 #fffff8;
   background-position: 0% 93%, 100% 93%, 0% 93%;
 }
-
-@media screen and (-webkit-min-device-pixel-ratio: 0) { a:link { background-position-y: 87%, 87%, 87%; } }
+@media screen and (-webkit-min-device-pixel-ratio: 0) { a:link:not(header-anchor) { background-position-y: 87%, 87%, 87%; } }
 
 a:link::selection {
   text-shadow: 0.03em 0 #b4d5fe, -0.03em 0 #b4d5fe, 0 0.03em #b4d5fe, 0 -0.03em #b4d5fe, 0.06em 0 #b4d5fe, -0.06em 0 #b4d5fe, 0.09em 0 #b4d5fe, -0.09em 0 #b4d5fe, 0.12em 0 #b4d5fe, -0.12em 0 #b4d5fe, 0.15em 0 #b4d5fe, -0.15em 0 #b4d5fe;
