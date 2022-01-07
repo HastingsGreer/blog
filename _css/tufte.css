@@ -2,7 +2,6 @@
 
 /* Import ET Book styles
    adapted from https://github.com/edwardtufte/et-book/blob/gh-pages/et-book.css */
-
 @font-face {
   font-family: "et-book";
   src: url("../assets/et-book/et-book-roman-line-figures/et-book-roman-line-figures.eot");
@@ -34,7 +33,6 @@
   font-weight: normal;
   font-style: normal;
 }
-
 /* Tufte CSS styles */
 html { font-size: 15px; }
 
@@ -60,13 +58,13 @@ h1 {
 }
 
 h2 {
-  font-style: italic;
   font-weight: 400;
   margin-top: 2.1rem;
   margin-bottom: 1.4rem;
   font-size: 2.2rem;
   line-height: 1;
 }
+
 
 h3 {
   font-style: italic;
@@ -197,7 +195,7 @@ figure.fullwidth figcaption { margin-right: 24%; }
 a:link,
 a:visited { color: inherit; }
 
-a:link {
+a:link:not(.header-anchor) {
   text-decoration: none;
   background: -webkit-linear-gradient(#fffff8, #fffff8), -webkit-linear-gradient(#fffff8, #fffff8), -webkit-linear-gradient(#333, #333);
   background: linear-gradient(#fffff8, #fffff8), linear-gradient(#fffff8, #fffff8), linear-gradient(#333, #333);

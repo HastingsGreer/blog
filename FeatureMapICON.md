@@ -9,9 +9,9 @@
 @def tags = ["syntax", "code", "image"]
 
 
-#Feature Map Inverse Consistency
+# Feature Map Inverse Consistency
 
+## Purpose of Rolling Augmentation
 
-
-
+The overall story of training networks using the FeatureMapICON loss is as follows: 
 
