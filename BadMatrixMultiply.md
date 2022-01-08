@@ -16,7 +16,6 @@
 
 [Github Repository with experiments](https://github.com/HastingsGreer/badMatrixMultiplication)
 
-## Executive summary
 
 I went on an adventure finding NxN matrices $A$ and $B$ where $ AB = 10A + B $.
 
