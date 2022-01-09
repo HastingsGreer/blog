@@ -143,8 +143,10 @@ training initially proceeds well, and we get the first few results that look rea
 
 \fig{/assets/FeatureMapICON/camel_figure.png}
 
-However, a new issue appears: the neural network trains well for a while, but eventually we see again that the loss improves while the accuracy gets worse
-. The reason is that the network begins having specific distributions of vectors for each part of the image, so that it never matches pixels further apart than the affine warping can move them: the
+However, a new issue appears: the neural network trains well for a while,
+but eventually we see again that the loss improves while the accuracy gets worse.
+The reason is that the network begins having specific distributions of vectors for each part of the image,
+so that it never matches pixels further apart than the affine warping can move them: the
 
 ## Attempt 2: force each pixel location to have the same per channel mean
 
@@ -153,7 +155,9 @@ However, a new issue appears: the neural network trains well for a while, but ev
 ### The process: 
 
 After processing with the neural network, subtract the mean from each batch of pixels. (shown in red above). 
-This is similar to batch normalization, except computing the mean over the whole batch, but individually for each pixel location instead of over the whole batch and every pixel location.
+This is similar to batch normalization, 
+except computing the mean over the whole batch, 
+but individually for each pixel location instead of over the whole batch and every pixel location.
 
 
 
@@ -164,7 +168,24 @@ In the previous approach, we attempted to force the neural network outputs to ha
 Because we were doing this at a batch level, we went with forcing just the mean to be the same at every pixel, instead of forcing the whole distribution to be identical. Eventually, the network began defeating this, although I do not know how: it was storing the rough  location in the variance, or the correlation, or something else clever.
 That approach can be interpreted as "measuring the statistics before augmentation". However, after some thought, I realized that there was a way to force the per pixel statistics to be the same at every pixel after augmentation, instead of before: when picking a distribution of "augmentation permutations" P, pick one that moves each pixel to each other pixel with uniform probability. Then, by force after augmentation, every pixel in the image has the same distribution of feature vectors.
 
-The simplest form of augmentation with this property is "rolling": sliding the image left to right and up and down by some random amount, wrapping at the edges (ie, implemented as np.roll). (Implementing this performantly and independently for each channel is slightly more involved in torch). Empirically, this approach works to prevent the network from only matching vectors that are in the same region of the image by making the distribution of vectors the same everywhere.
+The simplest form of augmentation with this property is "rolling": sliding the image left to right and up and down by some random amount, wrapping at the edges (ie, implemented as np.roll). (Implementing this performantly and independently for each channel is slightly more involved in torch). Empirically, this approach works to prevent the network from only matching vectors that are in the same region of the image by making the distribution of vectors the same at each pixel location: 
 
+Assertion: the output of the pipeline
+
+```
+Sample x and y rolling amounts from 0 .. [edge length - 1]
+roll image by x in the x direction, y in the y direction
+Process into feature vectors using neural network
+roll features by -x, -y
+```
+
+has the same distribution of feature vectors at every pixel location
+
+Proof: 
+Proof fails: the neural network could learn to detect the amount of rolling. Argh
+
+So, why is this approach effective?
 
 \fig{/assets/FeatureMapICON/rolling.png}
+
+
