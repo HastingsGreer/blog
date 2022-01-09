@@ -137,8 +137,9 @@ We can approximate the augmentation $\tilde{\cdot}$ as a permutation $\tilde{P}^
 
 It looks like we are in no danger of outputting fixed vectors!
 
-With the failure mode from attempt zero suppressed, 
-training initially proceeds well, and we get the first few results that look reasonable on the downstream task we are using for evaluation, DAVIS semi-supervised instance segmentation.
+With the failure mode from attempt zero suppressed, training initially proceeds
+well, and we get the first few results that look reasonable on the downstream
+task we are using for evaluation, DAVIS semi-supervised instance segmentation.
 
 
 \fig{/assets/FeatureMapICON/camel_figure.png}
@@ -164,11 +165,27 @@ but individually for each pixel location instead of over the whole batch and eve
 
 ## Attempt 3: Rolling Augmentation
 
-In the previous approach, we attempted to force the neural network outputs to have the same statistics at each pixel. 
-Because we were doing this at a batch level, we went with forcing just the mean to be the same at every pixel, instead of forcing the whole distribution to be identical. Eventually, the network began defeating this, although I do not know how: it was storing the rough  location in the variance, or the correlation, or something else clever.
-That approach can be interpreted as "measuring the statistics before augmentation". However, after some thought, I realized that there was a way to force the per pixel statistics to be the same at every pixel after augmentation, instead of before: when picking a distribution of "augmentation permutations" P, pick one that moves each pixel to each other pixel with uniform probability. Then, by force after augmentation, every pixel in the image has the same distribution of feature vectors.
+In the previous approach, we attempted to force the neural network outputs to
+have the same statistics at each pixel.  Because we were doing this at a batch
+level, we went with forcing just the mean to be the same at every pixel,
+instead of forcing the whole distribution to be identical. Eventually, the
+network began defeating this, although I do not know how: it was storing the
+rough  location in the variance, or the correlation, or something else clever.
+That approach can be interpreted as "measuring the statistics before
+augmentation". However, after some thought, I realized that there was a way to
+force the per pixel statistics to be the same at every pixel after
+augmentation, instead of before: when picking a distribution of "augmentation
+permutations" P, pick one that moves each pixel to each other pixel with
+uniform probability. Then, by force after augmentation, every pixel in the
+image has the same distribution of feature vectors.
 
-The simplest form of augmentation with this property is "rolling": sliding the image left to right and up and down by some random amount, wrapping at the edges (ie, implemented as np.roll). (Implementing this performantly and independently for each channel is slightly more involved in torch). Empirically, this approach works to prevent the network from only matching vectors that are in the same region of the image by making the distribution of vectors the same at each pixel location: 
+The simplest form of augmentation with this property is "rolling": sliding the
+image left to right and up and down by some random amount, wrapping at the
+edges (ie, implemented as np.roll). (Implementing this performantly and
+independently for each channel is slightly more involved in torch).
+Empirically, this approach works to prevent the network from only matching
+vectors that are in the same region of the image by making the distribution of
+vectors the same at each pixel location: 
 
 Assertion: the output of the pipeline
 
@@ -186,6 +203,14 @@ Proof fails: the neural network could learn to detect the amount of rolling. Arg
 
 So, why is this approach effective?
 
+Assertion: the output of that pipeline has the same distribution of feature
+vectors *if the neural network output is independent of x and y*
+
+Well that's true, but not surprising or interesting
+
+
+
 \fig{/assets/FeatureMapICON/rolling.png}
+
 
 

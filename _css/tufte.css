@@ -39,7 +39,7 @@
 html { font-size: 15px; }
 
 body {
-  width: 87.5%;
+  /* width: 87.5%; */
   margin-left: auto;
   margin-right: auto;
 
@@ -336,10 +336,10 @@ label.margin-toggle:not(.sidenote-number) { display: none; }
 }
 
 @media (max-width: 760px) {
-  body {
-    width: 84%;
-    padding-left: 8%;
-    padding-right: 8%;
+  body, div.franklin-content {
+    width: 96%;
+    padding-left: 2%;
+    padding-right: 2%;
   }
 
   hr,
