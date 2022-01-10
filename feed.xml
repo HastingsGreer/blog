@@ -99,6 +99,25 @@
 
 <item>
   <title>
+    <![CDATA[  footsteps  ]]>
+  </title>
+  <link> https://tlienart.github.io/FranklinTemplates.jl/footsteps/index.html </link>
+  <guid> https://tlienart.github.io/FranklinTemplates.jl/footsteps/index.html </guid>
+  <description>
+    <![CDATA[  footsteps  ]]>
+  </description>  
+    
+  <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>  
+  
+  
+  <atom:author>
+    <atom:name>Hastings Greer</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
     <![CDATA[  Feature Map Inverse Consistency  ]]>
   </title>
   <link> https://tlienart.github.io/FranklinTemplates.jl/FeatureMapICON/index.html </link>
