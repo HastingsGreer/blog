@@ -50,7 +50,16 @@ It made it easy to add UI components for adjusting resolution, colormap details,
 ### Perturbative methods?
 
 The main downside of the technique in the python method above is that it needs a good "center" point to compute in high precision, before computing low precision offsets: if the high precision trajectory escapes, we can't take offsets from it for very long.
-In the julia code, we now take a more sensible approach and itertively seek out a good center
+In the julia code, we now take a more sensible approach and itertively seek out a good center hacks hacks hacks distance transform 
+
+TODO for go fast:
+
+ - quadtree + mpfr -- backtracking?
+ - reference reuse!
+ - slider for number of reference iterations
+ - eventually softfloat. This is suffering
+ - quadtree that puts onto gpu queue
+ - just do the damn series approximation
 
 ### Automatic zooming
 
