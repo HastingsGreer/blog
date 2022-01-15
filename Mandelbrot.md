@@ -17,6 +17,10 @@
 
 [Julia repository](https://github.com/HastingsGreer/julia_mandelbrot)
 
+[JS repository](https://github.com/HastingsGreer/mandeljs)
+
+[JS try now](https://hastingsgreer.github.io/mandeljs)
+
 ## Early efforts: Python and OpenCL
 
 \fig{/assets/Mandelbrot/python_screenshot.png}
@@ -60,6 +64,28 @@ TODO for go fast:
  - eventually softfloat. This is suffering
  - quadtree that puts onto gpu queue
  - just do the damn series approximation
+
+
+### A thought process for proceeding with efficient reference computation
+
+Which terms in series approximation need to be high precision?
+
+
+What I hope I can do:
+
+A reference consists of a center C and a trajectory Z 
+
+Want to 
+    
+ - Guess C
+
+ - Compute Z using only one sequence of MPFR values, plus machine precision auxiliaries
+
+ - When Z escapes, update C to make Z take longer to escape
+
+ - update Z without having to recompute?
+
+
 
 ### Automatic zooming
 
