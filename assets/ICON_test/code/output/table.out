@@ -8,8 +8,14 @@ B_in.png
 \fig{/assets/ICON_test/checkerboard.png}
 checkerboard.png
 
+\fig{/assets/ICON_test/grid.png}
+grid.png
+
 \fig{/assets/ICON_test/transform2.png}
 transform2.png
+
+\fig{/assets/ICON_test/warped.png}
+warped.png
 
 \fig{/assets/ICON_test/warpedA.png}
 warpedA.png
