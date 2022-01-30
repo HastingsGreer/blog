@@ -179,7 +179,7 @@ permutations" P, pick one that moves each pixel to each other pixel with
 uniform probability. Then, by force after augmentation, every pixel in the
 image has the same distribution of feature vectors.
 
-The simplest form of augmentation with this property is "rolling": sliding the
+A simple form of augmentation with this property is "rolling": sliding the
 image left to right and up and down by some random amount, wrapping at the
 edges (ie, implemented as np.roll). (Implementing this performantly and
 independently for each channel is slightly more involved in torch).
@@ -207,6 +207,15 @@ Assertion: the output of that pipeline has the same distribution of feature
 vectors *if the neural network output is independent of x and y*
 
 Well that's true, but not surprising or interesting
+
+# Related Works
+
+Cycle consistency in time
+ICON
+random walks on spacetime graphs
+
+
+
 
 
 
