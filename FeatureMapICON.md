@@ -208,20 +208,22 @@ vectors *if the neural network output is independent of x and y*
 
 Well that's true, but not surprising or interesting
 
+\fig{/assets/FeatureMapICON/rolling.png}
+
+
 # Related Works
 
 Cycle consistency in time
 
 ICON
 
-random walks on spacetime graphs
+[random walks on spacetime graphs](https://ajabri.github.io/videowalk/)
 
 
 
 
 
 
-\fig{/assets/FeatureMapICON/rolling.png}
 
 
 
