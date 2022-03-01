@@ -1,0 +1,21 @@
+@def title = "March 1"
+
+
+# Atlas registration progress
+
+At low resolution
+
+Since last time, found that I could not train ICON_atlas loss to match performance of ICON on OAI knees:
+second step of multiscale training failed as folds ran away, lambda increased to infinity.
+
+# Outreach:
+
+Presenting same powerpoint from group meeting last week to funky bunch on wednesday. Several people from 
+Kitware's AI team coming: anything I should make sure to include?
+
+
+# Follow up to "New approach to patchwise registration"
+Wanted to setup for applying [Instant Neural Graphics Primitives](https://nvlabs.github.io/instant-ngp/) to neural registration fields. 
+To do this, I needed a valid regularization proceedure. Started with this approach:
+
+\fig(NEDF_diagram.png)
