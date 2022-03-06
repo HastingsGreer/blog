@@ -1,6 +1,8 @@
 # How to write your own registration model
 
-This document explains how to write a novel registration method in the ICON framework. We will assume that neural network driven stationary velocity field registration (SVF) does not already exist in icon_registration.
+This document explains how to write a novel registration method in the ICON framework. 
+
+<!-- We will assume that neural network driven stationary velocity field registration (SVF) does not already exist in icon_registration.) -->
 
 ## Writing a similarity measure
 
