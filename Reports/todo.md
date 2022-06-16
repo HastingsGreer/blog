@@ -12,7 +12,7 @@
 
 log sample registrations to tensorboard
 
-log metrics to tensorboard
+log DICE metrics to tensorboard
 
 fix batchfunction callback- needs refactor
 
