@@ -12,6 +12,8 @@
 
 log sample registrations to tensorboard
 
+log metrics to tensorboard
+
 fix batchfunction callback- needs refactor
 
 compress OAI models by dropping identitymaps
