@@ -10,6 +10,10 @@
 
 ✓ get OAI pull request merged
 
+log sample registrations to tensorboard
+
+fix batchfunction callback- needs refactor
+
 compress OAI models by dropping identitymaps
 
 add identitymap stripping code to ICON
