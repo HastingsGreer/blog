@@ -10,6 +10,8 @@
 
 ✓ get OAI pull request merged
 
+move `OAI_analysis_2` to ICON 1.0.0 
+
 log sample registrations to tensorboard
 
 log DICE metric to tensorboard
@@ -20,13 +22,21 @@ compress OAI models by dropping identitymaps
 
 add identitymap stripping code to ICON
 
-ICON 1.0 release
+✓ ICON 1.0 release
 
-merge biag .vimrc
+✓ train brain lncc
+
+✓ merge biag .vimrc
 
 put augmentation into train.py
 
+ICON default network
+
 ## Ambitious todo
+
+train a diffusion model
+
+train a VQ-GAN
 
 genius idea: registration that improves previous result: train by randomy resetting prev result
 
@@ -63,6 +73,8 @@ put OAI preprocessing into pretrained models
 Create a set of images where the shapes are bright and the background dark. Create another set where it is the other way around. Train a network that gets as inputs either a random image pair from one or from the other. Will this network entirely fail if it is presented with a pair where one image is from one set and the other one from the other?
 
 non neural finetune
+
+high res finetune lowres model
 
 ## ITK deficiencies todo
 
