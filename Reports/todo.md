@@ -1,16 +1,19 @@
-
+#DONE
+✓ put all results into the overleaf
+✓ evaluate latest highres model
+✓ train oai knees with LNCC + augmentation
+✓ merge biag .vimrc
+✓ train brain lncc
+✓ ICON 1.0 release
+✓ get OAI pull request merged
+✓ merge code in "/media/data/hastings/InverseConsistency/" into master
+✓ footsteps needs to log uncommitted file if that's what's being run
 
 # TODO
 
 ## Cleanup todo
 
-✓ footsteps needs to log uncommitted file if that's what's being run
-
-✓ merge code in "/media/data/hastings/InverseConsistency/" into master
-
-✓ get OAI pull request merged
-
-move `OAI_analysis_2` to ICON 1.0.0 
+update `OAI_analysis_2` to ICON 1.0.0 
 
 log sample registrations to tensorboard
 
@@ -22,15 +25,15 @@ compress OAI models by dropping identitymaps
 
 add identitymap stripping code to ICON
 
-✓ ICON 1.0 release
-
-✓ train brain lncc
-
-✓ merge biag .vimrc
-
 put augmentation into train.py
 
 ICON default network
+
+use better torch parallelism abastraction
+
+investigate corner alignment (RIP LOL)
+
+freeze network into asymmetricnet with fixed vectorfields
 
 ## Ambitious todo
 
@@ -56,15 +59,13 @@ one approach to mitigate this is to create a very diverse zoo of intensity trans
 
 ## Marc request todo
 
-✓ train oai knees with LNCC + augmentation
+download full copdgene image dataset
 
 - currently training with just LNCC for taste. Will try next with LNCC + augmentation
 
 train lung with lin loss + augmnentation
 
-✓ evaluate latest highres model
-
-✓ put all results into the overleaf
+- put lin loss into losses.py- doesn't need to be embedded into GradientICON
 
 make formal list of experiments for paper -- journal article?
 
@@ -75,6 +76,10 @@ Create a set of images where the shapes are bright and the background dark. Crea
 non neural finetune
 
 high res finetune lowres model
+
+contour based image visualization
+
+snap to grid
 
 ## ITK deficiencies todo
 
