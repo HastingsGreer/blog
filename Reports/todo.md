@@ -59,6 +59,18 @@ one approach to mitigate this is to create a very diverse zoo of intensity trans
 
 ## Marc request todo
 
+folds of lncc
+
+Documentation of preprocessing- more comments
+
+Documentation of train_batchfunction!
+
+evaluation during training
+
+example of how to view warped images
+
+description of input_shape: the network will throw an error if the input images aren't this size.
+
 download full copdgene image dataset
 
 - currently training with just LNCC for taste. Will try next with LNCC + augmentation
