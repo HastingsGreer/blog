@@ -1,0 +1,19 @@
+Locations of models for this week:
+
+dxa registration model:
+
+
+Sections:
+DXA atlas
+
+preliminary cross-modal atlas
+
+challenge: high energy - low energy xray registration
+
+plot of cross sections of high energy, low energy.
+
+Proposals: 
+Gradient similarity metric
+CycleGan
+simple translator network
+just grab the high energy non-fat xrays
