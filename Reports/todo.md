@@ -1,4 +1,5 @@
 #DONE
+✓snap to grid
 ✓ put all results into the overleaf
 ✓ evaluate latest highres model
 ✓ train oai knees with LNCC + augmentation
@@ -91,7 +92,6 @@ high res finetune lowres model
 
 contour based image visualization
 
-snap to grid
 
 ## ITK deficiencies todo
 
