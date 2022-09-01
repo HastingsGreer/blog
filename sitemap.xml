@@ -68,12 +68,6 @@
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://tlienart.github.io/FranklinTemplates.jl/Reports/April5/index.html</loc>
-    <lastmod>2022-09-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
-<url>
     <loc>https://tlienart.github.io/FranklinTemplates.jl/Reports/Jul182022/index.html</loc>
     <lastmod>2022-09-01</lastmod>
     <changefreq>monthly</changefreq>
@@ -93,6 +87,12 @@
 </url>
 <url>
     <loc>https://tlienart.github.io/FranklinTemplates.jl/Reports/Feb222022/index.html</loc>
+    <lastmod>2022-09-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://tlienart.github.io/FranklinTemplates.jl/Reports/Jun062022/index.html</loc>
     <lastmod>2022-09-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -122,12 +122,6 @@
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://tlienart.github.io/FranklinTemplates.jl/Reports/Jun72022/index.html</loc>
-    <lastmod>2022-09-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
-<url>
     <loc>https://tlienart.github.io/FranklinTemplates.jl/BadMatrixMultiply/index.html</loc>
     <lastmod>2022-09-01</lastmod>
     <changefreq>monthly</changefreq>
@@ -147,6 +141,12 @@
 </url>
 <url>
     <loc>https://tlienart.github.io/FranklinTemplates.jl/Reports/index.html</loc>
+    <lastmod>2022-09-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://tlienart.github.io/FranklinTemplates.jl/Reports/Apr052022/index.html</loc>
     <lastmod>2022-09-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
