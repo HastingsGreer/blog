@@ -1,6 +1,63 @@
-MethodError: no method matching -(::Nothing)
-Closest candidates are:
-  -(!Matched::Union{Int128, Int16, Int32, Int64, Int8, UInt128, UInt16, UInt32, UInt64, UInt8}) at int.jl:85
-  -(!Matched::T, !Matched::T) where T<:Union{Int128, Int16, Int32, Int64, Int8, UInt128, UInt16, UInt32, UInt64, UInt8} at int.jl:86
-  -(!Matched::Union{UInt16, UInt32, UInt64, UInt8}, !Matched::BigInt) at gmp.jl:531
-  ...
+
+[Sep062022.md](Sep062022) "eval of ants brain reg"
+
+
+[Aug302022.md](Aug302022) "Evaluation Catastrophe"
+
+
+[Aug162022.md](Aug162022) "monai + docs"
+
+
+[Jul262022.md](Jul262022) "apply atlas to dxa alone"
+
+
+[Jul182022.md](Jul182022) "New atlas approach: fixed network + optimize atlas + results"
+
+
+[Jun282022.md](Jun282022) "Lung results with rounding to integers"
+
+
+[Jun212022.md](Jun212022) "Flagship lung results Augmentation + LNCC + mask"
+
+
+[Jun062022.md](Jun062022) 
+
+
+[May172022.md](May172022) 
+
+
+[Apr052022.md](Apr052022) 
+
+
+[Mar292022.md](Mar292022) 
+
+
+[Mar222022.md](Mar222022) "Early lung results and GradICON knee release"
+
+
+[Mar082022.md](Mar082022) 
+
+
+[Mar012022.md](Mar012022) = "GradICON first knee results"
+
+
+[Feb222022.md](Feb222022) 
+
+
+[Feb152022.md](Feb152022) "Early Atlas work"
+
+
+[Feb012022.md](Feb012022) 
+
+
+[Jan252022.md](Jan252022) 
+
+
+[Jan182022.md](Jan182022) 
+
+
+[Jan102022.md](Jan102022) 
+
+
+[todo.md](todo) 
+
