@@ -100,3 +100,15 @@ verify whether itk can be installed on an old version yet?
 get itk to not segfault when asked to save a composite transform without []ifying it
 
 get itkDisplacementFieldJacobianFilter wrapped for doubles
+
+
+# ICON lung todo
+
+1 dataloader
+1 augmentation
+1 lambda
+
+# GradICON knee to do
+
+Voxelmorph network with Gradient Inverse Consistency loss
+our lung architecture with Gradient Inverse Consistency loss
