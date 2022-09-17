@@ -241,7 +241,10 @@ td {
 ================================================================== */
 
 .franklin-content img {
-  width: 70%;
+  max-width: 70%;
+  max-height: 90vh;
+  height: auto;
+  width: auto;
   text-align: center;
   padding-left: 10%;
 }
