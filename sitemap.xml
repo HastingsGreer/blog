@@ -62,6 +62,12 @@
     <priority>0.5</priority>
 </url>
 <url>
+    <loc>https://tlienart.github.io/FranklinTemplates.jl/Reports/Nov292022/index.html</loc>
+    <lastmod>2022-11-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
     <loc>https://tlienart.github.io/FranklinTemplates.jl/GameJam/index.html</loc>
     <lastmod>2022-11-29</lastmod>
     <changefreq>monthly</changefreq>
