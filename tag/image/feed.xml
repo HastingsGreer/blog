@@ -23,69 +23,12 @@
 
 <item>
   <title>
-    <![CDATA[  Game Jam Games  ]]>
-  </title>
-  <link> https://tlienart.github.io/FranklinTemplates.jl/GameJam/index.html </link>
-  <guid> https://tlienart.github.io/FranklinTemplates.jl/GameJam/index.html </guid>
-  <description>
-    <![CDATA[  Games that I have created while participating in Game Jams and Jackathons  ]]>
-  </description>  
-    
-  <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>  
-  
-  
-  <atom:author>
-    <atom:name>Hastings Greer</atom:name>
-  </atom:author>
-        
-</item>
-
-<item>
-  <title>
-    <![CDATA[  ICON registration  ]]>
-  </title>
-  <link> https://tlienart.github.io/FranklinTemplates.jl/ICON/index.html </link>
-  <guid> https://tlienart.github.io/FranklinTemplates.jl/ICON/index.html </guid>
-  <description>
-    <![CDATA[  An exploration of inverse consistency for driving image registration  ]]>
-  </description>  
-    
-  <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>  
-  
-  
-  <atom:author>
-    <atom:name>Hastings Greer</atom:name>
-  </atom:author>
-        
-</item>
-
-<item>
-  <title>
     <![CDATA[  blaaaaa  ]]>
   </title>
   <link> https://tlienart.github.io/FranklinTemplates.jl/ICON_test/index.html </link>
   <guid> https://tlienart.github.io/FranklinTemplates.jl/ICON_test/index.html </guid>
   <description>
     <![CDATA[  An exploration of inverse consistency for driving image registration  ]]>
-  </description>  
-    
-  <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>  
-  
-  
-  <atom:author>
-    <atom:name>Hastings Greer</atom:name>
-  </atom:author>
-        
-</item>
-
-<item>
-  <title>
-    <![CDATA[  Mandelbrot  ]]>
-  </title>
-  <link> https://tlienart.github.io/FranklinTemplates.jl/Mandelbrot/index.html </link>
-  <guid> https://tlienart.github.io/FranklinTemplates.jl/Mandelbrot/index.html </guid>
-  <description>
-    <![CDATA[  My projects that render the Mandelbrot set with various techniques  ]]>
   </description>  
     
   <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>  
@@ -122,6 +65,63 @@
   </title>
   <link> https://tlienart.github.io/FranklinTemplates.jl/FeatureMapICON/index.html </link>
   <guid> https://tlienart.github.io/FranklinTemplates.jl/FeatureMapICON/index.html </guid>
+  <description>
+    <![CDATA[  An exploration of inverse consistency for driving image registration  ]]>
+  </description>  
+    
+  <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>  
+  
+  
+  <atom:author>
+    <atom:name>Hastings Greer</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  Mandelbrot  ]]>
+  </title>
+  <link> https://tlienart.github.io/FranklinTemplates.jl/Mandelbrot/index.html </link>
+  <guid> https://tlienart.github.io/FranklinTemplates.jl/Mandelbrot/index.html </guid>
+  <description>
+    <![CDATA[  My projects that render the Mandelbrot set with various techniques  ]]>
+  </description>  
+    
+  <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>  
+  
+  
+  <atom:author>
+    <atom:name>Hastings Greer</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  Game Jam Games  ]]>
+  </title>
+  <link> https://tlienart.github.io/FranklinTemplates.jl/GameJam/index.html </link>
+  <guid> https://tlienart.github.io/FranklinTemplates.jl/GameJam/index.html </guid>
+  <description>
+    <![CDATA[  Games that I have created while participating in Game Jams and Jackathons  ]]>
+  </description>  
+    
+  <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>  
+  
+  
+  <atom:author>
+    <atom:name>Hastings Greer</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  ICON registration  ]]>
+  </title>
+  <link> https://tlienart.github.io/FranklinTemplates.jl/ICON/index.html </link>
+  <guid> https://tlienart.github.io/FranklinTemplates.jl/ICON/index.html </guid>
   <description>
     <![CDATA[  An exploration of inverse consistency for driving image registration  ]]>
   </description>  
