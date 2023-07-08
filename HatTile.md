@@ -4,11 +4,11 @@
 
 [Numberphile](https://www.youtube.com/watch?v=_ZS3Oqg1AX0) recently put out a video on the discovery of the Hat Tile, which linked to an excellent [blog post](https://hedraweb.wordpress.com/2023/03/23/its-a-shape-jim-but-not-as-we-know-it/) by David Smith about the discovery process. 
 
-In David's post, he talks about a mysterious entity "Craig’s Sat Solver" that works on assembling tilings. This piqued my curiousity: I was familiar with using an SAT solver for sudoku solutions or finding Iird matricies. Could I use it to draw the hat tiling? I'm going to take a shot at showing how to tile (or fail to tile) shapes using a SAT solver (in this case, z3)
+In David's post, he talks about a mysterious entity "Craig’s Sat Solver" that works on assembling tilings. This piqued my curiosity: I was familiar with using an SAT solver for sudoku solutions or finding weird matricies. Could I use it to draw the hat tiling? I'm going to take a shot at showing how to tile (or fail to tile) shapes using a SAT solver (in this case, Z3)
 
 The hat tile has an unusual property for an aperiodic tiling: it lives on a regular grid. As a result, I can enumerate all the places it is possible to put a hat or one of its component kites! This would not be so easy for, e.g., the kite and dart tiling.
 
-First I set up arrays that I can use to make translated or rotated copies of an object
+First, I set up arrays that I can use to make translated or rotated copies of an object
 ```python
 import matplotlib.pyplot as plt
 import numpy as np
@@ -33,7 +33,7 @@ Then, I define a grid of 'kite' tiles
 kite = np.array([0, .5, 1 / np.sqrt(3) * np.exp(1j * np.pi / 6), .5 * np.exp(1j * np.pi / 3), 0])
 kites = kite[None, None, None, :] * six_rotations[None, None, :, None]
 kites = kites + hexagon_centers[:, :, None, None]
-show_pts(kites[:5, :5]
+show_pts(kites[:5, :5])
 ```
 \fig{Unknown-8.png}
 
@@ -51,7 +51,8 @@ show_pts(hat)
 
 \fig{Unknown-9.png}
 
-Next, I make a big i x j x θ x kite-in-hat x vertex-in-kite array of all possible hats.
+Next, I collect all possible hats into an i x j x θ x kite-in-hat x vertex-in-kite array.
+I then flatten this array to hat-index x kite-index x vertex-in-kite since I don't need the grid structure anymore- I just want a list of hat tiles.
 
 ```python
 hats = hat[None, :, :] * six_rotations[:, None, None]
@@ -73,15 +74,15 @@ for hat_index, centers in enumerate(hat_centers):
     hats_with_point[loc] += [hat_index]
 ```
 
-Now, we are ready do create a tiling with z3. We tell z3 to keep track of a boolean value for each possible location
+Now, we are ready do create a tiling with Z3. I tell Z3 to keep track of a boolean value for each possible location
 for a hat tile.
 
 ```python
 hat_present = [z3.Bool(f"hat{i}") for i in range(len(hats))]
 s = z3.Solver()
 ```
-Then we describe the rules for tiling: Every kite must be a member of at most one hat. In addition, kites in the interior
-of the region that we are tiling must be a member of at least one hat.
+Then I input our tiling rules into the solver. In the first loop, I require that every kite must be a member of at most one hat. In the second loop, I require that kites in the interior
+of the region that I am tiling must be a member of at least one hat.
 
 ```python
 max_pop = max(len(c) for p, c in hats_with_point.items())
@@ -101,7 +102,9 @@ for p in full_points:
   atleastone(s, [hat_present[i] for i in hats_with_point[p]])
 print(s.check())
 ```
-Here, I wanted to use the built in function for counting the number of Bools that are true, PbLe, but it caused performance to tank. Manually specifying that each pair of hats covering a point cannot both be true somehow solves much faster. `s3.check` computes a value for each boolean that together satisfy all constraints. All that's left is to plot the tiling!
+Here, I wanted to use the built in function for counting the number of Bools that are true, PbLe, but it caused performance to tank. Manually specifying that each pair of hats covering a point cannot both be true somehow solves much faster. `s.check` computes a value for each boolean that together satisfy all constraints. All that's left is to plot the tiling.
+
+This is the place to be creative, but instead I just drew the outline of each hat in black.
 
 ```python
 m = s.model()
