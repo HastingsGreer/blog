@@ -74,7 +74,7 @@ for hat_index, centers in enumerate(hat_centers):
     hats_with_point[loc] += [hat_index]
 ```
 
-Now, we are ready do create a tiling with Z3. I tell Z3 to keep track of a boolean value for each possible location
+Now, we are ready to create a tiling with Z3. I tell Z3 to keep track of a boolean value for each possible location
 for a hat tile.
 
 ```python
