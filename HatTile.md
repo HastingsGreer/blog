@@ -124,5 +124,6 @@ plt.gca().set_aspect("equal")
 plt.show()
 ```
 \fig{Unknown-10.png}
-To run the code now and try variations, head to this colab notebook!
+
+To run the code in the cloud and try variations, head to this colab notebook!
 [colab notebook](https://colab.research.google.com/drive/1cBs3HGFQ6cz8z9o5HIr2OqhpD5A3LcqO?usp=sharing)
