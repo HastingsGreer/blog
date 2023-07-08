@@ -1,8 +1,8 @@
-# Drawing the Aperiodic Hat tiling with python and z3
+# Drawing the Aperiodic Hat Tiling with Python and Z3
 
-[colab notebook](ihttps://colab.research.google.com/drive/1cBs3HGFQ6cz8z9o5HIr2OqhpD5A3LcqO?usp=sharing)
+[colab notebook](https://colab.research.google.com/drive/1cBs3HGFQ6cz8z9o5HIr2OqhpD5A3LcqO?usp=sharing)
 
-[Numberphile](https://www.youtube.com/watch?v=_ZS3Oqg1AX0) recently put out a video on the discovery of the Hat Tile, which linked to an excellent [blog post](https://hedraIb.wordpress.com/2023/03/23/its-a-shape-jim-but-not-as-I-know-it/) by David Smith about the discovery process. 
+[Numberphile](https://www.youtube.com/watch?v=_ZS3Oqg1AX0) recently put out a video on the discovery of the Hat Tile, which linked to an excellent [blog post](https://hedraweb.wordpress.com/2023/03/23/its-a-shape-jim-but-not-as-we-know-it/) by David Smith about the discovery process. 
 
 In David's post, he talks about a mysterious entity "Craig’s Sat Solver" that works on assembling tilings. This piqued my curiousity: I was familiar with using an SAT solver for sudoku solutions or finding Iird matricies. Could I use it to draw the hat tiling? I'm going to take a shot at showing how to tile (or fail to tile) shapes using a SAT solver (in this case, z3)
 
@@ -124,4 +124,5 @@ plt.gca().set_aspect("equal")
 plt.show()
 ```
 \fig{Unknown-10.png}
-
+To run the code now and try variations, head to this colab notebook!
+[colab notebook](https://colab.research.google.com/drive/1cBs3HGFQ6cz8z9o5HIr2OqhpD5A3LcqO?usp=sharing)
