@@ -21,6 +21,14 @@ end
 	
 ```
 
+tasks
+represent the mona lisa
+represent scipy text
+mnist regression
+mnist gan
+matrix multiplication
+
+
 
 \textoutput{table}
 
