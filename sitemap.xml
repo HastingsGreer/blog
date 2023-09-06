@@ -38,6 +38,12 @@
     <priority>0.5</priority>
 </url>
 <url>
+    <loc>https://tlienart.github.io/FranklinTemplates.jl/ProbabilisticRegistration/index.html</loc>
+    <lastmod>2023-09-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
     <loc>https://tlienart.github.io/FranklinTemplates.jl/ExternalLinks/index.html</loc>
     <lastmod>2023-09-06</lastmod>
     <changefreq>monthly</changefreq>
@@ -50,7 +56,13 @@
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://tlienart.github.io/FranklinTemplates.jl/Reports/Sep042024/index.html</loc>
+    <loc>https://tlienart.github.io/FranklinTemplates.jl/Reports/Feb102023/index.html</loc>
+    <lastmod>2023-09-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://tlienart.github.io/FranklinTemplates.jl/Reports/Sep142023/index.html</loc>
     <lastmod>2023-09-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -213,6 +225,12 @@
 </url>
 <url>
     <loc>https://tlienart.github.io/FranklinTemplates.jl/Reports/Nov292022/index.html</loc>
+    <lastmod>2023-09-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://tlienart.github.io/FranklinTemplates.jl/Reports/Sep042023/index.html</loc>
     <lastmod>2023-09-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
