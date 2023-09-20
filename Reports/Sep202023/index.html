@@ -1,1 +1,114 @@
-<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/tufte.css"> <link rel=stylesheet  href="/css/latex.css"> <link rel=stylesheet  href="/css/adjust.css"> <link rel=icon  href="/assets/favicon.png"> <title>CVPR Equivariance paper</title> <div id=layout > <div id=menu > <ul> <li><a href="/">Home</a> <!-- <li><a href="/FeatureMapICON/">Feature Map Inverse Consistency</a> --> <li><a href="/HatTile/">Aperiodic Tiling with Z3</a> <li><a href="/ICON/">Inverse Consistent Regstration</a> <li><a href="/Mandelbrot/">Mandelbrot Set Adventures</a> <li><a href="/BadMatrixMultiply/">Bad Matrix Multiplication</a> <li><a href="/GameJam/">Game Jam Games</a> <li><a href="/menu3/">Tags</a> </ul> </div> <div id=main > <div class=franklin-content > <a href=/Reports/>Back to Reports</a> <div class=page-foot > <div> <a href=https://subdavis.com>subdavis.com </a> <a href=http://forrestli.con>forrestli.com</a> <div class=copyright > &copy; Hastings Greer. Last modified: September 20, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div> </div>
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/tufte.css"> <link rel=stylesheet  href="/css/latex.css"> <link rel=stylesheet  href="/css/adjust.css"> <link rel=icon  href="/assets/favicon.png"> <title>CVPR Equivariance paper</title> <div id=layout > <div id=menu > <ul> <li><a href="/">Home</a> <!-- <li><a href="/FeatureMapICON/">Feature Map Inverse Consistency</a> --> <li><a href="/HatTile/">Aperiodic Tiling with Z3</a> <li><a href="/ICON/">Inverse Consistent Regstration</a> <li><a href="/Mandelbrot/">Mandelbrot Set Adventures</a> <li><a href="/BadMatrixMultiply/">Bad Matrix Multiplication</a> <li><a href="/GameJam/">Game Jam Games</a> <li><a href="/menu3/">Tags</a> </ul> </div> <div id=main > <div class=franklin-content ><h2>test title</h2> <p><img src="/assets/Reports/Sep202023/code/output_2_1.png" alt=""> <img src="/assets/Reports/Sep202023/code/output_8_2.png" alt=""></p> <pre><code class="python hljs"><span class=hljs-keyword >import</span> unet
+<span class=hljs-keyword >import</span> importlib
+importlib.reload(unet)
+unet = unet.GenericUNet(input_channels=<span class=hljs-number >1</span>, output_channels=<span class=hljs-number >64</span>, init_zero=<span class=hljs-literal >False</span>, regis_scale=<span class=hljs-literal >False</span>)
+unet.cuda()
+image_A = sample_batch.cuda()
+ufeatures = unet(image_A)</code></pre> <pre><code class="python hljs"><span class=hljs-keyword >class</span> <span class="hljs-title class_">AttentionRegistration</span>(icon_registration.RegistrationModule):
+    <span class=hljs-keyword >def</span> <span class="hljs-title function_">__init__</span>(<span class=hljs-params >self, net</span>):
+        <span class=hljs-built_in >super</span>().__init__()
+        self.net = net
+        dim = <span class=hljs-number >64</span>
+        
+        self.blur_kernel = torch.nn.Conv2d(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, <span class=hljs-number >5</span>, padding=<span class=hljs-string >&quot;same&quot;</span>, bias=<span class=hljs-literal >False</span>, groups=<span class=hljs-number >2</span>)
+    
+    <span class=hljs-keyword >def</span> <span class="hljs-title function_">featurize</span>(<span class=hljs-params >self, values</span>):
+        <span class=hljs-keyword >return</span> self.net(values)
+        <span class=hljs-keyword >return</span> self.net(torch.cat([
+            <span class=hljs-number >0</span>* self.identity_map.expand(values.shape[<span class=hljs-number >0</span>], -<span class=hljs-number >1</span>, values.shape[<span class=hljs-number >2</span>], values.shape[<span class=hljs-number >3</span>]),
+            values], dim=<span class=hljs-number >1</span>))
+    
+    <span class=hljs-keyword >def</span> <span class="hljs-title function_">forward</span>(<span class=hljs-params >self, A, B</span>):
+        ft_A = self.featurize(A)
+        ft_B = self.featurize(B)
+        
+        ft_A = ft_A.reshape(-<span class=hljs-number >1</span>, <span class=hljs-number >64</span>, self.identity_map.shape[-<span class=hljs-number >1</span>] * self.identity_map.shape[-<span class=hljs-number >2</span>])
+        ft_B = ft_B.reshape(-<span class=hljs-number >1</span>, <span class=hljs-number >64</span>, self.identity_map.shape[-<span class=hljs-number >1</span>] * self.identity_map.shape[-<span class=hljs-number >2</span>])
+
+        
+        attention = torch.nn.functional.softmax((ft_B.permute(<span class=hljs-number >0</span>, <span class=hljs-number >2</span>, <span class=hljs-number >1</span>) @ ft_A), dim=<span class=hljs-number >2</span>)
+        
+        self.attention = attention
+        
+        
+        x = self.identity_map.reshape(-<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, ft_A.shape[<span class=hljs-number >2</span>])
+        
+        output = attention @ x.permute(<span class=hljs-number >0</span>, <span class=hljs-number >2</span>, <span class=hljs-number >1</span>)
+        
+        output = output.reshape(-<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, self.identity_map.shape[<span class=hljs-number >2</span>], self.identity_map.shape[<span class=hljs-number >3</span>]) - self.identity_map
+        <span class=hljs-comment >#output = self.blur_kernel(output)</span>
+        
+        <span class=hljs-keyword >return</span> output
+ar = AttentionRegistration(unet)
+ar.cuda()
+
+inner_net = icon.FunctionFromVectorField(ar)
+inner_net.assign_identity_map(sample_batch.shape)
+inner_net.cuda()
+<span class=hljs-number >0</span></code></pre> <pre><code class="python hljs"><span class=hljs-keyword >import</span> tqdm
+optimizer = torch.optim.Adam(unet.parameters(), lr=<span class=hljs-number >0.001</span>)
+epochs = <span class=hljs-number >34</span>
+loss_history  = []
+<span class=hljs-keyword >for</span> epoch <span class=hljs-keyword >in</span> tqdm.tqdm(<span class=hljs-built_in >range</span>(epochs)):
+    <span class=hljs-keyword >for</span> A, B <span class=hljs-keyword >in</span> <span class=hljs-built_in >zip</span>(ds, ds):
+        image_A = A[<span class=hljs-number >0</span>].to(icon_registration.config.device)
+        image_B = B[<span class=hljs-number >0</span>].to(icon_registration.config.device)
+
+        optimizer.zero_grad()
+
+        teacher_phi = teacher_net.regis_net(image_A, image_B)(teacher_net.identity_map).detach()
+        student_phi = inner_net(image_A, image_B)(teacher_net.identity_map)
+        
+        error = torch.mean((student_phi - teacher_phi)**<span class=hljs-number >2</span>)
+        
+        error.backward()
+        optimizer.step()
+
+        loss_history.append(error.detach().item())
+plt.plot(loss_history)</code></pre> <img src="/assets/Reports/Sep202023/code/output_14_2.png" alt=""> <pre><code class="python hljs">net = icon.GradientICON(inner_net, icon.LNCC(sigma=<span class=hljs-number >4</span>), lmbda=<span class=hljs-number >.5</span>)
+net.assign_identity_map(sample_batch.shape)
+net.cuda()</code></pre> <pre><code class="python hljs"><span class=hljs-keyword >def</span> <span class="hljs-title function_">show</span>(<span class=hljs-params >tensor</span>):
+    plt.imshow(torchvision.utils.make_grid(tensor[:<span class=hljs-number >6</span>], nrow=<span class=hljs-number >3</span>)[<span class=hljs-number >0</span>].cpu().detach())
+    plt.xticks([])
+    plt.yticks([])
+image_A = <span class=hljs-built_in >next</span>(<span class=hljs-built_in >iter</span>(ds))[<span class=hljs-number >0</span>].to(device)
+image_B = <span class=hljs-built_in >next</span>(<span class=hljs-built_in >iter</span>(ds))[<span class=hljs-number >0</span>].to(device)
+net(image_A, image_B)
+plt.subplot(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, <span class=hljs-number >1</span>)
+show(image_A)
+plt.subplot(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
+show(image_B)
+plt.subplot(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, <span class=hljs-number >3</span>)
+show(net.warped_image_A)
+plt.contour(torchvision.utils.make_grid(net.phi_AB_vectorfield[:<span class=hljs-number >6</span>], nrow=<span class=hljs-number >3</span>)[<span class=hljs-number >0</span>].cpu().detach())
+plt.contour(torchvision.utils.make_grid(net.phi_AB_vectorfield[:<span class=hljs-number >6</span>], nrow=<span class=hljs-number >3</span>)[<span class=hljs-number >1</span>].cpu().detach())
+plt.subplot(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, <span class=hljs-number >4</span>)
+show(net.warped_image_A - image_B)
+plt.tight_layout()</code></pre> <img src="/assets/Reports/Sep202023/code/output_16_0.png" alt=""> <pre><code class="python hljs">ufeatures = unet(image_A)
+plt.imshow(ufeatures[<span class=hljs-number >0</span>, <span class=hljs-number >60</span>].detach().cpu())</code></pre> <img src="/assets/Reports/Sep202023/code/output_17_1.png" alt=""> <pre><code class="python hljs">net.train()
+net.to(device)
+optim = torch.optim.Adam(net.parameters(), lr=<span class=hljs-number >0.0001</span>)
+curves = icon.train_datasets(net, optim, ds, ds, epochs=<span class=hljs-number >5</span>)
+plt.close()
+plt.plot(np.array(curves)[:, :<span class=hljs-number >3</span>])</code></pre> <img src="/assets/Reports/Sep202023/code/output_19_2.png" alt=""> <pre><code class="python hljs">curves = icon.train_datasets(net, optim, ds, ds, epochs=<span class=hljs-number >50</span>)
+plt.close()
+plt.plot(np.array(curves)[:, :<span class=hljs-number >3</span>])</code></pre> <img src="/assets/Reports/Sep202023/code/output_20_2.png" alt=""> <pre><code class="python hljs"><span class=hljs-keyword >def</span> <span class="hljs-title function_">show</span>(<span class=hljs-params >tensor</span>):
+    plt.imshow(torchvision.utils.make_grid(tensor[:<span class=hljs-number >6</span>], nrow=<span class=hljs-number >3</span>)[<span class=hljs-number >0</span>].cpu().detach())
+    plt.xticks([])
+    plt.yticks([])
+image_A = <span class=hljs-built_in >next</span>(<span class=hljs-built_in >iter</span>(ds))[<span class=hljs-number >0</span>].to(device)
+image_B = <span class=hljs-built_in >next</span>(<span class=hljs-built_in >iter</span>(ds))[<span class=hljs-number >0</span>].to(device)
+net(image_A, image_B)
+plt.subplot(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, <span class=hljs-number >1</span>)
+show(image_A)
+plt.subplot(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
+show(image_B)
+plt.subplot(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, <span class=hljs-number >3</span>)
+show(net.warped_image_A)
+plt.contour(torchvision.utils.make_grid(net.phi_AB_vectorfield[:<span class=hljs-number >6</span>], nrow=<span class=hljs-number >3</span>)[<span class=hljs-number >0</span>].cpu().detach())
+plt.contour(torchvision.utils.make_grid(net.phi_AB_vectorfield[:<span class=hljs-number >6</span>], nrow=<span class=hljs-number >3</span>)[<span class=hljs-number >1</span>].cpu().detach())
+plt.subplot(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, <span class=hljs-number >4</span>)
+show(net.warped_image_A - image_B)
+plt.tight_layout()</code></pre> <img src="/assets/Reports/Sep202023/code/output_21_0.png" alt=""> <pre><code class="python hljs">ufeatures = unet(image_A)
+plt.imshow(ufeatures[<span class=hljs-number >0</span>, <span class=hljs-number >9</span>].detach().cpu())
+plt.colorbar()</code></pre> <img src="/assets/Reports/Sep202023/code/output_22_1.png" alt=""> <a href=/Reports/>Back to Reports</a> <div class=page-foot > <div> <a href=https://subdavis.com>subdavis.com </a> <a href=http://forrestli.con>forrestli.com</a> <div class=copyright > &copy; Hastings Greer. Last modified: September 20, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div> </div>
