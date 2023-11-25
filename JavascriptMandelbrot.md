@@ -31,7 +31,7 @@ Why is it important to be able to zoom to radiuses that are too small to represe
 
 ## The problem, in detail
 
-\fig{float_example.svg.png}
+\fig{Float_example.svg.png}
 
 A 32 bit float has 23 bits of precision in the mantissa. If each click zooms in by a factor of two, this means that a naive shader can only handle 23 clicks before every pixel on the screen is represented by the same pair of numbers, which is no good. In a clever shader, instead of representing each pixel by its coordinates in the Mandelbrot Set, each pixel is represented by its difference from the center pixel. Then, as long as you have the trajectory of the center pixel stored (in my case, computed on the CPU using a WASM distribution of gmp), you can compute the trajactory of the each other pixel by
 
