@@ -82,6 +82,44 @@
   <title>
     <![CDATA[  Mandelbrot  ]]>
   </title>
+  <link> https://tlienart.github.io/FranklinTemplates.jl/TrebuchetSimulator/index.html </link>
+  <guid> https://tlienart.github.io/FranklinTemplates.jl/TrebuchetSimulator/index.html </guid>
+  <description>
+    <![CDATA[  Trebuchet Simulator  ]]>
+  </description>  
+    
+  <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>  
+  
+  
+  <atom:author>
+    <atom:name>Hastings Greer</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  Mandelbrot  ]]>
+  </title>
+  <link> https://tlienart.github.io/FranklinTemplates.jl/JavascriptMandelbrot/index.html </link>
+  <guid> https://tlienart.github.io/FranklinTemplates.jl/JavascriptMandelbrot/index.html </guid>
+  <description>
+    <![CDATA[  My projects that render the Mandelbrot Set with various techniques  ]]>
+  </description>  
+    
+  <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>  
+  
+  
+  <atom:author>
+    <atom:name>Hastings Greer</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  Mandelbrot  ]]>
+  </title>
   <link> https://tlienart.github.io/FranklinTemplates.jl/Mandelbrot/index.html </link>
   <guid> https://tlienart.github.io/FranklinTemplates.jl/Mandelbrot/index.html </guid>
   <description>
