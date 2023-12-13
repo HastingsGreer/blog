@@ -9,14 +9,14 @@
 
   <channel>
     <title>
-      <![CDATA[  Franklin Template  ]]>
+      <![CDATA[  Hastings&#39; Blog  ]]>
     </title>
-    <link> https://tlienart.github.io/FranklinTemplates.jl/ </link>
+    <link> https://www.hgreer.com/ </link>
     <description>
-      <![CDATA[  Example website using Franklin  ]]>
+      <![CDATA[  Hastings&#39; Blog  ]]>
     </description>
     <atom:link
-      href="https://tlienart.github.io/FranklinTemplates.jl/feed.xml"
+      href="https://www.hgreer.com/feed.xml"
       rel="self"
       type="application/rss+xml" />
 
@@ -25,8 +25,8 @@
   <title>
     <![CDATA[  Writing scientific code with the minimum of abstraction  ]]>
   </title>
-  <link> https://tlienart.github.io/FranklinTemplates.jl/MinimumAbstraction/index.html </link>
-  <guid> https://tlienart.github.io/FranklinTemplates.jl/MinimumAbstraction/index.html </guid>
+  <link> https://www.hgreer.com/MinimumAbstraction/index.html </link>
+  <guid> https://www.hgreer.com/MinimumAbstraction/index.html </guid>
   <description>
     <![CDATA[  Writing scientific code with the minimum of abstraction  ]]>
   </description>  
@@ -44,8 +44,8 @@
   <title>
     <![CDATA[  blaaaaa  ]]>
   </title>
-  <link> https://tlienart.github.io/FranklinTemplates.jl/ICON_test/index.html </link>
-  <guid> https://tlienart.github.io/FranklinTemplates.jl/ICON_test/index.html </guid>
+  <link> https://www.hgreer.com/ICON_test/index.html </link>
+  <guid> https://www.hgreer.com/ICON_test/index.html </guid>
   <description>
     <![CDATA[  An exploration of inverse consistency for driving image registration  ]]>
   </description>  
@@ -63,8 +63,8 @@
   <title>
     <![CDATA[  footsteps  ]]>
   </title>
-  <link> https://tlienart.github.io/FranklinTemplates.jl/footsteps/index.html </link>
-  <guid> https://tlienart.github.io/FranklinTemplates.jl/footsteps/index.html </guid>
+  <link> https://www.hgreer.com/footsteps/index.html </link>
+  <guid> https://www.hgreer.com/footsteps/index.html </guid>
   <description>
     <![CDATA[  footsteps  ]]>
   </description>  
@@ -82,8 +82,8 @@
   <title>
     <![CDATA[  Feature Map Inverse Consistency  ]]>
   </title>
-  <link> https://tlienart.github.io/FranklinTemplates.jl/FeatureMapICON/index.html </link>
-  <guid> https://tlienart.github.io/FranklinTemplates.jl/FeatureMapICON/index.html </guid>
+  <link> https://www.hgreer.com/FeatureMapICON/index.html </link>
+  <guid> https://www.hgreer.com/FeatureMapICON/index.html </guid>
   <description>
     <![CDATA[  An exploration of inverse consistency for driving image registration  ]]>
   </description>  
@@ -101,8 +101,8 @@
   <title>
     <![CDATA[  Mandelbrot  ]]>
   </title>
-  <link> https://tlienart.github.io/FranklinTemplates.jl/TrebuchetSimulator/index.html </link>
-  <guid> https://tlienart.github.io/FranklinTemplates.jl/TrebuchetSimulator/index.html </guid>
+  <link> https://www.hgreer.com/TrebuchetSimulator/index.html </link>
+  <guid> https://www.hgreer.com/TrebuchetSimulator/index.html </guid>
   <description>
     <![CDATA[  Trebuchet Simulator  ]]>
   </description>  
@@ -120,8 +120,8 @@
   <title>
     <![CDATA[  Mandelbrot  ]]>
   </title>
-  <link> https://tlienart.github.io/FranklinTemplates.jl/JavascriptMandelbrot/index.html </link>
-  <guid> https://tlienart.github.io/FranklinTemplates.jl/JavascriptMandelbrot/index.html </guid>
+  <link> https://www.hgreer.com/JavascriptMandelbrot/index.html </link>
+  <guid> https://www.hgreer.com/JavascriptMandelbrot/index.html </guid>
   <description>
     <![CDATA[  My projects that render the Mandelbrot Set with various techniques  ]]>
   </description>  
@@ -139,8 +139,8 @@
   <title>
     <![CDATA[  Mandelbrot  ]]>
   </title>
-  <link> https://tlienart.github.io/FranklinTemplates.jl/Mandelbrot/index.html </link>
-  <guid> https://tlienart.github.io/FranklinTemplates.jl/Mandelbrot/index.html </guid>
+  <link> https://www.hgreer.com/Mandelbrot/index.html </link>
+  <guid> https://www.hgreer.com/Mandelbrot/index.html </guid>
   <description>
     <![CDATA[  My projects that render the Mandelbrot set with various techniques  ]]>
   </description>  
@@ -158,8 +158,8 @@
   <title>
     <![CDATA[  Game Jam Games  ]]>
   </title>
-  <link> https://tlienart.github.io/FranklinTemplates.jl/GameJam/index.html </link>
-  <guid> https://tlienart.github.io/FranklinTemplates.jl/GameJam/index.html </guid>
+  <link> https://www.hgreer.com/GameJam/index.html </link>
+  <guid> https://www.hgreer.com/GameJam/index.html </guid>
   <description>
     <![CDATA[  Games that I have created while participating in Game Jams and Jackathons  ]]>
   </description>  
@@ -177,8 +177,8 @@
   <title>
     <![CDATA[  ICON registration  ]]>
   </title>
-  <link> https://tlienart.github.io/FranklinTemplates.jl/ICON/index.html </link>
-  <guid> https://tlienart.github.io/FranklinTemplates.jl/ICON/index.html </guid>
+  <link> https://www.hgreer.com/ICON/index.html </link>
+  <guid> https://www.hgreer.com/ICON/index.html </guid>
   <description>
     <![CDATA[  An exploration of inverse consistency for driving image registration  ]]>
   </description>  
@@ -196,8 +196,8 @@
   <title>
     <![CDATA[  Bad Matrix Multiplication  ]]>
   </title>
-  <link> https://tlienart.github.io/FranklinTemplates.jl/BadMatrixMultiply/index.html </link>
-  <guid> https://tlienart.github.io/FranklinTemplates.jl/BadMatrixMultiply/index.html </guid>
+  <link> https://www.hgreer.com/BadMatrixMultiply/index.html </link>
+  <guid> https://www.hgreer.com/BadMatrixMultiply/index.html </guid>
   <description>
     <![CDATA[  Bad Matrix Multiplication  ]]>
   </description>  
