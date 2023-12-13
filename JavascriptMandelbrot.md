@@ -53,116 +53,40 @@ The right way to handle this is to give up on hardware floating point, and move 
 
 ## An ugly hack that's cool and fun
 
-My insight is that if I was to do correct soft float math, all the trajectories of the individual pixels would get bit shifted at the same time, and so instead of laboriously computing this 250,000 times per iteration, once per pixel, I can compute the shifts once on the CPU and store them in my data texture. This is only mostly correct, but it allows soft "floats" at interactive speed, and that's worth something.   
+First, we note that in the update equation
+
+$$\Delta z_{n + 1} = 2 z_n \Delta z_n + \Delta z_n^2 + \Delta c$$
+
+there are a few ways that $\Delta z$ can change magnitude. The scariest way is a catastrophic cancellation between terms- this corresponds to the orbit of the current pixel diverging from the orbit of the center pixel, and is prevented using a recently discovered trick, [rebasing](https://fractalforums.org/fractal-mathematics-and-new-theories/28/another-solution-to-perturbation-glitches/4360/msg29835#msg29835). Second, there can be a non-catastrophic cancellation or addition that changes the magnitude of $\Delta z$ by a small factor. The third way is for $z_n$ to be very close to zero. If we handle all of these cases, we don't need to handle the full float specification. 
+
+We store $\Delta_z$ an exponent (q) and mantissas (dx, dy). They are allowed to drift away from the range [.5, 1) unlike standard mantissas. We precompute the exponent of the value 
+
+$$\Delta z_{n + 1} = 2 z_n \Delta z_n + \Delta z_n^2 + \Delta c$$
+
+as just q + os, the exponent of the first term, which is much simpler than fully correct ieee float math. This is legal because we know about the rough relative magnitudes of the input values thanks to rebasing. 
+
+Finally, we can calculate the mantissas by scaling the latter two terms to match the first. (ie, usually to zero).
 
 ```
-    const fsSource = `#version 300 es
-precision highp float;
-in highp vec2 delta;
-out vec4 fragColor;
-uniform vec4 uState;
-uniform vec4 poly1;
-uniform vec4 poly2;
-uniform sampler2D sequence;
-float get_orbit_x(int i) {
-  i = i * 3;
-  int row = i / 1024;
-  return texelFetch(sequence, ivec2( i % 1024, row), 0)[0];
-}
-float get_orbit_y(int i) {
-  i = i * 3 + 1;
-  int row = i / 1024;
-  return texelFetch(sequence, ivec2( i % 1024, row), 0)[0];
-}
-float get_orbit_scale(int i) {
-  i = i * 3 + 2;
-  int row = i / 1024;
-  return texelFetch(sequence, ivec2( i % 1024, row), 0)[0];
-}
-void main() {
-  int q = int(uState[2]) - 1;
-  int cq = q;
-  q = q + int(poly2[3]);
-  float S = pow(2., float(q));
-  float dcx = delta[0];
-  float dcy = delta[1];
-  float x;
-  float y;
-  // dx + dyi = (p0 + p1 i) * (dcx, dcy) + (p2 + p3i) * (dcx + dcy * i) * (dcx + dcy * i)
-  float sqrx =  (dcx * dcx - dcy * dcy);
-  float sqry =  (2. * dcx * dcy);
-
-  float cux =  (dcx * sqrx - dcy * sqry);
-  float cuy =  (dcx * sqry + dcy * sqrx);
-  float dx = poly1[0]  * dcx - poly1[1] *  dcy + poly1[2] * sqrx - poly1[3] * sqry ;// + poly2[0] * cux - poly2[1] * cuy;
-  float dy = poly1[0] *  dcy + poly1[1] *  dcx + poly1[2] * sqry + poly1[3] * sqrx ;//+ poly2[0] * cuy + poly2[1] * cux;
-      
-  int k = int(poly2[2]);
-
-  if (false) {
-      q = cq;
-      dx = 0.;
-      dy = 0.;
-      k = 0;
-  }
-  int j = k;
-  x = get_orbit_x(k);
-  y = get_orbit_y(k);
-  
-  for (int i = k; float(i) < uState[3]; i++){
-    j += 1;
-    k += 1;
-    float os = get_orbit_scale(k - 1);
+    float x = get_orbit_x(k);
+    float y = get_orbit_y(k);
+    float os = get_orbit_scale(k);
     dcx = delta[0] * pow(2., float(-q + cq - int(os)));
     dcy = delta[1] * pow(2., float(-q + cq - int(os)));
-    float unS = pow(2., float(q) -get_orbit_scale(k - 1));
+    float unS = pow(2., float(q) -os);
 
     float tx = 2. * x * dx - 2. * y * dy + unS  * dx * dx - unS * dy * dy + dcx;
     dy = 2. * x * dy + 2. * y * dx + unS * 2. * dx * dy +  dcy;
     dx = tx;
 
     q = q + int(os);
-    S = pow(2., float(q));
-
-    x = get_orbit_x(k);
-    y = get_orbit_y(k);
-    float fx = x * pow(2., get_orbit_scale(k)) + S * dx;
-    float fy = y * pow(2., get_orbit_scale(k))+ S * dy;
-    if (fx * fx + fy * fy > 4.){
-      break;
-    }
-    if ( true && dx * dx + dy * dy > 4.) {
-      dx = dx / 2.;
-      dy = dy / 2.;
-      q = q + 1;
-      S = pow(2., float(q));
-      dcx = delta[0] * pow(2., float(-q + cq));
-      dcy = delta[1] * pow(2., float(-q + cq));
-    }
-    if ( false && dx * dx + dy * dy < .25) {
-      dx = dx * 2.;
-      dy = dy * 2.;
-      q = q - 1;
-      S = pow(2., float(q));
-      dcx = delta[0] * pow(2., float(-q + cq));
-      dcy = delta[1] * pow(2., float(-q + cq));
-    }
-
-    if (true  && fx * fx + fy * fy < S * S * dx * dx + S * S * dy * dy || (x == -1. && y == -1.)) {
-      dx  = fx;
-      dy = fy;
-      q = 0;
-      S = pow(2., float(q));
-      dcx = delta[0] * pow(2., float(-q + cq));
-      dcy = delta[1] * pow(2., float(-q + cq));
-      k = 0;
-      x = get_orbit_x(0);
-      y = get_orbit_y(0);
-    }
-  }
-  float c = (uState[3] - float(j)) / uState[1];
-  fragColor = vec4(vec3(cos(c), cos(1.1214 * c) , cos(.8 * c)) / -2. + .5, 1.);
-}
 ```
 
-[JS repository](https://github.com/HastingsGreer/mandeljs)
+The full shader code, along with the rest of the owl, is at
+
+[https://github.com/HastingsGreer/mandeljs](https://github.com/HastingsGreer/mandeljs)
+
+Finally, this work was closely inspired by [Claude's article on the same topic](https://mathr.co.uk/blog/2021-05-14_deep_zoom_theory_and_practice.html#a2021-05-14_deep_zoom_theory_and_practice_rescaling), and for absurdly deep Mandelbrot zooms in the browser, his [online explorer](https://fraktaler.mathr.co.uk/live/latest/), while not GPU accelerated, wins out thanks to Newton Raphsom zooming and Bilinear Approximation.
+
+
+
