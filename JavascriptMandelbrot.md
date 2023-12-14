@@ -51,8 +51,7 @@ By computing $\Delta z$ this way, it's fine that the representation of $\Delta z
 
 The right way to handle this is to give up on hardware floating point, and move to soft floats. You can store the mantissa in one 32 bit int, the exponent in another, and then make nice functions that do all the bit shifting and logic to implement ieee math. This is what early very deep mandelbrot zooms did, and real high quality mandelbrot explorers like Kalles Fraktaller and Imagina still fall back to this in some circumstances, but it's slow. They can afford this slowness because they only need soft floats once their CUDA, 64 bit shaders have run out of exponent, which takes thousands of clicks. I want to be able to zip around mildly deep in the mandelbrot set in my iphone's browser, so I need another answer.
 
-## An ugly hack that's cool and fun
-
+## An ugly hack (The cool kids love ugly hacks)
 First, we note that in the update equation
 
 $$\Delta z_{n + 1} = 2 z_n \Delta z_n + \Delta z_n^2 + \Delta c$$
