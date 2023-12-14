@@ -92,7 +92,7 @@ if ( dx * dx + dy * dy > 1000000.) {
   }
 ```
 
-We keep a ...loose hold on them. Keeping the magnitude of the mantissa under 1000 instead of under 1 empirically reduces visual glitches resulting from the lack of subnormal float math on the GPU, and checking that it's not underflowing empirically can be ommitted, but I don't fully know why and hope to find out in a later blog post!
+We keep a ...loose hold on them. Keeping the magnitude of the mantissa under 1000 instead of under 1 empirically reduces visual glitches resulting from the lack of subnormal float math on the GPU, and checking that it's not underflowing empirically can be omitted, but I don't fully know why and hope to find out in a later blog post!
 
 The full shader code, along with the rest of the owl, is at
 
