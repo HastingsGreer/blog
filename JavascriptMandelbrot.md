@@ -68,31 +68,28 @@ we precompute the result exponent as just q + os, the exponent of the first term
 Then, we can calculate the mantissas by scaling the latter two terms to match the first. 
 
 ```
-    float x = get_orbit_x(k);
-    float y = get_orbit_y(k);
-    float os = get_orbit_scale(k);
-    dcx = delta[0] * pow(2., float(-q + cq - int(os)));
-    dcy = delta[1] * pow(2., float(-q + cq - int(os)));
-    float unS = pow(2., float(q) -os);
+float x = get_orbit_x(k);
+float y = get_orbit_y(k);
+float os = get_orbit_scale(k);
+dcx = delta[0] * pow(2., float(-q + cq - int(os)));
+dcy = delta[1] * pow(2., float(-q + cq - int(os)));
+float unS = pow(2., float(q) -os);
 
-    float tx = 2. * x * dx - 2. * y * dy + unS  * dx * dx - unS * dy * dy + dcx;
-    dy = 2. * x * dy + 2. * y * dx + unS * 2. * dx * dy +  dcy;
-    dx = tx;
+float tx = 2. * x * dx - 2. * y * dy + unS  * dx * dx - unS * dy * dy + dcx;
+dy = 2. * x * dy + 2. * y * dx + unS * 2. * dx * dy +  dcy;
+dx = tx;
 
-    q = q + int(os);
+q = q + int(os);
 ```
 
 Now, we have handled the case of $z_n$ being small explicitly, and declared catastrophic cancellations to not happen. All that is left is to handle the mantissas drifting away from the range [.5, 1). 
 
 ```
-if ( true && dx * dx + dy * dy > 1000000.) {
-        dx = dx / 2.;
-        dy = dy / 2.;
-        q = q + 1;
-        S = pow(2., float(q));
-        dcx = delta[0] * pow(2., float(-q + cq));
-        dcy = delta[1] * pow(2., float(-q + cq));
-      }
+if ( dx * dx + dy * dy > 1000000.) {
+    dx = dx / 2.;
+    dy = dy / 2.;
+    q = q + 1;
+  }
 ```
 
 We keep a ...loose hold on them. Keeping the magnitude of the mantissa under 1000 instead of under 1 empirically reduces visual glitches resulting from the lack of subnormal float math on the GPU, but I don't know why and hope to find out in a later blog post!
