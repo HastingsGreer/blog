@@ -59,11 +59,11 @@ $$\Delta z_{n + 1} = 2 z_n \Delta z_n + \Delta z_n^2 + \Delta c$$
 
 there are a few ways that $\Delta z$ can change magnitude. The scariest way is a catastrophic cancellation between terms- this corresponds to the orbit of the current pixel diverging from the orbit of the center pixel, and is prevented using a recently discovered trick, [rebasing](https://fractalforums.org/fractal-mathematics-and-new-theories/28/another-solution-to-perturbation-glitches/4360/msg29835#msg29835). Second, there can be a non-catastrophic cancellation or addition that changes the magnitude of $\Delta z$ by a small factor. The third way is for $z_n$ to be very close to zero. If we handle all of these cases, we don't need to handle the full float specification. 
 
-We store $\Delta_z$ an exponent (q) and mantissas (dx, dy). They are allowed to drift away from the range [.5, 1) unlike standard mantissas. For each iteration of 
+We store $\Delta z$ an exponent (q) and mantissas (dx, dy). They are allowed to drift away from the range [.5, 1) unlike standard mantissas. Likewise, we store each value $z_n$ in our precomputed reference orbit as (os, x, y). For each iteration of 
 
 $$\Delta z_{n + 1} = 2 z_n \Delta z_n + \Delta z_n^2 + \Delta c$$
 
-we precompute the result exponent as just q + os, the exponent of the first term, which is much simpler than fully correct ieee float math. As long as the exponent is close enough to correct, (ie, right to within +- 127 or so) this works fine.
+we precompute the result exponent as just q + os, the exponent of the first term, instead of keeping track of how the exponent changes for each addition and multiplication (which would be a branch for every operation). As long as the exponent is close enough to correct, (ie, right to within +- 127 or so) this works fine.
 
 Then, we can calculate the mantissas by scaling the latter two terms to match the first. 
 
