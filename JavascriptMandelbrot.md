@@ -59,13 +59,13 @@ $$\Delta z_{n + 1} = 2 z_n \Delta z_n + \Delta z_n^2 + \Delta c$$
 
 there are a few ways that $\Delta z$ can change magnitude. The scariest way is a catastrophic cancellation between terms- this corresponds to the orbit of the current pixel diverging from the orbit of the center pixel, and is prevented using a recently discovered trick, [rebasing](https://fractalforums.org/fractal-mathematics-and-new-theories/28/another-solution-to-perturbation-glitches/4360/msg29835#msg29835). Second, there can be a non-catastrophic cancellation or addition that changes the magnitude of $\Delta z$ by a small factor. The third way is for $z_n$ to be very close to zero. If we handle all of these cases, we don't need to handle the full float specification. 
 
-We store $\Delta_z$ an exponent (q) and mantissas (dx, dy). They are allowed to drift away from the range [.5, 1) unlike standard mantissas. We precompute the exponent of the value 
+We store $\Delta_z$ an exponent (q) and mantissas (dx, dy). They are allowed to drift away from the range [.5, 1) unlike standard mantissas. For each iteration of 
 
 $$\Delta z_{n + 1} = 2 z_n \Delta z_n + \Delta z_n^2 + \Delta c$$
 
-as just q + os, the exponent of the first term, which is much simpler than fully correct ieee float math. This is legal because we know about the rough relative magnitudes of the input values thanks to rebasing. 
+we precompute the result exponent as just q + os, the exponent of the first term, which is much simpler than fully correct ieee float math. As long as thi exponent is close enough to correct, (ie, right to within +- 127 or so) this works fine.
 
-Finally, we can calculate the mantissas by scaling the latter two terms to match the first. (ie, usually to zero).
+Then, we can calculate the mantissas by scaling the latter two terms to match the first. 
 
 ```
     float x = get_orbit_x(k);
@@ -81,6 +81,21 @@ Finally, we can calculate the mantissas by scaling the latter two terms to match
 
     q = q + int(os);
 ```
+
+Now, we have handled the case of $z_n$ being small explicitly, and declared catastrophic cancellations to not happen. All that is left is to handle the mantissas drifting away from the range [.5, 1). 
+
+```
+if ( true && dx * dx + dy * dy > 1000000.) {
+        dx = dx / 2.;
+        dy = dy / 2.;
+        q = q + 1;
+        S = pow(2., float(q));
+        dcx = delta[0] * pow(2., float(-q + cq));
+        dcy = delta[1] * pow(2., float(-q + cq));
+      }
+```
+
+We keep a ...loose hold on them. Keeping the magnitude of the mantissa under 1000 instead of under 1 empirically reduces visual glitches resulting from the lack of subnormal float math on the GPU, but I don't know why and hope to find out in a later blog post!
 
 The full shader code, along with the rest of the owl, is at
 
