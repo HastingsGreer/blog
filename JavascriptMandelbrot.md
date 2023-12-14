@@ -63,7 +63,7 @@ We store $\Delta_z$ an exponent (q) and mantissas (dx, dy). They are allowed to 
 
 $$\Delta z_{n + 1} = 2 z_n \Delta z_n + \Delta z_n^2 + \Delta c$$
 
-we precompute the result exponent as just q + os, the exponent of the first term, which is much simpler than fully correct ieee float math. As long as thi exponent is close enough to correct, (ie, right to within +- 127 or so) this works fine.
+we precompute the result exponent as just q + os, the exponent of the first term, which is much simpler than fully correct ieee float math. As long as the exponent is close enough to correct, (ie, right to within +- 127 or so) this works fine.
 
 Then, we can calculate the mantissas by scaling the latter two terms to match the first. 
 
