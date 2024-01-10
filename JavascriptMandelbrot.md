@@ -9,7 +9,7 @@
 
 # The fastest Javascript Mandelbrot in the land
 
-\fig{S_shape.png}
+[\fig{S_shape.png}](https://hastingsgreer.github.io/mandeljs/?;re=-1.76908145622740503158437671055574159956782550694262781469802596201397106425666554420093748345592145250;im=0.003037787152539119673394881819412740681023744946458660316743819462018920571341488787781769620915429870;r=0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000061363668309;iterations=30000)
 ```
 re=-1.7690814562274050315843767105557415995678255069426278146980259620139710642566655442009374834559214525490298159;
 im=0.00303778715253911967339488181941274068102374494645866031674381946201892057134148878778176962091542987845068523;
@@ -21,8 +21,8 @@ r=0.0000000000000000000000000000000000000000000000000000000000000000000000000000
 Before anything else, 
 [get going, explore the Mandelbrot Set!](https://hastingsgreer.github.io/mandeljs)
 
-In early 2023, there was a gap in online Mandelbrot Set explorers. People had written fast, GPU based Mandelbrot Set renderers such as [], but they only let you click a few times before you reached the bottom and ran into pixels. The
-reason is that WebGL only has 32 bit floats, and this is just not very much precision for Mandelbrot zooming. This hurts twice: First, if you naively compute $z_{n + 1} = z_n$ in a shader, the limited bits in the mantissa (that is, the "a" in a floating point number $a \times 2^{b}$) run out very quickly. More cruelly, if you use [perturbative approximation](http://www.science.eclipse.co.uk/sft_maths.pdf)
+In early 2023, there was a gap in online Mandelbrot Set explorers. People had written fast, GPU based Mandelbrot Set renderers such as [munrocket](https://deep-mandelbrot.js.org/), but they only let you click a few times before you reached the bottom and ran into pixels. The
+reason is that WebGL only has 32 bit floats, and this is just not very much precision for Mandelbrot zooming. This hurts twice: First, if you naively compute $z_{n + 1} = z_n$ in a shader, the limited bits in the mantissa (that is, the "a" in a floating point number $a \times 2^{b}$) run out very quickly. More cruelly, if you use [perturbation theory](http://www.science.eclipse.co.uk/sft_maths.pdf)
 (which I will get to shortly), the limited bits in the exponent get you. This second constraint is only noticable after you have done a great deal of work writing a complicated WebGL shader, computed a reference orbit using an arbitrary precision library, and then passed that reference to the shader as a texture, and I suspect that when people get this far and find that they can't zoom in much farther, they have historically given up.
 
 ## Julia Morphing
@@ -49,120 +49,55 @@ By computing $\Delta z$ this way, it's fine that the representation of $\Delta z
 
 ## An elegant solution that I reject
 
-The right way to handle this is to give up on hardware floating point, and move to soft floats. You can store the mantissa in one 32 bit int, the exponent in another, and then make nice functions that do all the bit shifting and logic to implement ieee math. This is what the real high quality mandelbrot explorers like Kalles Fraktaller and Imagina do, but it's slooooww. They can afford this slowness because they only need soft floats once their CUDA, 64 bit shaders have run out of exponent, which takes thousands of clicks. I want to be able to zip around mildly deep in the mandelbrot set in my iphone's browser, so I need another answer.
+The right way to handle this is to give up on hardware floating point, and move to soft floats. You can store the mantissa in one 32 bit int, the exponent in another, and then make nice functions that do all the bit shifting and logic to implement ieee math. This is what early very deep mandelbrot zooms did, and real high quality mandelbrot explorers like Kalles Fraktaller and Imagina still fall back to this in some circumstances, but it's slow. They can afford this slowness because they only need soft floats once their CUDA, 64 bit shaders have run out of exponent, which takes thousands of clicks. I want to be able to zip around mildly deep in the mandelbrot set in my iphone's browser, so I need another answer.
 
-## An ugly hack that's cool and fun
+## An ugly hack (The cool kids love ugly hacks)
+First, we note that in the update equation
 
-My insight is that if I was to do correct soft float math, all the trajectories of the individual pixels would get bit shifted at the same time, and so instead of laboriously computing this 250,000 times per iteration, once per pixel, I can compute the shifts once on the CPU and store them in my data texture. This is only mostly correct, but it allows soft "floats" at interactive speed, and that's worth something.   
+$$\Delta z_{n + 1} = 2 z_n \Delta z_n + \Delta z_n^2 + \Delta c$$
+
+there are a few ways that $\Delta z$ can change magnitude. The scariest way is a catastrophic cancellation between terms- this corresponds to the orbit of the current pixel diverging from the orbit of the center pixel, and is prevented using a recently discovered trick, [rebasing](https://fractalforums.org/fractal-mathematics-and-new-theories/28/another-solution-to-perturbation-glitches/4360/msg29835#msg29835). Second, there can be a non-catastrophic cancellation or addition that changes the magnitude of $\Delta z$ by a small factor. The third way is for $z_n$ to be very close to zero. If we handle all of these cases, we don't need to handle the full float specification. 
+
+We store $\Delta z$ an exponent (q) and mantissas (dx, dy). They are allowed to drift away from the range [.5, 1) unlike standard mantissas. Likewise, we store each value $z_n$ in our precomputed reference orbit as (os, x, y). For each iteration of 
+
+$$\Delta z_{n + 1} = 2 z_n \Delta z_n + \Delta z_n^2 + \Delta c$$
+
+we precompute the result exponent as just q + os, the exponent of the first term, instead of keeping track of how the exponent changes for each addition and multiplication (which would be a branch for every operation). As long as the exponent is close enough to correct, (ie, right to within +- 127 or so) this works fine.
+
+Then, we can calculate the mantissas by scaling the latter two terms to match the first. 
 
 ```
-    const fsSource = `#version 300 es
-precision highp float;
-in highp vec2 delta;
-out vec4 fragColor;
-uniform vec4 uState;
-uniform vec4 poly1;
-uniform vec4 poly2;
-uniform sampler2D sequence;
-float get_orbit_x(int i) {
-  i = i * 3;
-  int row = i / 1024;
-  return texelFetch(sequence, ivec2( i % 1024, row), 0)[0];
-}
-float get_orbit_y(int i) {
-  i = i * 3 + 1;
-  int row = i / 1024;
-  return texelFetch(sequence, ivec2( i % 1024, row), 0)[0];
-}
-float get_orbit_scale(int i) {
-  i = i * 3 + 2;
-  int row = i / 1024;
-  return texelFetch(sequence, ivec2( i % 1024, row), 0)[0];
-}
-void main() {
-  int q = int(uState[2]) - 1;
-  int cq = q;
-  q = q + int(poly2[3]);
-  float S = pow(2., float(q));
-  float dcx = delta[0];
-  float dcy = delta[1];
-  float x;
-  float y;
-  // dx + dyi = (p0 + p1 i) * (dcx, dcy) + (p2 + p3i) * (dcx + dcy * i) * (dcx + dcy * i)
-  float sqrx =  (dcx * dcx - dcy * dcy);
-  float sqry =  (2. * dcx * dcy);
+float x = get_orbit_x(k);
+float y = get_orbit_y(k);
+float os = get_orbit_scale(k);
+dcx = delta[0] * pow(2., float(-q + cq - int(os)));
+dcy = delta[1] * pow(2., float(-q + cq - int(os)));
+float unS = pow(2., float(q) -os);
 
-  float cux =  (dcx * sqrx - dcy * sqry);
-  float cuy =  (dcx * sqry + dcy * sqrx);
-  float dx = poly1[0]  * dcx - poly1[1] *  dcy + poly1[2] * sqrx - poly1[3] * sqry ;// + poly2[0] * cux - poly2[1] * cuy;
-  float dy = poly1[0] *  dcy + poly1[1] *  dcx + poly1[2] * sqry + poly1[3] * sqrx ;//+ poly2[0] * cuy + poly2[1] * cux;
-      
-  int k = int(poly2[2]);
+float tx = 2. * x * dx - 2. * y * dy + unS  * dx * dx - unS * dy * dy + dcx;
+dy = 2. * x * dy + 2. * y * dx + unS * 2. * dx * dy +  dcy;
+dx = tx;
 
-  if (false) {
-      q = cq;
-      dx = 0.;
-      dy = 0.;
-      k = 0;
-  }
-  int j = k;
-  x = get_orbit_x(k);
-  y = get_orbit_y(k);
-  
-  for (int i = k; float(i) < uState[3]; i++){
-    j += 1;
-    k += 1;
-    float os = get_orbit_scale(k - 1);
-    dcx = delta[0] * pow(2., float(-q + cq - int(os)));
-    dcy = delta[1] * pow(2., float(-q + cq - int(os)));
-    float unS = pow(2., float(q) -get_orbit_scale(k - 1));
-
-    float tx = 2. * x * dx - 2. * y * dy + unS  * dx * dx - unS * dy * dy + dcx;
-    dy = 2. * x * dy + 2. * y * dx + unS * 2. * dx * dy +  dcy;
-    dx = tx;
-
-    q = q + int(os);
-    S = pow(2., float(q));
-
-    x = get_orbit_x(k);
-    y = get_orbit_y(k);
-    float fx = x * pow(2., get_orbit_scale(k)) + S * dx;
-    float fy = y * pow(2., get_orbit_scale(k))+ S * dy;
-    if (fx * fx + fy * fy > 4.){
-      break;
-    }
-    if ( true && dx * dx + dy * dy > 4.) {
-      dx = dx / 2.;
-      dy = dy / 2.;
-      q = q + 1;
-      S = pow(2., float(q));
-      dcx = delta[0] * pow(2., float(-q + cq));
-      dcy = delta[1] * pow(2., float(-q + cq));
-    }
-    if ( false && dx * dx + dy * dy < .25) {
-      dx = dx * 2.;
-      dy = dy * 2.;
-      q = q - 1;
-      S = pow(2., float(q));
-      dcx = delta[0] * pow(2., float(-q + cq));
-      dcy = delta[1] * pow(2., float(-q + cq));
-    }
-
-    if (true  && fx * fx + fy * fy < S * S * dx * dx + S * S * dy * dy || (x == -1. && y == -1.)) {
-      dx  = fx;
-      dy = fy;
-      q = 0;
-      S = pow(2., float(q));
-      dcx = delta[0] * pow(2., float(-q + cq));
-      dcy = delta[1] * pow(2., float(-q + cq));
-      k = 0;
-      x = get_orbit_x(0);
-      y = get_orbit_y(0);
-    }
-  }
-  float c = (uState[3] - float(j)) / uState[1];
-  fragColor = vec4(vec3(cos(c), cos(1.1214 * c) , cos(.8 * c)) / -2. + .5, 1.);
-}
+q = q + int(os);
 ```
 
-[JS repository](https://github.com/HastingsGreer/mandeljs)
+Now, we have handled the case of $z_n$ being small explicitly, and declared catastrophic cancellations to not happen. All that is left is to handle the mantissas drifting away from the range [.5, 1). 
+
+```
+if ( dx * dx + dy * dy > 1000000.) {
+    dx = dx / 2.;
+    dy = dy / 2.;
+    q = q + 1;
+  }
+```
+
+We keep a ...loose hold on them. Keeping the magnitude of the mantissa under 1000 instead of under 1 empirically reduces visual glitches resulting from the lack of subnormal float math on the GPU, and checking that it's not underflowing empirically can be omitted, but I don't fully know why and hope to find out in a later blog post!
+
+The full shader code, along with the rest of the owl, is at
+
+[https://github.com/HastingsGreer/mandeljs](https://github.com/HastingsGreer/mandeljs)
+
+Finally, this work was closely inspired by [Claude's article on the same topic](https://mathr.co.uk/blog/2021-05-14_deep_zoom_theory_and_practice.html#a2021-05-14_deep_zoom_theory_and_practice_rescaling), and for absurdly deep Mandelbrot zooms in the browser, his [online explorer](https://fraktaler.mathr.co.uk/live/latest/), while not GPU accelerated, wins out thanks to Newton Raphsom zooming and Bilinear Approximation.
+
+
+
