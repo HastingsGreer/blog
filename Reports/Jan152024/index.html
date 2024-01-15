@@ -1,0 +1,32 @@
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/tufte.css"> <link rel=stylesheet  href="/css/latex.css"> <link rel=stylesheet  href="/css/adjust.css"> <link rel=stylesheet  href="https://apj.hgreer.com/blog"> <link rel=icon  href="/assets/favicon.png"> <title>Monai library and equivariance experiments</title> <div id=layout > <div id=menu > <ul> <li><a href="/">Home</a> <!-- <li><a href="/FeatureMapICON/">Feature Map Inverse Consistency</a> --> <li><a href="/HatTile/">Aperiodic Tiling with Z3</a> <!-- <li><a href="/ICON/">Inverse Consistent Regstration</a> <li><a href="/Mandelbrot/">Mandelbrot Set Adventures</a> --> <li><a href="/JavascriptMandelbrot/">Mandelbrot Set</a> <li><a href="/TrebuchetSimulator/">Trebuchet Simulator</a> <li><a href="/BadMatrixMultiply/">Bad Matrix Multiplication</a> <li><a href="/GameJam/">Game Jam Games</a> <li><a href="/menu3/">Tags</a> </ul> </div> <div id=main > <div class=franklin-content ><h1>Friday status</h1> <h2>Monai work</h2> <p>It&#39;s almost completely done. There is a small discrepancy between the original and MONAI verions of the library when loading models trained with the old version of the library.</p> <p>Here is a difference image between a warped brain registered with the original library, and a warped brain registered with the monai version:</p> <img src="/assets/Reports/Jan152024/code/002_difference.png" alt=""> <pre><code class="julia hljs">/playpen-raid1/tgreer/monai-research-contributions/ICON/results/test-<span class=hljs-number >98</span>/<span class=hljs-number >002_</span>difference.png</code></pre>
+<p>The images range from values 0-1, and the errors are in the range 0.03. The change to the deformation field is subpixel but it should be zero.</p>
+<p>In addition, there is also a small discrepancy in lung registration. </p>
+<p>Compared to the original library, the test pair has errors that are larger by approximately a .01 mm. </p>
+<p>TODO the test case for TwoStepConsistent is missing. Also, the ConstrICON models were never formally published and need to be- currently just an anonymous google drive link referenced in a colab notebook I think.</p>
+<h2>Equivariance Experiments:</h2>
+<p>We aim to try:</p>
+<ul>
+<li><p>Weaker 2d feature extraction</p>
+
+<li><p>Try retina using 3d code</p>
+
+<li><p>3D circles and squares</p>
+
+<li><p>White noise to 2d case</p>
+
+</ul>
+<p>We want to reproduce the effect where the equivariant net only captures the translation, and all deformation is left to the subsequent net.</p>
+<p><a href="/Reports/Nov292023/">Reports/Nov292023.md</a></p>
+
+  <a href=/Reports/>Back to Reports</a>  
+<div class=page-foot >
+  <div>
+    <a href=https://subdavis.com>subdavis.com </a> 
+    <a href=http://forrestli.con>forrestli.com</a>
+  <div class=copyright >
+    &copy; Hastings Greer. Last modified: January 15, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+  </div>
+</div>
+</div>
+        </div> 
+    </div>
