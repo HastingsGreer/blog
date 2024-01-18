@@ -19,7 +19,7 @@ r=0.0000000000000000000000000000000000000000000000000000000000000000000000000000
 
 
 Before anything else, 
-[get going, explore the Mandelbrot Set!](https://hastingsgreer.github.io/mandeljs)
+[get going, explore the Mandelbrot Set!](mandeljs.hgreer.com)
 
 In early 2023, there was a gap in online Mandelbrot Set explorers. People had written fast, GPU based Mandelbrot Set renderers such as [munrocket](https://deep-mandelbrot.js.org/), but they only let you click a few times before you reached the bottom and ran into pixels. The
 reason is that WebGL only has 32 bit floats, and this is just not very much precision for Mandelbrot zooming. This hurts twice: First, if you naively compute $z_{n + 1} = z_n$ in a shader, the limited bits in the mantissa (that is, the "a" in a floating point number $a \times 2^{b}$) run out very quickly. More cruelly, if you use [perturbation theory](http://www.science.eclipse.co.uk/sft_maths.pdf)
