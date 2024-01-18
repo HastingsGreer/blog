@@ -12,6 +12,6 @@
 # Trebuchet Simulator
 \fig{SimScreenshot.png}
 
-[Try Now](jstreb.hgreer.com)
+[Try Now](https://jstreb.hgreer.com)
 
 [Github repo](https://github.com/HastingsGreer/jstreb)
