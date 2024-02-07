@@ -130,3 +130,7 @@ plt.show()
 
 To run the code in the cloud and try variations, head to this 
 [colab notebook!](https://colab.research.google.com/drive/1cBs3HGFQ6cz8z9o5HIr2OqhpD5A3LcqO?usp=sharing)
+
+External Links:
+
+[https://www.nhatcher.com/post/on-hats-and-sats/](https://www.nhatcher.com/post/on-hats-and-sats/)
