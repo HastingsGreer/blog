@@ -52,6 +52,33 @@ while True:
 ```
 
 Alas, python's import system is powerful but doesn't have that. We'll have to approximate, and to approximate we have to start cheating.
+
+
+
+
+
 With the cryptic four word message "An aperiodic polykite exists," it's hard to say how large that polykite is. Unfortunately, I know
 exactly how big it is, so when I guess that it fits into three adjacent hexagons, I'm much more confident than the recipient of 
 our cryptic message would be.
+
+
+
+
+How close were we to discovering the Hat Tile?
+==============================================
+
+It's fascinating to explore how close so many people were to discovering this tiling. 
+
+Back in 2006, recmath.org had a list of all polykites up to size 7, with various explorations of how they fit together. http://www.recmath.com/PolyPages/PolyPages/PolyX/index.htm?Polykites.htm
+
+Alas, they didn't try size 8, the size of the Hat Tile, and it's not clear that they were examining if each polykite tiled with itself, only the shapes that they could make all together.
+
+Plenty of sources https://abarothsworld.com/Puzzles/Polykites/Polykites.htm list the number of size 8 polykites at 873. This calculation required someone to look at the Hat Tile, but typically they stop showing images at the hexakites
+
+https://www.polyomino.org.uk/mathematics/polyform-tiling/
+
+polyomino.org did catalog how the polyominos and polyhexes up to size 8 tile or don't tile, but didn't add polykites until after the hat was discovered.
+
+abarothsworld provides the greatest pre-discovery insight. Polyomino.org's catalog stopped at polyhexes, but there was a long way to go before they hit the hat tile because there are a lot of kinds of polyforms!
+
+https://abarothsworld.com/Puzzles/Polyforms.htm lists around 50 classes of polyform of about the same "likelyhood of being interesting" as polykites. 
