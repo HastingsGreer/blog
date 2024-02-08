@@ -1,0 +1,45 @@
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/tufte.css"> <link rel=stylesheet  href="/css/latex.css"> <link rel=stylesheet  href="/css/adjust.css"> <link rel=stylesheet  href="https://apj.hgreer.com/blog"> <link rel=icon  href="/assets/favicon.png"> <title>Deriving the Hat Tile from &quot;An aperiodic Polykite exists&quot;</title> <div id=layout > <div id=menu > <ul> <li><a href="/">Home</a> <!-- <li><a href="/FeatureMapICON/">Feature Map Inverse Consistency</a> --> <li><a href="/HatTile/">Aperiodic Tiling with Z3</a> <!-- <li><a href="/ICON/">Inverse Consistent Regstration</a> <li><a href="/Mandelbrot/">Mandelbrot Set Adventures</a> --> <li><a href="/JavascriptMandelbrot/">Mandelbrot Set</a> <li><a href="/TrebuchetSimulator/">Trebuchet Simulator</a> <li><a href="/BadMatrixMultiply/">Bad Matrix Multiplication</a> <li><a href="/GameJam/">Game Jam Games</a> <li><a href="/menu3/">Tags</a> </ul> </div> <div id=main > <div class=franklin-content ><h1 id=deriving_the_hat_tile_from_an_aperiodic_polykite_exists ><a href="#deriving_the_hat_tile_from_an_aperiodic_polykite_exists" class=header-anchor >Deriving the Hat Tile from &quot;An aperiodic Polykite exists&quot;</a></h1> <p>Previously: <a href="HatTile/">Drawing the Aperiodic Hat Tiling with Python and Z3</a></p> <p><a href="https://colab.research.google.com/drive/1XBChTb8fkHIQiN1MQiyPuMh4T-lQg3nP?usp&#61;sharing">colab notebook</a></p> <p>If you could deliver a four word message into the past, what would you send? Strong candidates include &quot;Buy and hold bitcoin&quot; or &quot;Ask out Jane Doe,&quot; but I have a new favorite: &quot;An aperiodic polykite exists.&quot; In the previous entry in this series, we started with the shape of the polykite, and automatically tiled a subset of the plane using the z3 theorem prover. In this post, we will be much more ambitious: We will attempt to derive the shape of the Hat Tile from the knowledge that it is small, connected, and made out of kites.</p> <p>First, we slap the whole code from the previous post into a function named </p> <pre><code class="julia hljs">search_tiling(indices, grid_size, period=<span class=hljs-number >99</span>)</code></pre>
+<p><code>indices</code> is the definition of the shape we are attempting to tile as indices into a grid of kites, grid size is the size  of the region that we want to tile, and period is a new addition: In the previous code, we created a z3 variable for whether a tile was present at each possible location a tile could be placed.</p>
+<pre><code class="julia hljs">hat_present = [z3.<span class=hljs-built_in >Bool</span>(<span class=hljs-string >f&quot;hat{i}&quot;</span>) <span class=hljs-keyword >for</span> i <span class=hljs-keyword >in</span> range(len(hats))]</code></pre>
+<p>In this new function search_tiling, we will instead create a z3 variable for each location modulo a spatial period&#33;</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >for</span> i <span class=hljs-keyword >in</span> range(len(hats)):
+    row, col, rot = np.unravel_index(i, full_hat_shape)
+    hat_present.append(z3.<span class=hljs-built_in >Bool</span>(<span class=hljs-string >f&quot;hat{row%modulo}_{col%modulo}_{rot}&quot;</span>))</code></pre>
+<p>This new collection of variables can only represent tilings that are unchanged if shifted by period units along the horizontal or vertical axes.</p>
+<p>This makes finding an aperiodic monotile easy&#33;</p>
+<pre><code class="julia hljs">from __future__ <span class=hljs-keyword >import</span> infinity
+def is_einstein(indices):
+    <span class=hljs-keyword >if</span> not search_tiling(indices, infinity, period=np.infinity):
+        <span class=hljs-comment >#Does not tile the plane</span>
+        <span class=hljs-keyword >return</span> False
+    <span class=hljs-keyword >for</span> i <span class=hljs-keyword >in</span> range(infinity):
+        <span class=hljs-keyword >if</span> search_tiling(indices, infinity, period=i):
+            <span class=hljs-comment >#Is periodic</span>
+            <span class=hljs-keyword >return</span> False
+    <span class=hljs-keyword >return</span> True
+
+<span class=hljs-keyword >while</span> True:</code></pre>
+<p>Alas, python&#39;s import system is powerful but doesn&#39;t have that. We&#39;ll have to approximate, and to approximate we have to start cheating.</p>
+<p>With the cryptic four word message &quot;An aperiodic polykite exists,&quot; it&#39;s hard to say how large that polykite is. Unfortunately, I know exactly how big it is, so when I guess that it fits into three adjacent hexagons, I&#39;m much more confident than the recipient of  our cryptic message would be.</p>
+<h1>How close were we to discovering the Hat Tile?</h1>
+<p>It&#39;s fascinating to explore how close so many people were to discovering this tiling. </p>
+<p>Back in 2006, recmath.org had a list of all polykites up to size 7, with various explorations of how they fit together. http://www.recmath.com/PolyPages/PolyPages/PolyX/index.htm?Polykites.htm</p>
+<p>Alas, they didn&#39;t try size 8, the size of the Hat Tile, and it&#39;s not clear that they were examining if each polykite tiled with itself, only the shapes that they could make all together.</p>
+<p>Plenty of sources https://abarothsworld.com/Puzzles/Polykites/Polykites.htm list the number of size 8 polykites at 873. This calculation required someone to look at the Hat Tile, but typically they stop showing images at the hexakites</p>
+<p>https://www.polyomino.org.uk/mathematics/polyform-tiling/</p>
+<p>polyomino.org did catalog how the polyominos and polyhexes up to size 8 tile or don&#39;t tile, but didn&#39;t add polykites until after the hat was discovered.</p>
+<p>abarothsworld provides the greatest pre-discovery insight. Polyomino.org&#39;s catalog stopped at polyhexes, but there was a long way to go before they hit the hat tile because there are a lot of kinds of polyforms&#33;</p>
+<p>https://abarothsworld.com/Puzzles/Polyforms.htm lists around 50 classes of polyform of about the same &quot;likelyhood of being interesting&quot; as polykites. </p>
+
+
+<div class=page-foot >
+  <div>
+    <a href=https://subdavis.com>subdavis.com </a> 
+    <a href=http://forrestli.con>forrestli.com</a>
+  <div class=copyright >
+    &copy; Hastings Greer. Last modified: February 08, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+  </div>
+</div>
+</div>
+        </div> 
+    </div>
