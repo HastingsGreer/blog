@@ -21,7 +21,7 @@ sum += *(array + 2)
 sum += *(array + 3)
 ```
 
-How do we get that? C++ has a wonderful answer. As long as number_elements is 
+How do we get that? C++ has a wonderful answer. As long as number_elements is a constexpr
 # Structure of a High Performance codebase
 
 Typical C Structure:
@@ -40,10 +40,10 @@ inner program processes input and produces output
 
 # Language diversity vs metalanguage diversity 
 
-High performance C/C++ is many interpreted metalanguages targetting a single high performance compiled language. C++, CMake, m4, autoconf, Template Programs are all metalanguages that produce C.
+High performance C/C++ is many interpreted metalanguages targetting a single high performance compiled language. C++, CMake, m4, autoconf and friends  are all metalanguages that produce C.
 
-High performance python is a single interpreted metalanguage, Python, targetting many high performance compiled languages like torch, jax, tensorflow, sql, z3. It turns out that 
+High performance python is a single interpreted metalanguage, Python, targetting many high performance compiled languages like torch, jax, tensorflow, sql, and z3. It turns out that 
 
 # Turing completeness
 
-For maintainability, you don't really want your object language and your metalanguage to both be turing complete. Traditionally when writing C or C descendants, this has been managed by picking a weak metalanguage like macro substitution, or even just by reprimanding Jimmy from MIT when he submits a pull request that's calculating primes at compile time using SFINAE. 
+For maintainability, you don't really want your inner program and your metaprogram to both have complex control flow. Traditionally when writing C or C descendants, this has been managed by picking a weak metalanguage like macro substitution, or even just by reprimanding Jimmy from MIT when he submits a pull request that's calculating primes at compile time using SFINAE. 
