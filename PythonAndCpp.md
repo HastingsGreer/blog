@@ -1,7 +1,7 @@
-There's a sudden swarm of compute intensive projects being written in Python instead of C and its descendants. Specifically, while in performance sensitive, latency sensitive projects C(++) is still king, incredibly compute intensive and throughput sensitive projects are suddenly being written in a language where for loops are 100x slower. 
+There's a sudden swarm of compute intensive projects being written in Python instead of C and its descendants. Specifically, while in performance sensitive, latency sensitive projects C(++) is still king, performance sensitive and throughput sensitive projects are suddenly being written in a language where for loops are 100x slower. 
 The core example is of course neural network training. What's going on? Basically, python is both easier to learn for novices, less bug prone for experts, and has a faster interpreter than C++. 
 
-C++ interpreter? Well of course, C is faster than python. But C++, [from the beginning](https://en.wikipedia.org/wiki/Cfront), is a turing complete interpreted language that outputs C code. Python has a faster interpreter than C++ template metaprograms, which are the C-descendant programs python is actually competing with.
+C++ interpreter? Well of course, C is faster than python. But C++, [at least in its earliest implementations](https://en.wikipedia.org/wiki/Cfront), is a turing complete interpreted language that outputs C code. Python has a faster interpreter than C++ template metaprograms, which are python's primary competition. 
 
 # Why every project ends up having a metalanguage and an inner language
 
@@ -15,14 +15,14 @@ for(int i = 0; i < number_elements; i++) {
 ```
 If number_elements is known at compile time, we really want the compiled program to be
 ```
-sum = *(array)
+int sum = *(array)
 sum += *(array + 1)
 sum += *(array + 2)
 sum += *(array + 3)
 ```
 
-How do we get that? C++ has a wonderful answer. As long as number_elements is a constexpr
-# Structure of a High Performance codebase
+How do we get that? C++ has a wonderful answer. As long as number_elements is a constexpr, the lines of code that compute it are 
+# Structure of a High Performance latency insensitive codebase
 
 Typical C Structure:
 
