@@ -248,6 +248,12 @@
     <priority>0.5</priority>
 </url>
 <url>
+    <loc>https://www.hgreer.com/Reports/May202024/index.html</loc>
+    <lastmod>2024-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
     <loc>https://www.hgreer.com/Reports/Mar202024/index.html</loc>
     <lastmod>2024-05-20</lastmod>
     <changefreq>monthly</changefreq>
