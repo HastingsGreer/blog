@@ -32,13 +32,13 @@ for i in range(len(hats)):
     hat_present.append(z3.Bool(f"hat{row%modulo}_{col%modulo}_{rot}"))
 ```
 
-This new collection of variables can only represent tilings that are unchanged if shifted by period units along the horizontal or vertical axes.
+This new collection of variables can only represent tilings that are unchanged if shifted by `period` units along the horizontal or vertical axes.
 
 This makes finding an aperiodic monotile easy!
 ```
 from __future__ import infinity
 def is_einstein(indices):
-    if not search_tiling(indices, infinity, period=np.infinity):
+    if not search_tiling(indices, infinity, period=infinity):
         #Does not tile the plane
         return False
     for i in range(infinity):
@@ -49,17 +49,13 @@ def is_einstein(indices):
 
 while True:
     
+    
 ```
 
-Alas, python's import system is powerful but doesn't have that. We'll have to approximate, and to approximate we have to start cheating.
+Alas, python's import system is powerful but doesn't have that. We'll have to think a little longer.
 
 
-
-
-
-With the cryptic four word message "An aperiodic polykite exists," it's hard to say how large that polykite is. Unfortunately, I know
-exactly how big it is, so when I guess that it fits into three adjacent hexagons, I'm much more confident than the recipient of 
-our cryptic message would be.
+With the cryptic four word message "An aperiodic polykite exists," it's hard to say how large that polykite is. So, we will start small and search larger and larger 
 
 
 
