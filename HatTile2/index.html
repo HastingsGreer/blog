@@ -5,11 +5,11 @@
 <pre><code class="julia hljs"><span class=hljs-keyword >for</span> i <span class=hljs-keyword >in</span> range(len(hats)):
     row, col, rot = np.unravel_index(i, full_hat_shape)
     hat_present.append(z3.<span class=hljs-built_in >Bool</span>(<span class=hljs-string >f&quot;hat{row%modulo}_{col%modulo}_{rot}&quot;</span>))</code></pre>
-<p>This new collection of variables can only represent tilings that are unchanged if shifted by period units along the horizontal or vertical axes.</p>
+<p>This new collection of variables can only represent tilings that are unchanged if shifted by <code>period</code> units along the horizontal or vertical axes.</p>
 <p>This makes finding an aperiodic monotile easy&#33;</p>
 <pre><code class="julia hljs">from __future__ <span class=hljs-keyword >import</span> infinity
 def is_einstein(indices):
-    <span class=hljs-keyword >if</span> not search_tiling(indices, infinity, period=np.infinity):
+    <span class=hljs-keyword >if</span> not search_tiling(indices, infinity, period=infinity):
         <span class=hljs-comment >#Does not tile the plane</span>
         <span class=hljs-keyword >return</span> False
     <span class=hljs-keyword >for</span> i <span class=hljs-keyword >in</span> range(infinity):
@@ -19,8 +19,8 @@ def is_einstein(indices):
     <span class=hljs-keyword >return</span> True
 
 <span class=hljs-keyword >while</span> True:</code></pre>
-<p>Alas, python&#39;s import system is powerful but doesn&#39;t have that. We&#39;ll have to approximate, and to approximate we have to start cheating.</p>
-<p>With the cryptic four word message &quot;An aperiodic polykite exists,&quot; it&#39;s hard to say how large that polykite is. Unfortunately, I know exactly how big it is, so when I guess that it fits into three adjacent hexagons, I&#39;m much more confident than the recipient of  our cryptic message would be.</p>
+<p>Alas, python&#39;s import system is powerful but doesn&#39;t have that. We&#39;ll have to think a little longer.</p>
+<p>With the cryptic four word message &quot;An aperiodic polykite exists,&quot; it&#39;s hard to say how large that polykite is. So, we will start small and search larger and larger </p>
 <h1>How close were we to discovering the Hat Tile?</h1>
 <p>It&#39;s fascinating to explore how close so many people were to discovering this tiling. </p>
 <p>Back in 2006, recmath.org had a list of all polykites up to size 7, with various explorations of how they fit together. http://www.recmath.com/PolyPages/PolyPages/PolyX/index.htm?Polykites.htm</p>
@@ -37,7 +37,7 @@ def is_einstein(indices):
     <a href=https://subdavis.com>subdavis.com </a> 
     <a href=http://forrestli.con>forrestli.com</a>
   <div class=copyright >
-    &copy; Hastings Greer. Last modified: May 28, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    &copy; Hastings Greer. Last modified: June 26, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
