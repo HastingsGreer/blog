@@ -7,35 +7,35 @@ image_A = sample_batch.cuda()
 ufeatures = unet(image_A)</code></pre> <pre><code class="python hljs"><span class=hljs-keyword >class</span> <span class="hljs-title class_">AttentionRegistration</span>(icon_registration.RegistrationModule):
     <span class=hljs-keyword >def</span> <span class="hljs-title function_">__init__</span>(<span class=hljs-params >self, net</span>):
         <span class=hljs-built_in >super</span>().__init__()
-        self.net = net
+        <span class="hljs-variable language_">self</span>.net = net
         dim = <span class=hljs-number >64</span>
         
-        self.blur_kernel = torch.nn.Conv2d(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, <span class=hljs-number >5</span>, padding=<span class=hljs-string >&quot;same&quot;</span>, bias=<span class=hljs-literal >False</span>, groups=<span class=hljs-number >2</span>)
+        <span class="hljs-variable language_">self</span>.blur_kernel = torch.nn.Conv2d(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, <span class=hljs-number >5</span>, padding=<span class=hljs-string >&quot;same&quot;</span>, bias=<span class=hljs-literal >False</span>, groups=<span class=hljs-number >2</span>)
     
     <span class=hljs-keyword >def</span> <span class="hljs-title function_">featurize</span>(<span class=hljs-params >self, values</span>):
-        <span class=hljs-keyword >return</span> self.net(values)
-        <span class=hljs-keyword >return</span> self.net(torch.cat([
-            <span class=hljs-number >0</span>* self.identity_map.expand(values.shape[<span class=hljs-number >0</span>], -<span class=hljs-number >1</span>, values.shape[<span class=hljs-number >2</span>], values.shape[<span class=hljs-number >3</span>]),
+        <span class=hljs-keyword >return</span> <span class="hljs-variable language_">self</span>.net(values)
+        <span class=hljs-keyword >return</span> <span class="hljs-variable language_">self</span>.net(torch.cat([
+            <span class=hljs-number >0</span>* <span class="hljs-variable language_">self</span>.identity_map.expand(values.shape[<span class=hljs-number >0</span>], -<span class=hljs-number >1</span>, values.shape[<span class=hljs-number >2</span>], values.shape[<span class=hljs-number >3</span>]),
             values], dim=<span class=hljs-number >1</span>))
     
     <span class=hljs-keyword >def</span> <span class="hljs-title function_">forward</span>(<span class=hljs-params >self, A, B</span>):
-        ft_A = self.featurize(A)
-        ft_B = self.featurize(B)
+        ft_A = <span class="hljs-variable language_">self</span>.featurize(A)
+        ft_B = <span class="hljs-variable language_">self</span>.featurize(B)
         
-        ft_A = ft_A.reshape(-<span class=hljs-number >1</span>, <span class=hljs-number >64</span>, self.identity_map.shape[-<span class=hljs-number >1</span>] * self.identity_map.shape[-<span class=hljs-number >2</span>])
-        ft_B = ft_B.reshape(-<span class=hljs-number >1</span>, <span class=hljs-number >64</span>, self.identity_map.shape[-<span class=hljs-number >1</span>] * self.identity_map.shape[-<span class=hljs-number >2</span>])
+        ft_A = ft_A.reshape(-<span class=hljs-number >1</span>, <span class=hljs-number >64</span>, <span class="hljs-variable language_">self</span>.identity_map.shape[-<span class=hljs-number >1</span>] * <span class="hljs-variable language_">self</span>.identity_map.shape[-<span class=hljs-number >2</span>])
+        ft_B = ft_B.reshape(-<span class=hljs-number >1</span>, <span class=hljs-number >64</span>, <span class="hljs-variable language_">self</span>.identity_map.shape[-<span class=hljs-number >1</span>] * <span class="hljs-variable language_">self</span>.identity_map.shape[-<span class=hljs-number >2</span>])
 
         
         attention = torch.nn.functional.softmax((ft_B.permute(<span class=hljs-number >0</span>, <span class=hljs-number >2</span>, <span class=hljs-number >1</span>) @ ft_A), dim=<span class=hljs-number >2</span>)
         
-        self.attention = attention
+        <span class="hljs-variable language_">self</span>.attention = attention
         
         
-        x = self.identity_map.reshape(-<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, ft_A.shape[<span class=hljs-number >2</span>])
+        x = <span class="hljs-variable language_">self</span>.identity_map.reshape(-<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, ft_A.shape[<span class=hljs-number >2</span>])
         
         output = attention @ x.permute(<span class=hljs-number >0</span>, <span class=hljs-number >2</span>, <span class=hljs-number >1</span>)
         
-        output = output.reshape(-<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, self.identity_map.shape[<span class=hljs-number >2</span>], self.identity_map.shape[<span class=hljs-number >3</span>]) - self.identity_map
+        output = output.reshape(-<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, <span class="hljs-variable language_">self</span>.identity_map.shape[<span class=hljs-number >2</span>], <span class="hljs-variable language_">self</span>.identity_map.shape[<span class=hljs-number >3</span>]) - <span class="hljs-variable language_">self</span>.identity_map
         <span class=hljs-comment >#output = self.blur_kernel(output)</span>
         
         <span class=hljs-keyword >return</span> output
@@ -111,4 +111,4 @@ plt.subplot(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>
 show(net.warped_image_A - image_B)
 plt.tight_layout()</code></pre> <img src="/assets/Reports/Sep202023/code/output_21_0.png" alt=""> <pre><code class="python hljs">ufeatures = unet(image_A)
 plt.imshow(ufeatures[<span class=hljs-number >0</span>, <span class=hljs-number >9</span>].detach().cpu())
-plt.colorbar()</code></pre> <img src="/assets/Reports/Sep202023/code/output_22_1.png" alt=""> <a href=/Reports/>Back to Reports</a> <div class=page-foot > <div> <a href=https://subdavis.com>subdavis.com </a> <a href=http://forrestli.con>forrestli.com</a> <div class=copyright > &copy; Hastings Greer. Last modified: July 05, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div> </div>
+plt.colorbar()</code></pre> <img src="/assets/Reports/Sep202023/code/output_22_1.png" alt=""> <a href=/Reports/>Back to Reports</a> <div class=page-foot > <div> <a href=https://subdavis.com>subdavis.com </a> <a href=http://forrestli.con>forrestli.com</a> <div class=copyright > &copy; Hastings Greer. Last modified: July 31, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div> </div>
