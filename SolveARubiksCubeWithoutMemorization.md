@@ -4,8 +4,6 @@ No longer! Once you have followed this tutorial, you will permanently be able to
 Your future solves may take a few hours and and require pencil and paper, but they will not require internet access. This is a tutorial about inventing sequences, not memorizing them. Thus, whenever we show specific move sequences,
 they will solve a different, freely available online puzzle- if you want cubey victory, you will then have to work out analogous cubey sequences. 
 
-//Fundamentally, this blog post is about "How do I construct a sequence of moves which only affects a few pieces on a rubik's cube?
-
 But first, an aside. If you have read other guides on rubiks cubes, you may have three sticky ideas in your head: one good and two bad. The good idea is that we don't need to solve stickers- we need to solve pieces. Each sticker is attached to a piece, and a sticker that is on the right colored side does you no good if other stickers on the same piece are on the wrong colored sides. Now, the bad ideas: someone may have taught you that "the centers never move." Nonsense- hold the top and bottom layers
 fixed, and turn the middle layer! Look- the centers moved. This sort of turn is important to _easily_ solving the cube. It's a different way of looking at the same problem, but the difference is important.
 Second, you probably were taught to solve the cube layer by layer. This is one of the _fastest_ ways to solve a cube, but it is not the easiest to invent: it is much easier to solve corners, then edges, and then centers.
@@ -18,7 +16,7 @@ Simon Tatham's "Twiddle"
 
 https://www.chiark.greenend.org.uk/~sgtatham/puzzles/js/twiddle.html#4x4n3
 
-$animation of random piece moves
+animation of random piece moves
 
 Two classes of piece- no move ever wil put 1 in the slot where 2 belongs. We will solve 1 class, then the other.
 
@@ -41,7 +39,14 @@ We first write down the locations of our unsolved pieces.
 16 
 14 8
 
-We then take out the 3, and then put it back using a different sequence of moves. (Depending on available working memory, it's probably best to write this sequence down)
+We then take out the 3, and then put it back using a different sequence of moves. (Depending on available working memory, it's probably best to write this sequence down). we denote the 4 possible moves
+
+ab
+cd
+
+and perform 
+
+bdddb
 
 The unsolved pieces are now 
 
@@ -49,15 +54,17 @@ The unsolved pieces are now
 14
 8 16
 
-lets rotate this to resemble the original locations
+lets rotate this to resemble the original locations, making our sequence
+
+bdddbd
 
 6 16
 14 
 11 8
 
-and what we have found is a sequence that (restricted to this class of pieces) cycles a diagonal of three pieces: Our first useful sequence. By alternating rotating the bottom square and peforming this sequence to permute along the diagonal, it is easy to solve the remaining pieces of the first class. This introduces _parity_: you may find yourself in a situation where it appears that you need to swap 2 pieces, which is impossible to achieve with any sequence of 3 piece cycles. However, this is an illusion, as _rotating the bottom square once_ performs a 4 piece permutation, which can be combined with a 3 piece cycle to create a 2 piece cycle (hint hint)
+and what we have found is a sequence that (restricted to the first class of pieces) cycles a diagonal of three pieces: 3 cycles are deeply useful sequences. By alternating rotating the bottom square and peforming this sequence to permute along the diagonal, it is easy to solve the remaining pieces of the first class. This introduces _parity_: you may find yourself in a situation where it appears that you need to swap 2 pieces, which is impossible to achieve with any sequence of 3 piece cycles. However, this is an illusion, as _rotating the bottom square once_ performs a 4 piece permutation, which can be combined with a 3 piece cycle to create a 2 piece cycle (hint hint)
 
-$animation of solving first class.
+animation of solving first class.
 
 Now, on to the second class of piece.
 
