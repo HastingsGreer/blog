@@ -81,6 +81,11 @@ adadadad
 
 5 cycle
 
+adddaaad
+
+Ah- two 2-cycles. This is usable to solve most of the class 2 pieces
+
+
 
 
 
