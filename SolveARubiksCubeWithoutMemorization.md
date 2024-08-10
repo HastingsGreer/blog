@@ -1,3 +1,5 @@
+# Solve a Rubiks Cube with pen and paper and no memorized algorithms
+
 You've probably seen tutorials on how to solve a rubiks cube- but did they seem deeply unsatisfying? They introduce long sequences of moves that must be memorized, without explaining how they were created. If you want to solve a Rubiks cube again years later, if you have forgotten a single step of one of these sequences, you are up a creek without a paddle unless you have internet access to learn again.
 
 No longer! Once you have followed this tutorial, you will permanently be able to solve a rubiks cube.
@@ -22,7 +24,7 @@ Two classes of piece- no move ever wil put 1 in the slot where 2 belongs. We wil
 
 First piece class
 
-Technique A. Go as far as you can intuitively, leaving yourself freedom
+# Technique A. Go as far as you can intuitively, leaving yourself freedom
 
 Solving the piece 1 is easy- just move it to the top left corner. 
 
@@ -68,7 +70,7 @@ animation of solving first class.
 
 Now, on to the second class of piece.
 
-Technique C: moves that commute with respect to a class
+# Technique C: moves that commute with respect to a class
 
 Check it out- any sequence of top left and bottom right moves where the total number of top left and bottom right moves both add to 4, don't affect any of the first class of piece.
 
@@ -109,22 +111,44 @@ Ah- two 2-cycles. This is usable to solve most of the class 2 pieces
 
 
 
-Technique D: size of orbits, permutations, and repeated sequences
+# Technique D: size of orbits, permutations, and repeated sequences
 
 
 Basically, any short sequence of moves will, after being repeated enough times, restore the puzzle to its initial state. However, the way that it does so can be very useful. Specifically, any sequence of moves will execute a number of cycles in the locations of the pieces of the puzzle. If you execute the sequence a number of times that is divisible by the length of a cycle, those pieces won't move. If the cycles are different lengths, then you can isolate one cycle by performing the sequence the length of another cycle.
 
 The cycles in location space are often different lengths than the cycles in orientation space
 
-Any sequence of moves on a rubiks cube will permute the edges, 
+
+AC x 4 rotates 8 pieces in place
+
+Heyyyyy, since AC is the identity function with respect to piece location, then it commutes with any other sequence with respect to piece location
+
+C- C- C- Combo move
+
+AC x 4 BB AC x 12 BB rotates just two pieces!
+
+
+
+
 
 Twiddle: 
-ACC x 6 ACCC x 4 rotates two pieces
+ACC x 6 ACCC x 4 rotates two pieces same direction
+
+AC x 4 BB AC x 12 BB rotates two different directions
+
+
+
+# Technique E: fuck all that, Claude -> SMT solver
+
+Wait! We aren't cavemen. We have technology.
+
+Spongebob smashing dollar meme
 
 
 
 
-Basically, the purpose of an ordinary rubiks cube
+
+
 
 
 
