@@ -109,20 +109,17 @@ Ah- two 2-cycles. This is usable to solve most of the class 2 pieces
 
 
 
+Technique D: size of orbits, permutations, and repeated sequences
 
 
+Basically, any short sequence of moves will, after being repeated enough times, restore the puzzle to its initial state. However, the way that it does so can be very useful. Specifically, any sequence of moves will execute a number of cycles in the locations of the pieces of the puzzle. If you execute the sequence a number of times that is divisible by the length of a cycle, those pieces won't move. If the cycles are different lengths, then you can isolate one cycle by performing the sequence the length of another cycle.
 
-
-
-
-
-
-
-
-
-Trick 1: size of orbits, permutations, and repeated sequences
+The cycles in location space are often different lengths than the cycles in orientation space
 
 Any sequence of moves on a rubiks cube will permute the edges, 
+
+Twiddle: 
+ACC x 6 ACCC x 4 rotates two pieces
 
 
 
