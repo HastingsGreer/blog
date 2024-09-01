@@ -4,8 +4,8 @@ Previously: [Drawing the Aperiodic Hat Tiling with Python and Z3](HatTile/)
 
 [colab notebook](https://colab.research.google.com/drive/1XBChTb8fkHIQiN1MQiyPuMh4T-lQg3nP?usp=sharing)
 
-If you could deliver a four word message into the past, what would you send? Strong candidates include 
-"Buy and hold bitcoin" or "Ask out Jane Doe," but I have a new favorite: "An aperiodic polykite exists."
+If you could deliver a four word message to your past self, what would you send? Perennial candidates include 
+"buy and hold bitcoin" or "prioritize family over work," but I have a new favorite: "An aperiodic polykite exists."
 In the previous entry in this series, we started with the shape of the polykite, and automatically tiled a
 subset of the plane using the z3 theorem prover. In this post, we will be much more ambitious: We will attempt to
 derive the shape of the Hat Tile from the knowledge that it is small, connected, and made out of kites.
