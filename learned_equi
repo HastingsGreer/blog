@@ -1,0 +1,18 @@
+# Making a learned optimizer follow a rule without constraining its inner goal
+
+Last time we (maybe?) summoned a mesaoptimizer that wants to warp its environment to look like its training set. This time, we are seeking good behaviour.
+
+A trick about mesaoptimizers in recurrent neural networks is that whatever their inner goal, they have the property that at convergence they output f(x) = x, 
+where x is the state and f an unrolling step of the network, even if f is stochastic.
+This lets you restrict the final behaviour pretty precisely. 
+
+IMHO, this is easiest to do if the constraint you want to put on the network is equivariance to a group. I mean, the Categorical Imperative looks like equivariance to me,
+so you alignment folks should be able to run with this.
+
+Once again, we're going to be registering, or warping into correspondence, MNIST 9 digits. The network is the same, an MLP that takes in digits and outputs a displacement at each pixel. This time, we've got a slightly harder task: the digits are randomly rotated. It is 
+really hard to do this unsupervised: go ahead and try and write a loss that requests this, but I promise the network is just going to squish the stem into the loop and stretch out a new stem instead of rotating the 9.
+
+Instead of trying to specify a loss to achieve this, we're going to specify a pretty simple loss: we want the images to correspond 
+
+
+Pro-tip for this sort of thing
