@@ -1,18 +1,21 @@
-# Making a learned optimizer follow a rule without constraining its inner goal
+# Making a learned optimizer follow a rule without understanding its inner goal
 
-Last time we (maybe?) summoned a mesaoptimizer that wants to warp its environment to look like its training set. This time, we are seeking good behaviour.
+Last time we (maybe?) summoned a mesaoptimizer and found weird behaviour: it wants to warp its environment to look like its training set. This time, we are seeking good behaviour.
 
-A trick about mesaoptimizers in recurrent neural networks is that whatever their inner goal, they have the property that at convergence they output f(x) = x, 
-where x is the state and f an unrolling step of the network, even if f is stochastic.
-This lets you restrict the final behaviour pretty precisely. 
+We're going to summon a mesa-optimizer that does continuing computation with a fairly specific constraint: the state it preserves between iterations of its optimization algorithm is in one to one correspondence to 
+its final output. Under this constraint, we have conditioning data x, a neural network y such that y_n+1 = f(x, y_n), and an outer goal L(x, y). This is a very restrictive constraint: it's not true at all of human brains or chess engines. It's also clearly relevant since (non-o1) LLMs and diffusion models have this constraint and do great work.
+Under this constraint (and possibly more generally), a trick about mesaoptimizers is that whatever their inner goal, they have the property that at convergence Expected Value(f(x)) = Expected Value(x), i.e., if you run their algorithm for enough iterations that
+the score stops improving with more iterations of the algorithm, A) the score won't improve with further iterations of the algorithm, B) a strategy where score goes up and reaches a maximum then goes back down is dominated by a strategy 
+that reaches the plateu and then stays there. (LLMs under reinforcement learning achieve this by outputting stop tokens, for example)
 
-IMHO, this is easiest to do if the constraint you want to put on the network is equivariance to a group. I mean, the Categorical Imperative looks like equivariance to me,
-so you alignment folks should be able to run with this.
+We'll then call the limit of iterating f many times F. 
 
-Once again, we're going to be registering, or warping into correspondence, MNIST 9 digits. The network is the same, an MLP that takes in digits and outputs a displacement at each pixel. This time, we've got a slightly harder task: the digits are randomly rotated. It is 
+This property gives access to a way to neatly restrict the final behaviour. 
+
+IMHO, this is easiest to do if the constraint you want to put on the network is equivariance to a group. 
+We're going to be registering, or warping into correspondence, MNIST 9 digits. The network is the same, an MLP that takes in digits and outputs a displacement at each pixel. The condition x will be This time, we've got a slightly harder task: the digits are randomly rotated. It is 
 really hard to do this unsupervised: go ahead and try and write a loss that requests this, but I promise the network is just going to squish the stem into the loop and stretch out a new stem instead of rotating the 9.
 
-Instead of trying to specify a loss to achieve this, we're going to specify a pretty simple loss: we want the images to correspond 
+Instead of trying to specify a loss to achieve this, we're going to specify a pretty simple outer loss: we want the images to correspond, and we'll grow a mesa-optimizer with a smarter loss than that. 
 
-
-Pro-tip for this sort of thing
+We will _restrict_ the mesaoptimizer by making it equivariant as follows: For rotat
