@@ -16,6 +16,19 @@ IMHO, this is easiest to do if the constraint you want to put on the network is 
 We're going to be registering, or warping into correspondence, MNIST 9 digits. The network is the same, an MLP that takes in digits and outputs a displacement at each pixel. The condition x will be This time, we've got a slightly harder task: the digits are randomly rotated. It is 
 really hard to do this unsupervised: go ahead and try and write a loss that requests this, but I promise the network is just going to squish the stem into the loop and stretch out a new stem instead of rotating the 9.
 
-Instead of trying to specify a loss to achieve this, we're going to specify a pretty simple outer loss: we want the images to correspond, and we'll grow a mesa-optimizer with a smarter loss than that. 
+Larger structure: W
 
-We will _restrict_ the mesaoptimizer by making it equivariant as follows: For rotat
+Instead of trying to specify a loss to achieve this, we're going to specify a pretty simple outer loss: we want the images to correspond, and we'll grow a mesa-optimizer with a smarter loss than that. To do this, we
+
+
+In order to make our algorithm correctly align rotated digits _restrict_ the mesaoptimizer by making it equivariant as follows: For rotations R, Q: F((a, b)) = R^{-1} \circ F((a \circ R, b \circ Q)) \circ Q. This is a sense of "fairness" over rotations or blindness to rottions:
+our 
+
+Now, a restricted version of this is actually pretty easy: if we wanted For rotations R: F((a, b)) = R^{-1} \circ F((a \circ R, b \circ R)) \circ R (i.e. both input images are rotated the same, then network output doesn't change)
+then we can achieve this via a local property of the weights: trick involving spherical harmonics. An ongoing lesson in neural networks is that if an architecture _can_ achieve a given property via a local weight property (such as rotational equviariance
+then it will achieve that property, so you don't actually have to go to the effort of implementing spherical harmonics, you can just rotationally augment the dataset.) However, the full equivariance is much harder (as you likely 
+found when trying to design a loss earlier) because it requires global properties.
+
+Our mesaoptimizer trick turns a local property into a global property
+
+
