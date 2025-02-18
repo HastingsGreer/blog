@@ -171,3 +171,28 @@ end
 ## Combining the quadtree approach with perturbative methods
 
 How on earth do we do this? 
+
+\begin{align}
+z_{n + 1}&= z_n^2 + c\\
+z_{n + 1} + \Delta z_{n + 1} &= (z_n + \Delta z_n)^2 + c + \Delta c\\
+z_{n + 1} + \Delta z_{n + 1} &= (z_n + \Delta z_n)^2 + c + \Delta c\\
+z_{n + 1} + \Delta z_{n + 1} &= z_n^2 + 2 z_n \Delta z_n + \Delta z_n^2 + c + \Delta c \\
+z_{n + 1} + \Delta z_{n + 1} &= z_{n + 1}  + 2 z_n \Delta z_n + \Delta z_n^2 + \Delta c \\
+\Delta z_{n + 1} &= 2 z_n \Delta z_n + \Delta z_n^2 + \Delta c\\
+\end{align}
+
+
+
+\begin{align}
+\delta z_{n} &= A_n + B_n \delta c  + C_n \delta c^2 + D_n \delta c^3 \\
+\delta z_{0} &= 0 \\
+\Delta z_{n + 1} + \delta z_{n + 1} &= 2 z_n (\Delta z_n + \delta z_n) + (\Delta z_n + \delta z_n) ^2 + \Delta c + \delta c \\
+\Delta z_{n + 1} + \delta z_{n + 1} &= 2 z_n \Delta z_n + 2 z_n \delta z_n + \Delta z_n^2 2 \Delta z_n \delta z_n  + \delta z_n^2 + \Delta c + \delta c \\
+\delta z_{n + 1} &= 2 z_n \delta z_n +  2 \Delta z_n \delta z_n  + \delta z_n^2 +  \delta c \\
+\delta z_{n + 1} &= (2 z_n + 2 \Delta z_n) (A_n + B_n \delta c  + C_n \delta c^2 + D_n \delta c^3) + (A_n + B_n \delta c  + C_n \delta c^2 + D_n \delta c^3)^2 +  \delta c\\
+A_{n + 1} &= (2z_n + 2 \Delta z_n) A_n + A_n^2 \\
+B_{n + 1} &= (2z_n + 2 \Delta z_n) B_n + 2 * A_n B_n  + 1 \\
+C_{n + 1} &= (2z_n + 2 \Delta z_n) C_n + B_n^2 +2  A_n C_n\\
+D_{n + 1} &= (2z_n + 2 \Delta z_n) D_n + 2 C_n B_n + 2 A_n D_n\\
+\end{align}
+
