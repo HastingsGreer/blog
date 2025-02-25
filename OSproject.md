@@ -7,7 +7,7 @@ Goal: make a memory allocator where the primary metric is that it should be easy
 
 We go so far as to
 
-(Why float**? want alignment)
+(Why float**? want compiler to track alignment)
 ```
 typedef float** allocator;
 
