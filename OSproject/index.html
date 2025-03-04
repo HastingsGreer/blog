@@ -1,8 +1,219 @@
-<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/tufte.css"> <link rel=stylesheet  href="/css/latex.css"> <link rel=stylesheet  href="/css/adjust.css"> <link rel=stylesheet  href="https://apj.hgreer.com/blog"> <link rel=icon  href="/assets/favicon.png"> <title></title> <div id=layout > <div id=menu > <ul> <li><a href="/">Home</a> <!-- <li><a href="/FeatureMapICON/">Feature Map Inverse Consistency</a> --> <li><a href="/HatTile/">Aperiodic Tiling with Z3</a> <!-- <li><a href="/ICON/">Inverse Consistent Regstration</a> <li><a href="/Mandelbrot/">Mandelbrot Set Adventures</a> --> <li><a href="/JavascriptMandelbrot/">Mandelbrot Set</a> <li><a href="/TrebuchetSimulator/">Trebuchet Simulator</a> <li><a href="/BadMatrixMultiply/">Bad Matrix Multiplication</a> <li><a href="/GameJam/">Game Jam Games</a> <li><a href="/menu3/">Tags</a> </ul> </div> <div id=main > <div class=franklin-content ><p>There are various memory allocators and memory management strategies floating around</p> <p>Goal: make a memory allocator where the primary metric is that it should be easy to reason about for the compiler. Easy to reason about encourages inlining, inlining encourages vectorization</p> <p>We go so far as to</p> <p>&#40;Why float**? want compiler to track alignment&#41;</p> <pre><code class="julia hljs">typedef float** allocator;
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/tufte.css"> <link rel=stylesheet  href="/css/latex.css"> <link rel=stylesheet  href="/css/adjust.css"> <link rel=stylesheet  href="https://apj.hgreer.com/blog"> <link rel=icon  href="/assets/favicon.png"> <title>OS Project</title> <div id=layout > <div id=menu > <ul> <li><a href="/">Home</a> <!-- <li><a href="/FeatureMapICON/">Feature Map Inverse Consistency</a> --> <li><a href="/HatTile/">Aperiodic Tiling with Z3</a> <!-- <li><a href="/ICON/">Inverse Consistent Regstration</a> <li><a href="/Mandelbrot/">Mandelbrot Set Adventures</a> --> <li><a href="/JavascriptMandelbrot/">Mandelbrot Set</a> <li><a href="/TrebuchetSimulator/">Trebuchet Simulator</a> <li><a href="/BadMatrixMultiply/">Bad Matrix Multiplication</a> <li><a href="/GameJam/">Game Jam Games</a> <li><a href="/menu3/">Tags</a> </ul> </div> <div id=main > <div class=franklin-content ><p>Goal: make a memory allocator where the primary metric is that it should be easy to reason about for the compiler. Easy to reason about encourages inlining, inlining encourages vectorization</p> <p>We go so far as to</p> <pre><code class="julia hljs">typedef float** allocator;
 
 float* alloc(allocator s, unsigned int size_floats) {
      *s = *s - size_floats;
      <span class=hljs-keyword >return</span> *s
-}</code></pre> <p>Then, instead of paying the price of allocating while we are allocating, we build scaffolding using operating system and hardware features to make the above safe.</p> <p>First, how do we free memory? Never free, just discard allocators</p> <pre><code class="julia hljs"><span class=hljs-comment >#define allocator_push( old_allocator, new_allocator ) \</span>
+}</code></pre> <p>Then, instead of paying the complexity price of allocating while we are allocating, we will build scaffolding using operating system and hardware features to make the above safe.</p> <p>First, how do we free memory? Never free, just discard allocators</p> <pre><code class="julia hljs"><span class=hljs-comment >#define allocator_push( old_allocator, new_allocator ) \</span>
 float * stack_allocator_storage = * old_allocator; \
-allocator new_allocator = &amp;stack_allocator_storage;</code></pre> <p>How do we expand memory? Never expand memory, always initially allocate memory the size of physical memory. Now, getting new memory is the responsibility of the operating system- compiler doesn&#39;t know about it.</p> <p>Now our enemy is the OOM killer: malloc failing was friendly and catchable, the oom killer is mysterious and will start wrecking things </p> <div class=page-foot > <div> <a href=https://subdavis.com>subdavis.com </a> <a href=http://forrestli.con>forrestli.com</a> <div class=copyright > &copy; Hastings Greer. Last modified: February 25, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div> </div>
+allocator new_allocator = &amp;stack_allocator_storage;</code></pre> <p>All functions will just assume that they will get an allocator as the first argument.</p> <p>How do we expand memory? There are two options: On the one hand, we could never expand memory, and instead always initially allocate memory equal to the the size of physical memory. This will actually get claimed as it is written to. In this case, responding to the allocator filling up is responsibility of the operating system- neither the program nor the compiler know about it. Now our enemy is the OOM killer: malloc failing was friendly and catchable, the oom killer is mysterious and will start deleting processes as we write to too many pages in the allocated block.</p> <p>Second option: allocate just a little memory at first, and catch the segfault from writing after the end of the allocated memory and expand it. I think that this is less demanding of system resources &#40;especially if huge pages aren&#39;t turned on&#41;. It will require modifying malloc to reserve a section of virtual address space. since it requires controlling the virtual address space to forbid putting anything in the way of where the bump allocator could expand.</p> <p>Basically, this is just a second stack. A motivating code sample for why bump allocators have huge ergonomic advantages: it works with array-programming habits I have from python.</p> <pre><code class="julia hljs">//branchless bump allocator differential equation integration
+matrix rk4(allocator source, vector (*dydt)(allocator, vector), vector y, float h,
+           float tfinal) {
+  float t = <span class=hljs-number >0</span>;
+  matrix output = new_matrix(source, y.len, tfinal / h, NULL);
+  int i = <span class=hljs-number >0</span>;
+  allocator_push(source, is)
+
+  <span class=hljs-keyword >while</span> (t &lt; tfinal - h) {
+    t += h;
+    vector k1 = dydt(is, y);
+    vector step = k1;
+    vector k2 = dydt(is, add_vv(is, y, mul_vs(is, k1, h / <span class=hljs-number >2</span>)));
+    step = add_vv(is, step, mul_vs(is, k2, <span class=hljs-number >2</span>));
+    vector k3 = dydt(is, add_vv(is, y, mul_vs(is, k2, h / <span class=hljs-number >2</span>)));
+    step = add_vv(is, step, mul_vs(is, k3, <span class=hljs-number >2</span>));
+    vector k4 = dydt(is, add_vv(is, y, mul_vs(is, k3, h)));
+    step = add_vv(is, step, k4);
+
+    step = mul_vs(is, step, h / <span class=hljs-number >6.</span>);
+    y = add_vv(is, y, step);
+    set_col(output, y, i);
+
+    // This is a little dodgy- reset 
+    stack_allocator_storage = *old_allocator;
+
+    y = get_col(is, output, i);
+    i += <span class=hljs-number >1</span>;
+  }
+
+  <span class=hljs-keyword >return</span> output;
+}</code></pre> <p>Whereas, with the math functions allocating their return values, freeing is an absolute burden. &#40;This is what RAII is for, of course, so the real question is whether there will be big performance gains.&#41;</p> <pre><code class="julia hljs">//glibc Malloc based differential equation integration
+matrix rk4(allocator source, vector (*dydt)(vector), vector y, float h,
+           float tfinal) {
+  float t = <span class=hljs-number >0</span>;
+  matrix output = new_matrix(source, y.len, tfinal / h, NULL);
+  int i = <span class=hljs-number >0</span>;
+
+  <span class=hljs-keyword >while</span> (t &lt; tfinal - h) {
+    t += h;
+    vector k1 = dydt(y);
+    vector step = k1;
+    vector scaled_k1 = mul_vs(k1, h / <span class=hljs-number >2</span>);
+    vector y_plus_scaled_k1 = add_vv(scaled_k1, y);
+    vector k2 = dydt(y_plus_scaled_k1);
+    vector two_k2 = mul_vs(k2, <span class=hljs-number >2</span>);
+    vector step2 = add_vv(step, scaled_k2);
+    vector scaled_k2 = mul_vs(k2, h / <span class=hljs-number >2</span>);
+    vector y_plus_scaled_k2 = add_vv(y, scaled_k2);
+    vector k3 = dydt(y_plus_scaled_k2);
+    vector two_k3 = mul_vs(k3, <span class=hljs-number >2</span>);
+    vector step3 = add_vv(step2, two_k3);
+    vector scaled_k3 = mul_vs(k3, h);
+    vector y_plus_scaled_k3 = add_vv(y, scaled_k3);
+    vector k4 = dydt(y_plus_scaled_k3);
+    vector step4 = add_vv(is, step, k4);
+
+    vector scaled_step = mul_vs(step, h / <span class=hljs-number >6.</span>);
+    vector new_y = add_vv(y, scaled_step);
+    set_col(output, new_y, i);
+
+    // memory management
+	free_vector(k1 );
+	free_vector(step );
+	free_vector(scaled_k1 );
+	free_vector(y_plus_scaled_k1 );
+	free_vector(k2 );
+	free_vector(two_k2 );
+	free_vector(step2 );
+	free_vector(scaled_k2 );
+	free_vector(y_plus_scaled_k2 );
+	free_vector(k3 );
+	free_vector(two_k3 );
+	free_vector(step3 );
+	free_vector(scaled_k3 );
+	free_vector(y_plus_scaled_k3 );
+	free_vector(k4 );
+	free_vector(step4 );
+	free_vector(vector );
+	free_vector(new_y );
+    y = get_col(is, output, i);
+    i += <span class=hljs-number >1</span>;
+  }
+
+  <span class=hljs-keyword >return</span> output;
+}</code></pre> <p>Preliminary experiments: </p> <p>As a first pass, we can confirm that at least the compiler is much happier reasoning about this memory allocation approach than the glibc malloc. We write a program to add two hardcoded vectors, and return the first element of the result:</p> <pre><code class="julia hljs"><span class=hljs-comment >#include &lt;stdlib.h&gt;</span>
+typedef <span class=hljs-keyword >struct</span> {
+    float* data;
+    int len;
+} vector;
+
+typedef float** allocator;
+float* alloc( allocator s, int len) {
+    *s = *s - len;
+    <span class=hljs-keyword >return</span> *s;
+}
+
+vector add (allocator s, vector a, vector b) {
+    vector res;
+    res.data = alloc(s, a.len);
+    <span class=hljs-keyword >for</span>(int i = <span class=hljs-number >0</span>; i &lt; a.len; i++) {
+        res.data[i] = a.data[i] + b.data[i];
+    }
+    <span class=hljs-keyword >return</span> res;
+}
+
+vector vec(allocator s, int len, float* data) {
+    vector res;
+    res.data = alloc(s, len);
+    res.len = len;
+    <span class=hljs-keyword >for</span>(int i = <span class=hljs-number >0</span>; i &lt; len; i++){
+    res.data[i] = data[i];
+    }
+    <span class=hljs-keyword >return</span> res;
+}
+
+int main() {
+
+    float* memory = malloc(<span class=hljs-number >1000</span> * sizeof(float));
+    float* float_ptr = memory + <span class=hljs-number >1000</span>;
+    allocator s = &amp;float_ptr;
+    
+    vector a = vec(s, <span class=hljs-number >2</span>, (float[]){<span class=hljs-number >1</span>, <span class=hljs-number >2</span>});
+    vector b = vec(s, <span class=hljs-number >2</span>, (float[]){<span class=hljs-number >3</span>, <span class=hljs-number >4</span>});
+    vector c = add(s, a, b);
+    int ret = (int) c.data[<span class=hljs-number >0</span>];
+    free(memory);
+    <span class=hljs-keyword >return</span> ret;
+
+}</code></pre> <p>gcc happily compiles this to</p> <pre><code class="julia hljs">main:
+        mov     eax, <span class=hljs-number >4</span>
+        ret</code></pre> <p>This is in contrast to the analogous program using a real allocator:</p> <pre><code class="julia hljs"><span class=hljs-comment >#include &lt;stdlib.h&gt;</span>
+typedef <span class=hljs-keyword >struct</span> {
+    float* data;
+    int len;
+} vector;
+
+
+vector add (vector a, vector b) {
+    vector res;
+    res.data = malloc(a.len * sizeof(float));
+    <span class=hljs-keyword >for</span>(int i = <span class=hljs-number >0</span>; i &lt; a.len; i++) {
+        res.data[i] = a.data[i] + b.data[i];
+    }
+    <span class=hljs-keyword >return</span> res;
+}
+
+vector vec(int len, float* data) {
+    vector res;
+    res.data = malloc(len * sizeof(float));
+    res.len = len;
+    <span class=hljs-keyword >for</span>(int i = <span class=hljs-number >0</span>; i &lt; len; i++){
+    res.data[i] = data[i];
+    }
+    <span class=hljs-keyword >return</span> res;
+}
+
+int main() {
+    vector a = vec(<span class=hljs-number >2</span>, (float[]){<span class=hljs-number >1</span>, <span class=hljs-number >2</span>});
+    vector b = vec(<span class=hljs-number >2</span>, (float[]){<span class=hljs-number >3</span>, <span class=hljs-number >4</span>});
+    vector c = add(a, b);
+    int ret = (int) c.data[<span class=hljs-number >0</span>];
+    free(a.data);
+    free(b.data);
+    free(c.data);
+    <span class=hljs-keyword >return</span> ret;
+
+}</code></pre> <p>which gcc can no longer inline, producing a bunch of function calls etc</p> <pre><code class="julia hljs">main:
+        push    r13
+        mov     edi, <span class=hljs-number >2</span>
+        push    r12
+        push    rbp
+        push    rbx
+        sub     rsp, <span class=hljs-number >24</span>
+        mov     rax, QWORD PTR .LC0[rip]
+        mov     rsi, rsp
+        mov     QWORD PTR [rsp], rax
+        call    vec
+        lea     rsi, [rsp+<span class=hljs-number >8</span>]
+        mov     edi, <span class=hljs-number >2</span>
+        mov     r12, rax
+        mov     rax, QWORD PTR .LC1[rip]
+        mov     rbx, rdx
+        mov     QWORD PTR [rsp+<span class=hljs-number >8</span>], rax
+        call    vec
+        mov     rsi, rbx
+        mov     rdi, r12
+        mov     rcx, rdx
+        mov     rdx, rax
+        mov     rbp, rax
+        call    add
+        mov     rdi, r12
+        cvttss2si       r13d, DWORD PTR [rax]
+        mov     rbx, rax
+        call    free
+        mov     rdi, rbp
+        call    free
+        mov     rdi, rbx
+        call    free
+        add     rsp, <span class=hljs-number >24</span>
+        pop     rbx
+        mov     eax, r13d
+        pop     rbp
+        pop     r12
+        pop     r13
+        ret</code></pre> <p>I have spent the remaining pre-project time fussing about with what it&#39;s like to program C in this style, by writing a toy physics engine. This is not yet science, but it&#39;s given me a sense of what features will need to be implemented. </p> <p>The big annoyance so far is a lack of an ergonomic growable array. Runtime checks and logging in debug mode are absolutely critical. With the debug ifdefs turned on, the allocator struct currently looks less like **float and more like</p> <pre><code class="julia hljs">typedef <span class=hljs-keyword >struct</span> {
+  float *start;
+  float *current;
+  float *<span class=hljs-keyword >end</span>;
+  char do_logging;
+} allocator_storage;
+typedef allocator_storage * allocator;</code></pre> <p>The target expermiments will be running workload such as the toy physics simulator in three parallel implementations: the branchless allocation approach here, raii style mallocing and freeing, and hard coding vector length and then moving everything to the stack.</p> <p>I compiled the all-bump simulator into web assembly which lets me embed it into this proposal, which has to be worth something.</p> <canvas class=emscripten id=canvas oncontextmenu=event.preventDefault() tabindex=-1></canvas><p id=output><script>var Module={print:function(){var e=document.getElementById("output");return e&&(e.value=""),function(n){arguments.length>1&&(n=Array.prototype.slice.call(arguments).join(" ")),console.log(n),e&&(e.value+=n+"\n",e.scrollTop=e.scrollHeight)}}(),canvas:document.getElementById("canvas")}</script><script src=/assets/OSproject/pendulum.js async></script> <div class=page-foot > <div> <a href=https://subdavis.com>subdavis.com </a> <a href=http://forrestli.con>forrestli.com</a> <div class=copyright > &copy; Hastings Greer. Last modified: March 04, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div> </div>
