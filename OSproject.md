@@ -1,5 +1,4 @@
 @def title = "OS Project"
-There are various memory allocators and memory management strategies floating around
 
 Goal: make a memory allocator where the primary metric is that it should be easy to reason about for the compiler. Easy to reason about encourages inlining, inlining encourages vectorization
 
@@ -8,7 +7,6 @@ Goal: make a memory allocator where the primary metric is that it should be easy
 
 We go so far as to
 
-(Why float**? want compiler to track alignment)
 ```
 typedef float** allocator;
 
@@ -18,7 +16,7 @@ float* alloc(allocator s, unsigned int size_floats) {
 }
 ```
 
-Then, instead of paying the price of allocating while we are allocating, we build scaffolding using operating system and hardware features to make the above safe.
+Then, instead of paying the complexity price of allocating while we are allocating, we will build scaffolding using operating system and hardware features to make the above safe.
 
 First, how do we free memory? Never free, just discard allocators
 
@@ -32,7 +30,7 @@ All functions will just assume that they will get an allocator as the first argu
 How do we expand memory? There are two options: On the one hand, we could never expand memory, and instead always initially allocate memory equal to the the size of physical memory. This will actually get claimed as it is written to. In this case, responding to the allocator filling up is responsibility of the operating system- neither the program nor the compiler know about it.
 Now our enemy is the OOM killer: malloc failing was friendly and catchable, the oom killer is mysterious and will start deleting processes as we write to too many pages in the allocated block.
 
-Second option: allocate jus ta little memory at first, and catch the segfault from writing after the end of the allocated memory and expand it. I think that this is less demanding of system resources (especially if huge pages aren't turned on). It will require modifying malloc to reserve a section of virtual address space. since it requires controlling the virtual address space to forbid putting anything in the way of where the bump allocator could expand.
+Second option: allocate just a little memory at first, and catch the segfault from writing after the end of the allocated memory and expand it. I think that this is less demanding of system resources (especially if huge pages aren't turned on). It will require modifying malloc to reserve a section of virtual address space. since it requires controlling the virtual address space to forbid putting anything in the way of where the bump allocator could expand.
 
 
 Basically, this is just a second stack. A motivating code sample for why bump allocators have huge ergonomic advantages: it works with array-programming habits I have from python.
@@ -299,4 +297,8 @@ typedef allocator_storage * allocator;
 
 The target expermiments will be running workload such as the toy physics simulator in three parallel implementations: the branchless allocation approach here, raii style mallocing and freeing, and hard coding vector length and then moving everything to the stack.
 
-I whacked compiled it into web assembly which lets me embed it into this proposal, which has to be worth something.
+I compiled the all-bump simulator into web assembly which lets me embed it into this proposal, which has to be worth something.
+
+~~~
+<canvas class=emscripten id=canvas oncontextmenu=event.preventDefault() tabindex=-1></canvas><p id=output><script>var Module={print:function(){var e=document.getElementById("output");return e&&(e.value=""),function(n){arguments.length>1&&(n=Array.prototype.slice.call(arguments).join(" ")),console.log(n),e&&(e.value+=n+"\n",e.scrollTop=e.scrollHeight)}}(),canvas:document.getElementById("canvas")}</script><script src=/assets/OSproject/pendulum.js async></script>
+~~~
