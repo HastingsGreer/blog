@@ -5,7 +5,7 @@ plugged every hole, eventually the water would always rise and defeat my efforts
 One day, I had the realization that there was a simpler approach. I could just go get a big 5 foot long shovel, and instead of intricately locking together rocks and leaves and sticks, 
 I could collapse the sides of the riverbank down and really build a proper big dam. I went to ask my dad for the shovel to try this out, and he told me, very heavily paraphrasing, 
 'Congratulations. You've cracked the river damming puzzle. And unfortunately, this means you no longer can try as hard as you can to dam up the creek." The price of victory is that 
-the space of games I could play wass permanently smaller, and checkmate was not played on the board. This is what growing up looks like.
+the space of games I could play was permanently smaller, and checkmate was not played on the board. This is what growing up looks like.
 
 I experienced many variations. After I put a hole in the ceiling, building K'Nex catapults switched from a careless activity to a careful activity.
 On the more supervised side, when I was curious how big of an explosion I could make by taping together sparklers, I was not allowed to find the limit.
