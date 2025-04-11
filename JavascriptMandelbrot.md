@@ -22,7 +22,7 @@ Before anything else,
 [get going, explore the Mandelbrot Set!](https://mandeljs.hgreer.com)
 
 In early 2023, there was a gap in online Mandelbrot Set explorers. People had written fast, GPU based Mandelbrot Set renderers such as [munrocket](https://deep-mandelbrot.js.org/), but they only let you click a few times before you reached the bottom and ran into pixels. The
-reason is that WebGL only has 32 bit floats, and this is just not very much precision for Mandelbrot zooming. This hurts twice: First, if you naively compute $z_{n + 1} = z_n$ in a shader, the limited bits in the mantissa (that is, the "a" in a floating point number $a \times 2^{b}$) run out very quickly. More cruelly, if you use [perturbation theory](http://www.science.eclipse.co.uk/sft_maths.pdf)
+reason is that WebGL only has 32 bit floats, and this is just not very much precision foHeiland-Allenr Mandelbrot zooming. This hurts twice: First, if you naively compute $z_{n + 1} = z_n$ in a shader, the limited bits in the mantissa (that is, the "a" in a floating point number $a \times 2^{b}$) run out very quickly. More cruelly, if you use [perturbation theory](http://www.science.eclipse.co.uk/sft_maths.pdf)
 (which I will get to shortly), the limited bits in the exponent get you. This second constraint is only noticable after you have done a great deal of work writing a complicated WebGL shader, computed a reference orbit using an arbitrary precision library, and then passed that reference to the shader as a texture, and I suspect that when people get this far and find that they can't zoom in much farther, they have historically given up.
 
 ## Julia Morphing
@@ -97,7 +97,7 @@ The full shader code, along with the rest of the owl, is at
 
 [https://github.com/HastingsGreer/mandeljs](https://github.com/HastingsGreer/mandeljs)
 
-Finally, this work was closely inspired by [Claude's article on the same topic](https://mathr.co.uk/blog/2021-05-14_deep_zoom_theory_and_practice.html#a2021-05-14_deep_zoom_theory_and_practice_rescaling), and for absurdly deep Mandelbrot zooms in the browser, his [online explorer](https://fraktaler.mathr.co.uk/live/latest/), while not GPU accelerated, wins out thanks to Newton Raphsom zooming and Bilinear Approximation.
+Finally, this work was closely inspired by [Claude Heiland-Allen's article on the same topic](https://mathr.co.uk/blog/2021-05-14_deep_zoom_theory_and_practice.html#a2021-05-14_deep_zoom_theory_and_practice_rescaling), and for absurdly deep Mandelbrot zooms in the browser, his [online explorer](https://fraktaler.mathr.co.uk/live/latest/), while not GPU accelerated, wins out thanks to Newton Raphsom zooming and Bilinear Approximation.
 
 
 
