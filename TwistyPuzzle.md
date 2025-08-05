@@ -1,6 +1,8 @@
 Rubiks cubes are fascinating, and I've been working on writing a post about solving them for a while. At first, I thought that the post would be about solving them, and 
 the draft of that post is at (link) but I quickly realized that the post about solving them needed playable, embedded widgets where the reader could try the techniques in question. 
 
+[The unfinishable post in question](SolveARubiksCubeWithoutMemorization.md)
+
 Thus, this post started, a prequel of sorts, about how to embed a twisty cube widget in a website. It becomes a bit of a journey.
 
 I started off implementing a copy of Simon Tatham's "Twiddle", which is a simplified puzzle with rubiks like motion. Instead of stickers on cublets, it just has 16 tiles in a square, with
