@@ -9,14 +9,14 @@
 
   <channel>
     <title>
-      <![CDATA[  {{fd2rss website_title}}  ]]>
+      <![CDATA[  Hastings&#39; Blog  ]]>
     </title>
-    <link> {{website_url}} </link>
+    <link> https://www.hgreer.com/ </link>
     <description>
-      <![CDATA[  {{fd2rss website_description}}  ]]>
+      <![CDATA[  Hastings&#39; Blog  ]]>
     </description>
     <atom:link
-      href="{{fd_rss_feed_url}}"
+      href="https://www.hgreer.com/feed.xml"
       rel="self"
       type="application/rss+xml" />
 
