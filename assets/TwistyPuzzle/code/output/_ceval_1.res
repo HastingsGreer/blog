@@ -1,1 +1,1 @@
-nothing
+PyObject <module 'scipy' from '/opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages/scipy/__init__.py'>
