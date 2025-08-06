@@ -8,7 +8,7 @@ display_matrix = []
 for i in range(4):
   for j in range(4):
     display_matrix.append([j, -i])
-display_matrix = np.array(display_matrix) - np.mean(display_matrix, axis=0)
+display_matrix = np.array(display_matrix) - np.mean(display_matrix, axis=0, keepdims=True)
 def show(state):
   [plt.text(x, y, str(i), ha='center', va='center', fontsize=16)
    for i, (x, y) in enumerate(state @ display_matrix / 5 + .5)]
