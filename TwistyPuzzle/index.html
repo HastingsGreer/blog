@@ -120,60 +120,61 @@ display_matrix = []
         display_matrix.append(sticker)
 
 display_matrix = np.array(display_matrix) - np.mean(np.array(display_matrix), axis=<span class=hljs-number >0</span>, keepdims=True)
+colors = np.array(colors)
 
 state = np.eye(<span class=hljs-number >54</span>)
 
-def show(state, ax):
+def show(state):
     locations = state @ display_matrix
+    fig, ax = plt.subplots(subplot_kw={<span class=hljs-string >&quot;projection&quot;</span>: <span class=hljs-string >&quot;3d&quot;</span>})
+    ax.set_xlim(-<span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
+    ax.set_ylim(-<span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
+    ax.set_zlim(-<span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
     ax.scatter(locations[:, <span class=hljs-number >0</span>], locations[:, <span class=hljs-number >1</span>], locations[:, <span class=hljs-number >2</span>], c=colors, s=<span class=hljs-number >800</span>, alpha=<span class=hljs-number >1</span>)
-fig, ax = plt.subplots(subplot_kw={<span class=hljs-string >&quot;projection&quot;</span>: <span class=hljs-string >&quot;3d&quot;</span>})
-show(state, ax)</code></pre>
+show(state)</code></pre>
 <img src="/assets/TwistyPuzzle/code/output/rubiks.png" alt="">
 <p>I use the global permutations to rotate the cube along any of its axes</p>
 <pre><code class="julia hljs">global_perms, global_rotations = DQ_AD_solve(display_matrix)
 
-<span class=hljs-keyword >for</span> j <span class=hljs-keyword >in</span> range(frames):
-    <span class=hljs-keyword >for</span> i, element <span class=hljs-keyword >in</span> enumerate([<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, <span class=hljs-number >4</span>, <span class=hljs-number >6</span>]):
+<span class=hljs-keyword >for</span> i, element <span class=hljs-keyword >in</span> enumerate([<span class=hljs-number >1</span>, <span class=hljs-number >12</span>, <span class=hljs-number >4</span>, <span class=hljs-number >9</span>]):
         element = global_perms[element]
-        ax = plt.subplot(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, i + <span class=hljs-number >1</span>, projection=<span class=hljs-string >&quot;3d&quot;</span>)
-        ax.set_xlim(-<span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
-        ax.set_ylim(-<span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
-        ax.set_zlim(-<span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
-        show(np.real(expm(<span class=hljs-number >1</span>/<span class=hljs-number >16</span> * j * logm(element))), ax)
-collect_gif(<span class=hljs-string >&quot;rubiks_rotate&quot;</span>)</code></pre>
+        <span class=hljs-keyword >for</span> j <span class=hljs-keyword >in</span> range(frames // <span class=hljs-number >4</span>):
+            state = state<span class=hljs-meta >@expm</span>(<span class=hljs-number >1</span>/<span class=hljs-number >16</span> * logm(element))
+            show(np.real(state))</code></pre>
 <img src="/assets/TwistyPuzzle/code/output/rubiks_rotate_animation.gif" alt="">
-<pre><code class="julia hljs"><span class=hljs-keyword >try</span>:
-    slice_perms, slice_rotations = DQ_AD_solve(display_matrix[:<span class=hljs-number >21</span>])
-    move = np.eye(<span class=hljs-number >54</span>)
-    move[:<span class=hljs-number >21</span>, :<span class=hljs-number >21</span>] = slice_perms[<span class=hljs-number >1</span>]
+<p>And I use the permutations of a subset of the cube to rotate a single slice. As before, we compute a single &quot;move&quot; permutation, and then get all the moves via matricies of the form element @ move @ element.T</p>
+<pre><code class="julia hljs">slice_perms, slice_rotations = DQ_AD_solve(display_matrix[:<span class=hljs-number >21</span>])
+move = np.eye(<span class=hljs-number >54</span>)
+move[:<span class=hljs-number >21</span>, :<span class=hljs-number >21</span>] = slice_perms[<span class=hljs-number >1</span>]
 
-    <span class=hljs-keyword >for</span> j <span class=hljs-keyword >in</span> range(frames):
-        <span class=hljs-keyword >for</span> i, element <span class=hljs-keyword >in</span> enumerate([<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, <span class=hljs-number >4</span>, <span class=hljs-number >6</span>]):
-            element = global_perms[element]
-            ax = plt.subplot(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, i + <span class=hljs-number >1</span>, projection=<span class=hljs-string >&quot;3d&quot;</span>)
-            ax.set_xlim(-<span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
-            ax.set_ylim(-<span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
-            ax.set_zlim(-<span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
-            show(np.real(expm(<span class=hljs-number >1</span>/<span class=hljs-number >16</span> * j * logm(element @ move @ element.T))), ax)
-    collect_gif(<span class=hljs-string >&quot;rubiks_slice_rotate&quot;</span>)
-except <span class=hljs-built_in >Exception</span> as e:
-    print(e)</code></pre>
+<span class=hljs-keyword >for</span> i, element <span class=hljs-keyword >in</span> enumerate([<span class=hljs-number >1</span>, <span class=hljs-number >3</span>, <span class=hljs-number >4</span>, <span class=hljs-number >9</span>]):
+        element = global_perms[element]
+        <span class=hljs-keyword >for</span> j <span class=hljs-keyword >in</span> range(frames // <span class=hljs-number >4</span>):
+            state = state<span class=hljs-meta >@expm</span>(<span class=hljs-number >1</span>/<span class=hljs-number >16</span> * logm(element @ move @ element.T))
+            show(np.real(state))</code></pre>
 <img src="/assets/TwistyPuzzle/code/output/rubiks_slice_rotate_animation.gif" alt="">
-<pre><code class="julia hljs"><span class=hljs-keyword >try</span>:
-    <span class=hljs-keyword >for</span> j <span class=hljs-keyword >in</span> range(<span class=hljs-number >4</span>):
-        <span class=hljs-keyword >for</span> q <span class=hljs-keyword >in</span> range(<span class=hljs-number >16</span>):        
-                element = global_perms[j + <span class=hljs-number >3</span>]
-                ax = plt.subplot(<span class=hljs-number >1</span>, <span class=hljs-number >1</span>, <span class=hljs-number >1</span>, projection=<span class=hljs-string >&quot;3d&quot;</span>)
-                ax.set_xlim(-<span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
-                ax.set_ylim(-<span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
-                ax.set_zlim(-<span class=hljs-number >2</span>, <span class=hljs-number >2</span>)
-                
-                state = state @ expm(<span class=hljs-number >1</span>/<span class=hljs-number >16</span> * logm(element @ move @ element.T))
-                show(np.real(state), ax)
-    collect_gif(<span class=hljs-string >&quot;rubiks_sequence&quot;</span>)
-except <span class=hljs-built_in >Exception</span> as e:
-    print(e)</code></pre>
-<img src="/assets/TwistyPuzzle/code/output/rubiks_sequence_animation.gif" alt="">
+<p>The playable version of this rubiks cube is <a href="http://cubes.hgreer.com/rubiks">here</a></p>
+<p>Now, this is a standard rubiks cube. If we want to get a variant, it&#39;s as simple as selecting a different subset of the points to be the turnable slice.</p>
+<pre><code class="julia hljs">re_order = np.argsort(np.sum(display_matrix, axis=<span class=hljs-number >1</span>))
+
+display_matrix = display_matrix[re_order]
+
+colors = colors[re_order]
+
+state = np.eye(<span class=hljs-number >54</span>)
+
+global_perms, global_rotations = DQ_AD_solve(display_matrix)
+
+slice_perms, slice_rotations = DQ_AD_solve((display_matrix)[:<span class=hljs-number >18</span>])
+move = np.eye(<span class=hljs-number >54</span>)
+move[:<span class=hljs-number >18</span>, :<span class=hljs-number >18</span>] = slice_perms[<span class=hljs-number >1</span>]
+
+<span class=hljs-keyword >for</span> i, element <span class=hljs-keyword >in</span> enumerate([<span class=hljs-number >1</span>, <span class=hljs-number >3</span>, <span class=hljs-number >4</span>, <span class=hljs-number >9</span>]):
+        element = global_perms[element]
+        <span class=hljs-keyword >for</span> j <span class=hljs-keyword >in</span> range(frames // <span class=hljs-number >4</span>):
+            state = state<span class=hljs-meta >@expm</span>(<span class=hljs-number >1</span>/<span class=hljs-number >16</span> * logm(element @ move @ element.T))
+            show(np.real(state))</code></pre>
+<img src="/assets/TwistyPuzzle/code/output/rubiks_corner_rotate_animation.gif" alt="">
 
 
 <div class=page-foot >
@@ -181,7 +182,7 @@ except <span class=hljs-built_in >Exception</span> as e:
     <a href=https://subdavis.com>subdavis.com </a> 
     <a href=http://forrestli.con>forrestli.com</a>
   <div class=copyright >
-    &copy; Hastings Greer. Last modified: August 17, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    &copy; Hastings Greer. Last modified: August 20, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
