@@ -222,21 +222,25 @@ for sticker in itertools.product(* [range(5)] * 3):
         display_matrix.append(sticker)
 
 display_matrix = np.array(display_matrix) - np.mean(np.array(display_matrix), axis=0, keepdims=True)
+colors = np.array(colors)
 
 state = np.eye(54)
 
-def show(state, ax):
+def show(state):
     locations = state @ display_matrix
+    fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+    ax.set_xlim(-2, 2)
+    ax.set_ylim(-2, 2)
+    ax.set_zlim(-2, 2)
     ax.scatter(locations[:, 0], locations[:, 1], locations[:, 2], c=colors, s=800, alpha=1)
-fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-show(state, ax)
-plt.savefig(sys.output + f"/rubiks.png") #hide
+show(state)
+plt.savefig(sys.output + "/rubiks.png") #hide
 plt.clf() #hide
-    
 """ #hide
 print(String(take!(buf))) #hide
 ```
 \fig{rubiks}
+
 
 I use the global permutations to rotate the cube along any of its axes
 
@@ -244,66 +248,72 @@ I use the global permutations to rotate the cube along any of its axes
 py""" #hide
 global_perms, global_rotations = DQ_AD_solve(display_matrix)
 
-for j in range(frames):
-    for i, element in enumerate([1, 2, 4, 6]):
+for i, element in enumerate([1, 12, 4, 9]):
         element = global_perms[element]
-        ax = plt.subplot(2, 2, i + 1, projection="3d")
-        ax.set_xlim(-2, 2)
-        ax.set_ylim(-2, 2)
-        ax.set_zlim(-2, 2)
-        show(np.real(expm(1/16 * j * logm(element))), ax)
-    plt.savefig(sys.output + f"/rubiks_rotate{j}.png") #hide
-    plt.clf() #hide
-collect_gif("rubiks_rotate")
+        for j in range(frames // 4):
+            state = state@expm(1/16 * logm(element))
+            show(np.real(state))
+            plt.savefig(sys.output + f"/rubiks_rotate{j + 16 * i}.png") #hide
+            plt.clf() #hide
+collect_gif("rubiks_rotate") #hide
 """ #hide
 print(String(take!(buf))) #hide
 ```
 
+
 \fig{rubiks_rotate_animation}
+
+And I use the permutations of a subset of the cube to rotate a single slice. As before, we compute a single "move" permutation, and then get all the moves via matricies of the form element @ move @ element.T
 ```!
 py""" #hide
-try:
-    slice_perms, slice_rotations = DQ_AD_solve(display_matrix[:21])
-    move = np.eye(54)
-    move[:21, :21] = slice_perms[1]
+slice_perms, slice_rotations = DQ_AD_solve(display_matrix[:21])
+move = np.eye(54)
+move[:21, :21] = slice_perms[1]
 
-    for j in range(frames):
-        for i, element in enumerate([1, 2, 4, 6]):
-            element = global_perms[element]
-            ax = plt.subplot(2, 2, i + 1, projection="3d")
-            ax.set_xlim(-2, 2)
-            ax.set_ylim(-2, 2)
-            ax.set_zlim(-2, 2)
-            show(np.real(expm(1/16 * j * logm(element @ move @ element.T))), ax)
-        plt.savefig(sys.output + f"/rubiks_slice_rotate{j}.png") #hide
-        plt.clf() #hide
-    collect_gif("rubiks_slice_rotate")
-except Exception as e:
-    print(e)
+for i, element in enumerate([1, 3, 4, 9]):
+        element = global_perms[element]
+        for j in range(frames // 4):
+            state = state@expm(1/16 * logm(element @ move @ element.T))
+            show(np.real(state))
+            plt.savefig(sys.output + f"/rubiks_slice_rotate{j + 16 * i}.png") #hide
+            plt.clf() #hide
+collect_gif("rubiks_slice_rotate") #hide
 """ #hide
 print(String(take!(buf))) #hide
 ```
 \fig{rubiks_slice_rotate_animation}
 
+The playable version of this rubiks cube is [here](http://cubes.hgreer.com/rubiks)
+
+Now, this is a standard rubiks cube. If we want to get a variant, it's as simple as selecting a different subset of the points to be the turnable slice.
+
+
+
 ```!
 py""" #hide
-try:
-    for j in range(4):
-        for q in range(16):        
-                element = global_perms[j + 3]
-                ax = plt.subplot(1, 1, 1, projection="3d")
-                ax.set_xlim(-2, 2)
-                ax.set_ylim(-2, 2)
-                ax.set_zlim(-2, 2)
-                
-                state = state @ expm(1/16 * logm(element @ move @ element.T))
-                show(np.real(state), ax)
-                plt.savefig(sys.output + f"/rubiks_sequence{j * 16 + q}.png") #hide
-                plt.clf() #hide
-    collect_gif("rubiks_sequence")
-except Exception as e:
-    print(e)
+re_order = np.argsort(np.sum(display_matrix, axis=1))
+
+display_matrix = display_matrix[re_order]
+
+colors = colors[re_order]
+
+state = np.eye(54)
+
+global_perms, global_rotations = DQ_AD_solve(display_matrix)
+
+slice_perms, slice_rotations = DQ_AD_solve((display_matrix)[:18])
+move = np.eye(54)
+move[:18, :18] = slice_perms[1]
+
+for i, element in enumerate([1, 3, 4, 9]):
+        element = global_perms[element]
+        for j in range(frames // 4):
+            state = state@expm(1/16 * logm(element @ move @ element.T))
+            show(np.real(state))
+            plt.savefig(sys.output + f"/rubiks_corner_rotate{j + 16 * i}.png") #hide
+            plt.clf() #hide
+collect_gif("rubiks_corner_rotate") #hide
 """ #hide
 print(String(take!(buf))) #hide
 ```
-\fig{rubiks_sequence_animation}
+\fig{rubiks_corner_rotate_animation}
