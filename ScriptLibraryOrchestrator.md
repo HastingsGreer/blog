@@ -7,15 +7,15 @@ examples: cgi scripts. each page of the webpage is a script, scripts can import 
 machine learning: each training experiment or inference job is a script, the orchestrator is bash. bash should be your default orchestrator unless you have a very good reason
 to clarify: bash scripts aren’t the orchestrator- bash is. you shouldn’t be writing permanent scripts there, but you have bash tools to e.g. run all the scripts in a folder with xargs.
 
-Game development: each level is a script. this is the point of this post as this dedign pattern is underutilized in game dev. valuable to promote the otherwise tricky combo of debuggabillity and thematically diverse levels. may have to roll own orchestrator.
+if you write a toy ray tracer with the SLO design pattern, each scene should be a script.
 
 OG gnu-linux: linux is the library, gnu are the scripts
 
 Rules of the design pattern: 
 
-First, the three rules that define the SLO architecture.
+The three rules that define the SLO architecture.
 
-scripts ABSOLUTELY may not import each other, and library code can't import scripts. 
+First, scripts ABSOLUTELY may not import each other, and library code can't import scripts. 
 
 The practical upside of this is that completely deleting any script should not affect the functionality of the project, except that you can’t run the script any more. If you find that this is not the case, ban a broader definition of "import." 
 
@@ -37,14 +37,17 @@ Note that the rules as stated basically ban testing scripts. Feeling the need to
 
 Scripts may only communicate through persistent storage: cookie, disk or database. limit this communication whenever possible.
  
-scripts should be single file
+Scripts must be single file- this is downstream of script code never getting imported. You can have a multi-file executable, but all but one of those files has to go into the library, with the associated higher code quality standards.
 
 changes in which script is active should be in response to user input. the user may have the option to queue up a sequence of such inputs, or repeat that sequence, via affordances built into the orchestrator.
 
+# Absolutions of the design pattern:
 
-Absolutions of the design pattern:
+Most design patterns, have rules, but SLO also has an un-rule!
 
 you are permitted to do whatever the hell you want within scripts. you can have global state, you can copy paste code willy nilly within or between scripts, you can add external dependencies to scripts on a moments notice, you can vibe code scripts without even reading the diffs. 
+
+If one script is important, absolutely clean it up- but you don't need to clean up the rest of the scripts since they are isolated.
 
 # The Workflow
 
@@ -67,10 +70,9 @@ Tutorials are library, not script. They should be written using best practices: 
 
 The SLO architecture is not a panacea! It's just one option for organizing some kinds of project. Not every code base should be Script / Library / Orchestrator- that would be just as crazy as dogmatically breaking every codebase into microservices, orgranizing every single codebase into Model / View / Controller, or only ever coding in monolithic frameworks like Rails or Unity. 
 
-The comparison to microservices is, I think, the most illustrative. Microservices are a way to bring the advantages of small team development to projects with hundreds or thousands of developers. The strict SLO approach advocated here is really a way to bring the advantages of programming in large open source libraries, like numpy or eigen, to single developer projects. 
+The comparison to microservices is, I think, the most illustrative. Microservices are a way to bring the advantages of small team development to projects with hundreds or thousands of developers. The strict SLO approach advocated here is really a way to bring the advantages of programming in large open source libraries, like numpy or eigen, to single developer projects. The vibe is that you set out to do a task, and it turns out to be easy because you find a great external dependency that lets you solve the task in a single file- the only downside is that you have to write the dependency. 
 
 # Points to integrate
-
 
  when its time to share publish or polish the project, that’s the time to delete lots of old or irrelevant scripts or even just move them to a folder labelled dead dove). this is always easy without  affecting the remaining code! that’s a major goal of the rules
 scripts can be moved from folder to folder without affecting whether they compile / work
