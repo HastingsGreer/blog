@@ -55,6 +55,8 @@ typical workflow: copy paste code between scripts as a default action. If you fi
 
 Library code should be unit tested, scripts should be end-to-end tested via the orchestrator, not by writing scripts that import scripts. (this is a potential 
 
+SLO also has a target workflow for code deletion! Deleting code is actually super important, but it's negelected. In SLO, the canonical way to delete library code that needs to go is to copy-paste it to whichever scripts still use it, then remove it from the library. Then, deleting script code is a simple as deleting the script. Typically, deleting scripts wholesale is very common, deleting library code is rare but now doable.
+
 
 # Tutorial as a first class unit of code re-use
 
@@ -71,6 +73,8 @@ Tutorials are library, not script. They should be written using best practices: 
 The SLO architecture is not a panacea! It's just one option for organizing some kinds of project. Not every code base should be Script / Library / Orchestrator- that would be just as crazy as dogmatically breaking every codebase into microservices, orgranizing every single codebase into Model / View / Controller, or only ever coding in monolithic frameworks like Rails or Unity. 
 
 The comparison to microservices is, I think, the most illustrative. Microservices are a way to bring the advantages of small team development to projects with hundreds or thousands of developers. The strict SLO approach advocated here is really a way to bring the advantages of programming in large open source libraries, like numpy or eigen, to single developer projects. The vibe is that you set out to do a task, and it turns out to be easy because you find a great external dependency that lets you solve the task in a single file- the only downside is that you have to write the dependency. 
+
+The size of project where this approach absolutely shines is a semester course project.
 
 # Points to integrate
 
