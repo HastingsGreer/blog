@@ -37,7 +37,9 @@ Note that the rules as stated basically ban testing scripts. Feeling the need to
 
 Scripts may only communicate through persistent storage: cookie, disk or database. limit this communication whenever possible.
  
-Scripts must be single file- this is downstream of script code never getting imported. You can have a multi-file executable, but all but one of those files has to go into the library, with the associated higher code quality standards.
+Scripts must be single file- this is downstream of script code never getting imported. You can have a multi-file executable, but all but one of those files has to go into the library, with the associated higher code quality standards. This is load bearing.
+
+Code duplication between scripts is a fundamental part of this workflow, but code duplication within a script, or between libraries, is super banned. By following this principle, you can maintain the following invariant: at any time, you can delete every script except the one you are currently working on. After this action, code duplication is bounded- the worst case scenario is that a piece of code appears twice (once in the library, once in the script)
 
 changes in which script is active should be in response to user input. the user may have the option to queue up a sequence of such inputs, or repeat that sequence, via affordances built into the orchestrator.
 
@@ -45,13 +47,15 @@ changes in which script is active should be in response to user input. the user 
 
 Most design patterns, have rules, but SLO also has an un-rule!
 
-you are permitted to do whatever the hell you want within scripts. you can have global state, you can copy paste code willy nilly within or between scripts, you can add external dependencies to scripts on a moments notice, you can vibe code scripts without even reading the diffs. 
+you are permitted to do whatever the hell you want within scripts. you can have global state, you can copy paste code willy nilly  between scripts, you can add external dependencies to scripts on a moments notice, you can vibe code scripts without even reading the diffs. 
 
 If one script is important, absolutely clean it up- but you don't need to clean up the rest of the scripts since they are isolated.
 
 # The Workflow
 
 typical workflow: copy paste code between scripts as a default action. If you find yourself, to make a change, editting the same code in multiple scripts, instead you should usually move that code to the library. Likewise, script code can't be unit tested- because it can't be imported. If you want to unit test a function in a script, move it to the library! If these processes force you to move two versions of the same function to the library, only now is it time to add optional parameters or case-specific control flow. Since this is a rare occurance, you can take the time to do it Carefully, and only to the extent needed. As a new tool to dodge making code with a million arguments, consider writing a TUTORIAL and adding it to the library’s documentation, and going forward copy and paste the code from the tutorial into the script and then modify it to suite, instead of from script to script.
+
+Alternatively, instead of adding a parameter to a library function, you can always just copy that function wholesale to the script and then modify it. Without any rules, this practice would trend towards code being copied an infinite number of times. However, with the SLO approach, this can only lead to a piece of code effectively existing in two places at once (once in the library, another time modified in the script. It may exist more times in other scripts, but those copies can't affect the current script)
 
 Library code should be unit tested, scripts should be end-to-end tested via the orchestrator, not by writing scripts that import scripts. (this is a potential 
 
