@@ -1,10 +1,11 @@
-# The Script / Library / Orchestrator Architecture
+# The Script / Library / Orchestrator Design pattern
 
-
+Basically, the idea is to split your code into two portions, and approach each portion with a different mindset. The scripts contain the entry points, and is developed with the mindset of a newbie rushing to get a course project done at 3AM. The library contains all the importable functions and classes, and is developed with the mindset of an open source maintainer polishing their magnum opus.
 
 examples: cgi scripts. each page of the webpage is a script, scripts can import common libraries. orchestrator is apache
 
 machine learning: each training experiment or inference job is a script, the orchestrator is bash. bash should be your default orchestrator unless you have a very good reason
+to clarify: bash scripts aren’t the orchestrator- bash is. you shouldn’t be writing permanent scripts there, but you have bash tools to e.g. run all the scripts in a folder with xargs.
 
 Game development: each level is a script. this is the point of this post as this dedign pattern is underutilized in game dev. valuable to promote the otherwise tricky combo of debuggabillity and thematically diverse levels. may have to roll own orchestrator.
 
@@ -47,7 +48,7 @@ you are permitted to do whatever the hell you want within scripts. you can have 
 
 # The Workflow
 
-typical workflow: copy paste code between scripts as a default action. if same code has been copy pasted three times, lift it into the library or the documentation of the library. if the code fits well into the class or function abstractions, use them! if it doesn’t, don’t force it with a million arguments- instead, write a TUTORIAL and add it to the library’s documentation, and going forward copy and paste the code from the tutorial into the script and then modify it to suite, instead of from script to script.
+typical workflow: copy paste code between scripts as a default action. If you find yourself, to make a change, editting the same code in multiple scripts, instead you should usually move that code to the library. Likewise, script code can't be unit tested- because it can't be imported. If you want to unit test a function in a script, move it to the library! If these processes force you to move two versions of the same function to the library, only now is it time to add optional parameters or case-specific control flow. Since this is a rare occurance, you can take the time to do it Carefully, and only to the extent needed. As a new tool to dodge making code with a million arguments, consider writing a TUTORIAL and adding it to the library’s documentation, and going forward copy and paste the code from the tutorial into the script and then modify it to suite, instead of from script to script.
 
 Library code should be unit tested, scripts should be end-to-end tested via the orchestrator, not by writing scripts that import scripts. (this is a potential 
 
@@ -60,15 +61,18 @@ One thing that I suddenly noticed about libraries I love is that they have a Lot
 
 the rules of the script / library / orchestrator design pattern are tuned to allow tutorial to exist as a first class unit of code re-use
 
-Tutorials are library, not script. They require high quality tests just like functions or classes in the library.
-
-
-Testing of scripts is a good idea too but it is permitted to not, or even to let scripts rot.
+Tutorials are library, not script. They should be written using best practices: look at the tutorials in the numpy documentation for the target vibe. They require high quality tests just like functions or classes in the library. In python, sphinx is a great way to run your tutorials in CI when you build the documentation, making sure they don't rot.
 
 # Conclusion
 
-The SLO architecture is not a panacea! It's just one option for organizing a project. Not every code base should be Script / Library / Orchestrator- that would be just as crazy as dogmatically breaking every codebase into microservices, orgranizing every single codebase into Model / View / Controller, or only ever coding in monolithic frameworks like Rails or Unity. 
+The SLO architecture is not a panacea! It's just one option for organizing some kinds of project. Not every code base should be Script / Library / Orchestrator- that would be just as crazy as dogmatically breaking every codebase into microservices, orgranizing every single codebase into Model / View / Controller, or only ever coding in monolithic frameworks like Rails or Unity. 
 
 The comparison to microservices is, I think, the most illustrative. Microservices are a way to bring the advantages of small team development to projects with hundreds or thousands of developers. The strict SLO approach advocated here is really a way to bring the advantages of programming in large open source libraries, like numpy or eigen, to single developer projects. 
 
+# Points to integrate
 
+
+ when its time to share publish or polish the project, that’s the time to delete lots of old or irrelevant scripts or even just move them to a folder labelled dead dove). this is always easy without  affecting the remaining code! that’s a major goal of the rules
+scripts can be moved from folder to folder without affecting whether they compile / work
+
+if you’re going to do serialization the same way in multiple scripts, prioritize getting that into the library. this is a special case where copy paste is unusually toxic.
