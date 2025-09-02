@@ -1,5 +1,5 @@
 
 
-[Playing in the Creek](PlayingInTheCreek)
+[Playing in the Creek](/PlayingInTheCreek)
 
-[The cats are on to something](CatShoggoth)
+[The cats are on to something](/CatShoggoth)
