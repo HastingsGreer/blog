@@ -3,5 +3,9 @@
 
 # Hastings' Homepage
 
+[github](https://github.com/HastingsGreer)
+
+[google scholar](https://https://scholar.google.com/citations?user=O1xhOlUAAAAJ)
+
 
 
