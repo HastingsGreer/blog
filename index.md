@@ -5,7 +5,7 @@
 
 [github](https://github.com/HastingsGreer)
 
-[google scholar](https://https://scholar.google.com/citations?user=O1xhOlUAAAAJ)
+[google scholar](https://scholar.google.com/citations?user=O1xhOlUAAAAJ)
 
 
 
