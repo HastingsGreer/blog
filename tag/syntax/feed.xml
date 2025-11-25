@@ -9,11 +9,11 @@
 
   <channel>
     <title>
-      <![CDATA[  Hastings&#39; Blog  ]]>
+      <![CDATA[  Hastings Blog  ]]>
     </title>
     <link> https://www.hgreer.com/ </link>
     <description>
-      <![CDATA[  Hastings&#39; Blog  ]]>
+      <![CDATA[  Hastings Blog  ]]>
     </description>
     <atom:link
       href="https://www.hgreer.com/feed.xml"
