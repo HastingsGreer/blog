@@ -4,7 +4,7 @@ on:
     branches:
       - main
       - master
-  issue comment: 
+  issue_comment: 
       types: [created, editted, deleted]
 jobs:
   build-and-deploy:
