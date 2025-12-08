@@ -9,3 +9,7 @@ The plan for this post is to explore three different commenting systems of incre
 The first obvious approach is to just mirror a github issue's comments here. This has the advantage of leveraging Microsoft's anti-spam expertise, but at a terrible cost to the whole point
 of the indie web revival, which is to divorce from the tech giants. Anyways, the code to do it is just
 
+```bash
+curl https://api.github.com/repos/HastingsGreer/blog/issues/2/comments | grep -e "body\|login"
+```
+
