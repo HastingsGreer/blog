@@ -4,6 +4,8 @@ on:
     branches:
       - main
       - master
+  issue comment: 
+      types: [created, editted, deleted]
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
