@@ -1,0 +1,1 @@
+PyObject <module 'scipy' from '/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/scipy/__init__.py'>
