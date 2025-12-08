@@ -5,7 +5,7 @@ on:
       - main
       - master
   issue_comment: 
-      types: [created, editted, deleted]
+      types: [created, edited, deleted]
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

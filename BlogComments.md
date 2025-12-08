@@ -51,7 +51,7 @@ on:
     branches:
       - main
       - master
-  issue comment: 
-      types: [created, editted, deleted]
+  issue_comment: 
+      types: [created, edited, deleted]
 ```
 yeah that seems fine.
