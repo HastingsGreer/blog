@@ -13,3 +13,21 @@ of the indie web revival, which is to divorce from the tech giants. Anyways, the
 curl https://api.github.com/repos/HastingsGreer/blog/issues/2/comments | grep -e "body\|login"
 ```
 
+
+```!
+#hideall
+using PyCall 
+buf = IOBuffer(); 
+pyimport("sys").stdout = buf; 
+pyimport("sys").output = @OUTPUT 
+pyimport_conda("scipy", "scipy") 
+```
+
+```
+py"""
+import os
+os.system('''
+curl https://api.github.com/repos/HastingsGreer/blog/issues/2/comments | grep -e "body\|login"
+''')
+"""
+```
