@@ -23,6 +23,25 @@
 
 <item>
   <title>
+    <![CDATA[  Blog Comment Sections  ]]>
+  </title>
+  <link> https://www.hgreer.com/BlogComments/index.html </link>
+  <guid> https://www.hgreer.com/BlogComments/index.html </guid>
+  <description>
+    <![CDATA[  Blog Comment Sections  ]]>
+  </description>  
+    
+  <pubDate>Mon, 08 Dec 2025 00:00:00 +0000</pubDate>  
+  
+  
+  <atom:author>
+    <atom:name>Hastings Greer</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
     <![CDATA[  Writing scientific code with the minimum of abstraction  ]]>
   </title>
   <link> https://www.hgreer.com/MinimumAbstraction/index.html </link>
