@@ -99,5 +99,17 @@ The full shader code, along with the rest of the owl, is at
 
 Finally, this work was closely inspired by [Claude Heiland-Allen's article on the same topic](https://mathr.co.uk/blog/2021-05-14_deep_zoom_theory_and_practice.html#a2021-05-14_deep_zoom_theory_and_practice_rescaling), and for absurdly deep Mandelbrot zooms in the browser, his [online explorer](https://fraktaler.mathr.co.uk/live/latest/), while not GPU accelerated, wins out thanks to Newton Raphsom zooming and Bilinear Approximation.
 
-
+# Comments 
+```julia:printlink
+#hideall
+comment_num = 4
+println("`", "``!")
+println("run(`sh -c \"#hide")
+println("curl https://api.github.com/repos/HastingsGreer/blog/issues/$comment_num/comments \\")
+println("| grep -E 'body|login' || echo 'Be the first to comment!'")
+println("\"`);#hide")
+println("`", "``")
+println("\n\n[Leave your comment on this github issue](https://github.com/HastingsGreer/blog/issues/", comment_num, ")")
+```
+\textoutput{printlink}
 
