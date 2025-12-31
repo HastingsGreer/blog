@@ -59,10 +59,15 @@ move = np.eye(len(sticker_coords))
 move[:stickers_in_slice, :stickers_in_slice] = move[slice_perms[3]]
 ```
 
-The interviewer glances at his phone again. I suspect he is offended by the magic number 3, and make a mental note to do better next time.
+The interviewer glances at his phone again. I suspect he is offended by the magic number 3, and make a mental note to use a named constant next time.
 
 I attempt to pull his attention back to my qualifications with some inline Javascript.
 
+```
+def np2js(arr):
+    real_arr = np.block([[arr.real, arr.imag], [-arr.imag, arr.real]])
+    return json.dumps(real_arr.tolist())
+```
 
 ```
 view = np.linalg.qr(np.random.randn(3, 3))[0]
