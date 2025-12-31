@@ -69,6 +69,8 @@ def np2js(arr):
     return json.dumps(real_arr.tolist())
 ```
 
+
+
 ```
 view = np.linalg.qr(np.random.randn(3, 3))[0]
 
