@@ -12,4 +12,59 @@ stickers_in_slice = np.sum(sticker_coords[:, <span class=hljs-number >0</span>] 
 
 slice_perms = find_rigid_permutations(sticker_coords[:stickers_in_slice])
 move = np.eye(len(sticker_coords))
-move[:stickers_in_slice, :stickers_in_slice] = move[slice_perms[<span class=hljs-number >3</span>]]</code></pre> <p>The interviewer glances at his phone again. I suspect he is offended by the magic number 3, and make a mental note to do better next time.</p> <p>I attempt to pull his attention back to my qualifications with some inline Javascript.</p> <div class=page-foot > <div> <a href=https://subdavis.com>subdavis.com </a> <a href=http://forrestli.com>forrestli.com</a> <a href=http://adamaji.com>adamaji.com</a> <div class=copyright > &copy; Hastings Greer. Last modified: December 28, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div> </div>
+move[:stickers_in_slice, :stickers_in_slice] = move[slice_perms[<span class=hljs-number >3</span>]]</code></pre> <p>The interviewer glances at his phone again. I suspect he is offended by the magic number 3, and make a mental note to do better next time.</p> <p>I attempt to pull his attention back to my qualifications with some inline Javascript.</p> <pre><code class="julia hljs">global_perms = rigid_perms(sticker_coords)
+
+slice_perms = rigid_perms(sticker_coords[:<span class=hljs-number >21</span>])
+move = np.eye(len(sticker_coords))
+move[:<span class=hljs-number >21</span>, :<span class=hljs-number >21</span>] = slice_perms[<span class=hljs-number >3</span>]
+
+view = np.linalg.qr(np.random.randn(<span class=hljs-number >3</span>, <span class=hljs-number >3</span>))[<span class=hljs-number >0</span>]
+
+with open(<span class=hljs-string >&quot;output.html&quot;</span>, <span class=hljs-string >&quot;w&quot;</span>) as static_site:
+    static_site.write(
+        <span class=hljs-string >f&quot;&quot;&quot;
+    &lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;&lt;script&gt;
+
+    let mul = (A, B) =&gt; A.map((row, i) =&gt; B[0].map((_, j) =&gt;
+        row.reduce((acc, _, n) =&gt; acc + A[i][n] * B[n][j], 0)))
+
+    var state = {np2js(np.eye(len(sticker_coords)))}
+    const coords = {np2js(sticker_coords @ view * 14 + 35)}
+    var moves = [state]
+    document.addEventListener(&quot;keypress&quot;, (event) =&gt; {{
+    &quot;&quot;&quot;</span>
+    )
+    <span class=hljs-keyword >for</span> i, generator <span class=hljs-keyword >in</span> enumerate([move, global_perms[<span class=hljs-number >15</span>], global_perms[<span class=hljs-number >9</span>]]):
+        static_site.write(
+            <span class=hljs-string >f&quot;&quot;&quot;
+        if (event.key == {i}) {{
+            moves = (new Array(10).fill( {np2js(expm(.1 * logm(generator)))})).concat( moves);
+        }}
+        &quot;&quot;&quot;</span>
+        )
+    static_site.write(
+        <span class=hljs-string >&quot;&quot;&quot;
+    });
+    setInterval(step, 20);
+    function step() {
+        if (!moves.length) return;
+        state = mul(state, moves.pop());
+        const locations = mul(state, coords);
+        document.body.innerHTML= `
+    &quot;&quot;&quot;</span>
+    )
+    <span class=hljs-keyword >for</span> i, color <span class=hljs-keyword >in</span> enumerate(sticker_colors):
+        static_site.write(
+            <span class=hljs-string >f&quot;&quot;&quot;
+            &lt;div style=&#x27;
+                position: absolute; 
+                left: ${{locations[{i}][1]}}px; 
+                top: ${{locations[{i}][2]}}px; 
+                z-index: ${{Math.round(locations[{i}][0])}}; 
+                color: rgb({color[0]} {color[1]} {color[2]});
+            &#x27;&gt;
+                &amp;#x2B24;
+            &lt;/div&gt;
+        &quot;&quot;&quot;</span>
+        )
+    static_site.write(<span class=hljs-string >&quot;`;}&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span>)</code></pre> <div class=page-foot > <div> <a href=https://subdavis.com>subdavis.com </a> <a href=http://forrestli.com>forrestli.com</a> <a href=http://adamaji.com>adamaji.com</a> <div class=copyright > &copy; Hastings Greer. Last modified: December 31, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div> </div>
