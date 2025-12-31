@@ -12,13 +12,7 @@ stickers_in_slice = np.sum(sticker_coords[:, <span class=hljs-number >0</span>] 
 
 slice_perms = find_rigid_permutations(sticker_coords[:stickers_in_slice])
 move = np.eye(len(sticker_coords))
-move[:stickers_in_slice, :stickers_in_slice] = move[slice_perms[<span class=hljs-number >3</span>]]</code></pre> <p>The interviewer glances at his phone again. I suspect he is offended by the magic number 3, and make a mental note to do better next time.</p> <p>I attempt to pull his attention back to my qualifications with some inline Javascript.</p> <pre><code class="julia hljs">global_perms = rigid_perms(sticker_coords)
-
-slice_perms = rigid_perms(sticker_coords[:<span class=hljs-number >21</span>])
-move = np.eye(len(sticker_coords))
-move[:<span class=hljs-number >21</span>, :<span class=hljs-number >21</span>] = slice_perms[<span class=hljs-number >3</span>]
-
-view = np.linalg.qr(np.random.randn(<span class=hljs-number >3</span>, <span class=hljs-number >3</span>))[<span class=hljs-number >0</span>]
+move[:stickers_in_slice, :stickers_in_slice] = move[slice_perms[<span class=hljs-number >3</span>]]</code></pre> <p>The interviewer glances at his phone again. I suspect he is offended by the magic number 3, and make a mental note to do better next time.</p> <p>I attempt to pull his attention back to my qualifications with some inline Javascript.</p> <pre><code class="julia hljs">view = np.linalg.qr(np.random.randn(<span class=hljs-number >3</span>, <span class=hljs-number >3</span>))[<span class=hljs-number >0</span>]
 
 with open(<span class=hljs-string >&quot;output.html&quot;</span>, <span class=hljs-string >&quot;w&quot;</span>) as static_site:
     static_site.write(
