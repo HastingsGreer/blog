@@ -65,12 +65,6 @@ I attempt to pull his attention back to my qualifications with some inline Javas
 
 
 ```
-global_perms = rigid_perms(sticker_coords)
-
-slice_perms = rigid_perms(sticker_coords[:21])
-move = np.eye(len(sticker_coords))
-move[:21, :21] = slice_perms[3]
-
 view = np.linalg.qr(np.random.randn(3, 3))[0]
 
 with open("output.html", "w") as static_site:
