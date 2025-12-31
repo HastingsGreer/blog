@@ -63,3 +63,63 @@ The interviewer glances at his phone again. I suspect he is offended by the magi
 
 I attempt to pull his attention back to my qualifications with some inline Javascript.
 
+
+```
+global_perms = rigid_perms(sticker_coords)
+
+slice_perms = rigid_perms(sticker_coords[:21])
+move = np.eye(len(sticker_coords))
+move[:21, :21] = slice_perms[3]
+
+view = np.linalg.qr(np.random.randn(3, 3))[0]
+
+with open("output.html", "w") as static_site:
+    static_site.write(
+        f"""
+    <!DOCTYPE html><html><body><script>
+
+    let mul = (A, B) => A.map((row, i) => B[0].map((_, j) =>
+        row.reduce((acc, _, n) => acc + A[i][n] * B[n][j], 0)))
+
+    var state = {np2js(np.eye(len(sticker_coords)))}
+    const coords = {np2js(sticker_coords @ view * 14 + 35)}
+    var moves = [state]
+    document.addEventListener("keypress", (event) => {{
+    """
+    )
+    for i, generator in enumerate([move, global_perms[15], global_perms[9]]):
+        static_site.write(
+            f"""
+        if (event.key == {i}) {{
+            moves = (new Array(10).fill( {np2js(expm(.1 * logm(generator)))})).concat( moves);
+        }}
+        """
+        )
+    static_site.write(
+        """
+    });
+    setInterval(step, 20);
+    function step() {
+        if (!moves.length) return;
+        state = mul(state, moves.pop());
+        const locations = mul(state, coords);
+        document.body.innerHTML= `
+    """
+    )
+    for i, color in enumerate(sticker_colors):
+        static_site.write(
+            f"""
+            <div style='
+                position: absolute; 
+                left: ${{locations[{i}][1]}}px; 
+                top: ${{locations[{i}][2]}}px; 
+                z-index: ${{Math.round(locations[{i}][0])}}; 
+                color: rgb({color[0]} {color[1]} {color[2]});
+            '>
+                &#x2B24;
+            </div>
+        """
+        )
+    static_site.write("`;}</script></body></html>")
+```
+
