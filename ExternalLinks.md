@@ -11,7 +11,10 @@ Essential guide to calculus with matrices:
 [Matrix Cookbook](https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf)
 
 
+Space primary sources
+===========
 
+[LIFE exoplanet interferometer proposal](https://www.aanda.org/articles/aa/pdf/2023/10/aa45927-23.pdf)
 
 You have found the external links page. Poem.
 
