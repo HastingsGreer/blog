@@ -1,6 +1,6 @@
 # Deriving the Hat Tile from "An aperiodic Polykite exists"
 
-Previously: [Drawing the Aperiodic Hat Tiling with Python and Z3](HatTile/)
+Previously: [Drawing the Aperiodic Hat Tiling with Python and Z3](/HatTile/)
 
 [colab notebook](https://colab.research.google.com/drive/1XBChTb8fkHIQiN1MQiyPuMh4T-lQg3nP?usp=sharing)
 
