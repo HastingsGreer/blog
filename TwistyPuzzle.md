@@ -15,7 +15,7 @@ pyimport("sys").output = @OUTPUT
 pyimport_conda("scipy", "scipy") 
 ```
 
-[The unfinishable post in question](SolveARubiksCubeWithoutMemorization.md)
+[The unfinishable post in question](/SolveARubiksCubeWithoutMemorization.md)
 
 Thus, this post started, a prequel of sorts, about how to embed a twisty cube widget in a website. It becomes a bit of a journey.
 
