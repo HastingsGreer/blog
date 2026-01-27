@@ -1,0 +1,247 @@
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/tufte.css"> <link rel=stylesheet  href="/css/latex.css"> <link rel=stylesheet  href="/css/adjust.css"> <link rel=stylesheet  href="https://apj.hgreer.com/blog"> <link rel=icon  href="/assets/favicon-2.ico"> <script> fetch("https://apj.hgreer.com/referrer?" + document.referrer); </script> <title>Jupiter Interferometric Observatory</title> <div id=layout > <div id=menu > <ul> <li><a href="/">Home</a> <!-- <li><a href="/FeatureMapICON/">Feature Map Inverse Consistency</a> --> <li><a href="/HatTile/">Aperiodic Tiling with Z3</a> <!-- <li><a href="/ICON/">Inverse Consistent Regstration</a> <li><a href="/Mandelbrot/">Mandelbrot Set Adventures</a> --> <li><a href="/JavascriptMandelbrot/">Mandelbrot Set</a> <li><a href="/TrebuchetSimulator/">Trebuchet Simulator</a> <li><a href="/BadMatrixMultiply/">Bad Matrix Multiplication</a> <li><a href="/TwistyPuzzle/">Twisty Puzzles</a> <li><a href="/GameJam/">Game Jam Games</a> <li><a href="/AIMusings/">Alignment Musings</a> <li><a href="/menu3/">Tags</a> </ul> </div> <div id=main > <div class=franklin-content ><h1 id=jupiter_interferometric_observatory ><a href="#jupiter_interferometric_observatory" class=header-anchor >Jupiter Interferometric Observatory</a></h1> <p><strong>Author:</strong> hastings.greer</p> <p><strong>Date:</strong> January 2026</p> <h2 id=introduction ><a href="#introduction" class=header-anchor >Introduction</a></h2> <p>Jupiter&#39;s second Lagrange point is absurdly cold, quiet and gravitationally flat. It sits entirely in Jupiter&#39;s umbra, which in this vicinity is a 12 kelvin cylinder &gt;50,000 km across. As a result, our proposed 150 kg spacecraft with 100 watts of power from an RTG can station keep and maneuver in formation using just radiation pressure from LEDs. This form of maneuvering makes picometer adjustments easy with no moving parts. The constraint on precision positioning is purely measurment, actuation is as easy as PWM.</p> <p>The proposed telescope parameters: 30 primary mirrors, each on its own bus, flying in formation along a 160 km paraboloid. One collection scope on a bus at the focus 300 km away. Collection scope images the aperture, and this is masked to only allow light from the primary mirrors, then an image is formed with XXx magnification onto a 45 x 45 array of frequency sensitive single photon counters.</p> <h2 id=illumination_environment ><a href="#illumination_environment" class=header-anchor >Illumination environment</a></h2> <p>umbra math</p> <p>illumination from jupiter</p> <p>illumination from cmb</p> <h2 id=radiation ><a href="#radiation" class=header-anchor >radiation</a></h2> <p>details from new horizons and ulysses, punchline is that we are way outside the worst of jupiters radiation belts &#40;~half an AU from jupiter&#41; but will get hit by occasional plasma blobs as we are in the magnetotail. Don&#39;t have to worry about solar wind.</p> <h2 id=point_spread_function ><a href="#point_spread_function" class=header-anchor >point spread function</a></h2> <p>mirror smoothness- assume throughout that jwst mirror segments are used, scaled down to 1 m diameter</p> <p>image of earth from alpha centauri- resolved to continent scale</p> <h2 id=manuvering ><a href="#manuvering" class=header-anchor >manuvering</a></h2> <pre><code class="python hljs">sun_mass = <span class=hljs-number >1.989e30</span>
+jupiter_mass = <span class=hljs-number >1.898e27</span>
+G = <span class=hljs-number >6.6743e-11</span>
+jupiter_perihelion = <span class=hljs-number >740000000000</span>
+
+jupiter_velocity = <span class=hljs-number >13726</span>
+
+jupiter_orbit_time = <span class=hljs-number >374100000</span>
+
+c = <span class=hljs-number >3e8</span>
+
+bus_mass = <span class=hljs-number >150</span> <span class=hljs-comment ># 50 kg rtg (curiousity reference), 20 kg mirror (JWST reference), 20 kg metrology (grace reference) 60 kg structure, strut between active section and mirror, baffles along structure, leds, etc</span>
+
+<span class=hljs-keyword >import</span> numpy <span class=hljs-keyword >as</span> np
+<span class=hljs-keyword >def</span> <span class="hljs-title function_">ddt</span> (t, state):
+    sun_v = state[:<span class=hljs-number >2</span>]
+    sun_r = state[<span class=hljs-number >2</span>:<span class=hljs-number >4</span>]
+    jupiter_v = state[<span class=hljs-number >4</span>:<span class=hljs-number >6</span>]
+    jupiter_r = state[<span class=hljs-number >6</span>:]
+
+    r = sun_r - jupiter_r
+    ur = r / np.linalg.norm(r)
+
+    d = np.linalg.norm(r)
+
+    F = G * sun_mass * jupiter_mass / d **<span class=hljs-number >2</span>
+
+    jupiter_a = F / jupiter_mass * ur
+    sun_a = -F / sun_mass * ur
+
+    <span class=hljs-comment >#print(sun_a, sun_v, jupiter_a, jupiter_v)</span>
+
+    <span class=hljs-keyword >return</span> np.concatenate([sun_a, sun_v, jupiter_a, jupiter_v])
+
+<span class=hljs-keyword >import</span> scipy
+orbits = <span class=hljs-number >1</span>
+t = np.linspace(<span class=hljs-number >0</span>, orbits * jupiter_orbit_time, <span class=hljs-number >1000</span>)
+solution = scipy.integrate.solve_ivp(
+    ddt, 
+    (<span class=hljs-number >0</span>, orbits * jupiter_orbit_time), 
+    [<span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, jupiter_velocity, jupiter_perihelion, <span class=hljs-number >0</span>], 
+    t_eval=t,
+    rtol=<span class=hljs-number >1e-10</span>, 
+    atol=<span class=hljs-number >1e-13</span>,
+)
+y = solution.y
+np.<span class=hljs-built_in >min</span>(y[<span class=hljs-number >6</span>])
+
+sun_v = y[:<span class=hljs-number >2</span>]
+sun_r = y[<span class=hljs-number >2</span>:<span class=hljs-number >4</span>]
+jupiter_v = y[<span class=hljs-number >4</span>:<span class=hljs-number >6</span>]
+jupiter_r = y[<span class=hljs-number >6</span>:]
+
+dy = np.array([ddt(<span class=hljs-number >0</span>, y[:, i]) <span class=hljs-keyword >for</span> i <span class=hljs-keyword >in</span> <span class=hljs-built_in >range</span>(<span class=hljs-built_in >len</span>(y[<span class=hljs-number >0</span>]))]).transpose()
+
+<span class=hljs-keyword >import</span> matplotlib.pyplot <span class=hljs-keyword >as</span> plt
+
+dy[:, <span class=hljs-number >100</span>]
+
+lagrange_factor = <span class=hljs-number >1.0697710199</span>
+scope_position = lagrange_factor * jupiter_r + (<span class=hljs-number >1</span> - lagrange_factor) *  sun_r + np.array([[<span class=hljs-number >300000</span>], [<span class=hljs-number >0</span>]])
+scope_acceleration = lagrange_factor * dy[<span class=hljs-number >4</span>:<span class=hljs-number >6</span>] + (<span class=hljs-number >1</span> - lagrange_factor) *  dy[<span class=hljs-number >0</span>:<span class=hljs-number >2</span>] 
+
+d_sun = scope_position - sun_r
+dist_sun = np.sqrt(d_sun[<span class=hljs-number >0</span>]**<span class=hljs-number >2</span> + d_sun[<span class=hljs-number >1</span>]**<span class=hljs-number >2</span>)
+du_sun = d_sun / dist_sun
+acc_sun = -G * sun_mass * du_sun / dist_sun**<span class=hljs-number >2</span>
+d_jupiter = scope_position - jupiter_r
+dist_jupiter = np.sqrt(d_jupiter[<span class=hljs-number >0</span>]**<span class=hljs-number >2</span> + d_jupiter[<span class=hljs-number >1</span>]**<span class=hljs-number >2</span>)
+du_jupiter = d_jupiter / dist_jupiter
+acc_jupiter = -G * jupiter_mass * du_jupiter / dist_jupiter**<span class=hljs-number >2</span>
+
+control_authority = acc_sun + acc_jupiter - scope_acceleration
+control_power = c * bus_mass * np.<span class=hljs-built_in >max</span>(np.<span class=hljs-built_in >abs</span>(control_authority))
+<span class=hljs-built_in >print</span>(control_power) <span class=hljs-comment ># 30 watts</span></code></pre> <p>Sanity check: control authority needed is 7.127966317774063e-10 m/s^2, pioneer anomaly is &#40;8.74±1.33&#41;×10−10 m/s2 so making a spaceship that manuevers with this level of acceleration via RTG emmission is doable by construction. Seebeck &#43; LED is just a chosen way to modulate this effect without vibration.</p> <h2 id=rtg_constraints ><a href="#rtg_constraints" class=header-anchor >RTG constraints</a></h2> <p>focal length defines needed thrust to weight ratio.</p> <p>americium? </p> <p>balanced emission of waste heat</p> <p>led efficiency, seebeck efficiency</p> <p>configuration </p> <p>mirror &#43; piston retroreflector - |cryobaffles|-led-cluster - - - &gt;&#91;rtg&#93;&lt; - - - led-cluster&amp;cpu&amp;lateral metrology equipment &amp; star trackers - | baffle</p> <p>matched baffles on either side of rtg along boom endure symmetric infrared radiation, such that assymetries can be corrected by led thrusters. </p> <h2 id=metrology ><a href="#metrology" class=header-anchor >metrology</a></h2> <p>Piston: just copy paste grace-fo. 200 Picometer sqrt hz measurement.</p> <p>lateral: ah. This is actually important, will require laser paths between primary mirror busses. again, Off the shelf tech, copy paste grace-fo</p> <p>steering: hubble level pointing stability is all that is needed, but this is not actually trivial- hubble could hold a beam with the required steadiness, but couldn&#39;t necessarily point accurately enough without feedback to land the beam on the secondary mirror.</p> <p>Feedback solution: array of small cameras on the hub forms a light field camera. From each camera, each of the 30 primary mirrors looks like a dim star because it is reflecting the host star of the target exoplanet. Light field camera is several meters across, brightness of the primary mirrors varies for each of the element cameras- this can be fit to an aerie pattern to work out exactly how each of the primary mirrors is tilted &#40;real image of the host star is formed at the plane by each primary mirror, lightfield camera elements prevent interference between primary mirrors, this is a little complex actually&#41;</p> <p>This allows steering all the light from the exoplanet into the hub secondary mirror &#40;actually involves putting the center of the measured aerie disk ~1-2 meters away from the secondary mirror, because this is the distance between the image of the host star and the image of the exoplanet- focal length here is absurdly long for this to be true&#41;</p> <h2 id=star_nulling ><a href="#star_nulling" class=header-anchor >Star nulling</a></h2> <p>When imaging an exoplanet, move the mirrors into <em>pairs</em> separated by ~100m so that each primary pair sends a deep null to the exoplanet imaging array</p> <p>Distributed lightfield camera directly images the resulting fringes, allows closed loop control per pair</p> <p>pairs actually stay on the paraboloid. Piston error achievable by this fringe tracking is much tighter than total error &#40;which can be up to 20 nanometers without much damage, see appendix b&#41;</p> <p>Note: paraboloid is apparently meaningfully the wrong shape- need an ellipsoid to get the path lengths right &#40;&#33;&#41; for nearby stars</p> <h2 id=total_mass_budget_and_delivery_to_l2 ><a href="#total_mass_budget_and_delivery_to_l2" class=header-anchor >total mass budget and delivery to l2</a></h2> <p>150 * 30 &#43; ~2000 for the hub scope. No problem for falcon heavy.</p> <p>hi musk</p> <h2 id=the_tides_of_saturn ><a href="#the_tides_of_saturn" class=header-anchor >the tides of saturn</a></h2> <h2 id=appendix_b ><a href="#appendix_b" class=header-anchor >Appendix b</a></h2> <pre><code class="python hljs"><span class=hljs-keyword >from</span> mpmath <span class=hljs-keyword >import</span> mp, mpf, mpc, sqrt, exp, pi, cos, sin, fabs
+<span class=hljs-keyword >import</span> numpy <span class=hljs-keyword >as</span> np
+<span class=hljs-keyword >import</span> matplotlib.pyplot <span class=hljs-keyword >as</span> plt
+
+plt.savefig = <span class=hljs-keyword >lambda</span> *y, **x: plt.show()
+mp.dps = <span class=hljs-number >100</span>
+
+wavelength = mpf(<span class=hljs-string >&#x27;500e-9&#x27;</span>)
+baseline = mpf(<span class=hljs-string >&#x27;160000&#x27;</span>)
+focal_length = mpf(<span class=hljs-string >&#x27;300000&#x27;</span>)
+n_primaries = <span class=hljs-number >30</span>
+
+theta_res = wavelength / baseline
+res_element_detector = focal_length * theta_res
+
+<span class=hljs-built_in >print</span>(<span class=hljs-string >&quot;=&quot;</span> * <span class=hljs-number >70</span>)
+<span class=hljs-built_in >print</span>(<span class=hljs-string >&quot;SPARSE APERTURE PSF ANALYSIS&quot;</span>)
+<span class=hljs-built_in >print</span>(<span class=hljs-string >&quot;=&quot;</span> * <span class=hljs-number >70</span>)
+<span class=hljs-built_in >print</span>(<span class=hljs-string >f&quot;Baseline: <span class=hljs-subst >{<span class=hljs-built_in >float</span>(baseline)/<span class=hljs-number >1000</span>}</span> km&quot;</span>)
+<span class=hljs-built_in >print</span>(<span class=hljs-string >f&quot;Number of mirrors: <span class=hljs-subst >{n_primaries}</span>&quot;</span>)
+<span class=hljs-built_in >print</span>(<span class=hljs-string >f&quot;Resolution: <span class=hljs-subst >{<span class=hljs-built_in >float</span>(theta_res):<span class=hljs-number >.3</span>e}</span> rad&quot;</span>)
+<span class=hljs-built_in >print</span>(<span class=hljs-string >f&quot;Detector res element: <span class=hljs-subst >{<span class=hljs-built_in >float</span>(res_element_detector)*<span class=hljs-number >1e6</span>:<span class=hljs-number >.3</span>f}</span> µm&quot;</span>)
+
+<span class=hljs-comment ># Generate primaries</span>
+<span class=hljs-keyword >def</span> <span class="hljs-title function_">generate_primaries</span>(<span class=hljs-params >n, max_radius, f</span>):
+    positions = []
+    golden_angle = pi * (<span class=hljs-number >3</span> - sqrt(mpf(<span class=hljs-string >&#x27;5&#x27;</span>)))
+    <span class=hljs-keyword >for</span> i <span class=hljs-keyword >in</span> <span class=hljs-built_in >range</span>(n):
+        r = max_radius * sqrt(mpf(i + <span class=hljs-number >1</span>) / mpf(n))
+        theta = golden_angle * i
+        x = r * cos(theta)
+        y = r * sin(theta)
+        z = (x*x + y*y) / (<span class=hljs-number >4</span> * f)
+
+        <span class=hljs-keyword >import</span> random
+        z = z + random.random() * <span class=hljs-number >1e-8</span>
+        positions.append({<span class=hljs-string >&#x27;x&#x27;</span>: x, <span class=hljs-string >&#x27;y&#x27;</span>: y, <span class=hljs-string >&#x27;z&#x27;</span>: z})
+    <span class=hljs-keyword >return</span> positions
+
+primaries = generate_primaries(n_primaries, baseline/<span class=hljs-number >2</span>, focal_length)
+
+<span class=hljs-comment ># Print primary positions</span>
+<span class=hljs-built_in >print</span>(<span class=hljs-string >&quot;\nMirror positions:&quot;</span>)
+<span class=hljs-keyword >for</span> i, p <span class=hljs-keyword >in</span> <span class=hljs-built_in >enumerate</span>(primaries[:<span class=hljs-number >5</span>]):
+    r = <span class=hljs-built_in >float</span>(sqrt(p[<span class=hljs-string >&#x27;x&#x27;</span>]**<span class=hljs-number >2</span> + p[<span class=hljs-string >&#x27;y&#x27;</span>]**<span class=hljs-number >2</span>))
+    <span class=hljs-built_in >print</span>(<span class=hljs-string >f&quot;  <span class=hljs-subst >{i}</span>: r = <span class=hljs-subst >{r/<span class=hljs-number >1000</span>:<span class=hljs-number >.1</span>f}</span> km&quot;</span>)
+
+
+<span class=hljs-keyword >def</span> <span class="hljs-title function_">distance_3d</span>(<span class=hljs-params >p1, p2</span>):
+    dx = p2[<span class=hljs-string >&#x27;x&#x27;</span>] - p1[<span class=hljs-string >&#x27;x&#x27;</span>]
+    dy = p2[<span class=hljs-string >&#x27;y&#x27;</span>] - p1[<span class=hljs-string >&#x27;y&#x27;</span>]
+    dz = p2[<span class=hljs-string >&#x27;z&#x27;</span>] - p1[<span class=hljs-string >&#x27;z&#x27;</span>]
+    <span class=hljs-keyword >return</span> sqrt(dx*dx + dy*dy + dz*dz)
+
+<span class=hljs-comment ># On-axis point source at &quot;infinity&quot;</span>
+source_distance = mpf(<span class=hljs-string >&#x27;1e19&#x27;</span>)
+source_on_axis = {<span class=hljs-string >&#x27;x&#x27;</span>: mpf(<span class=hljs-string >&#x27;0&#x27;</span>), <span class=hljs-string >&#x27;y&#x27;</span>: mpf(<span class=hljs-string >&#x27;0&#x27;</span>), <span class=hljs-string >&#x27;z&#x27;</span>: source_distance, <span class=hljs-string >&#x27;intensity&#x27;</span>: mpf(<span class=hljs-string >&#x27;1&#x27;</span>)}
+
+<span class=hljs-keyword >def</span> <span class="hljs-title function_">calculate_field_at_detector</span>(<span class=hljs-params >x_det, y_det, source, primaries, wl</span>):
+    det = {<span class=hljs-string >&#x27;x&#x27;</span>: x_det, <span class=hljs-string >&#x27;y&#x27;</span>: y_det, <span class=hljs-string >&#x27;z&#x27;</span>: focal_length}
+    field = mpc(<span class=hljs-string >&#x27;0&#x27;</span>, <span class=hljs-string >&#x27;0&#x27;</span>)
+    two_pi_i = mpc(<span class=hljs-string >&#x27;0&#x27;</span>, <span class=hljs-string >&#x27;1&#x27;</span>) * <span class=hljs-number >2</span> * pi
+    <span class=hljs-keyword >for</span> primary <span class=hljs-keyword >in</span> primaries:
+        d1 = distance_3d(source, primary)
+        d2 = distance_3d(primary, det)
+        path = d1 + d2
+        phase = two_pi_i * path / wl
+        field += <span class=hljs-number >1</span> / d2 **<span class=hljs-number >2</span> * exp(phase)
+    <span class=hljs-keyword >return</span> field
+
+<span class=hljs-comment ># 1D PSF scan (high resolution)</span>
+<span class=hljs-built_in >print</span>(<span class=hljs-string >&quot;\n--- 1D PSF (high resolution) ---&quot;</span>)
+n_scan = <span class=hljs-number >2001</span>
+scan_range = <span class=hljs-number >1200</span> * res_element_detector  <span class=hljs-comment ># ±100 resolution elements</span>
+
+scan_x_res = []
+scan_I = []
+
+
+
+
+<span class=hljs-keyword >for</span> i <span class=hljs-keyword >in</span> <span class=hljs-built_in >range</span>(n_scan):
+    frac = mpf(i) / mpf(n_scan - <span class=hljs-number >1</span>) - mpf(<span class=hljs-string >&#x27;0.5&#x27;</span>)
+    x = <span class=hljs-number >2</span> * scan_range * frac
+    
+    field = calculate_field_at_detector(x, mpf(<span class=hljs-string >&#x27;0&#x27;</span>), source_on_axis, primaries, wavelength)
+    I = <span class=hljs-built_in >float</span>(fabs(field)**<span class=hljs-number >2</span>)
+    
+    x_res = <span class=hljs-built_in >float</span>(x / res_element_detector)
+    scan_x_res.append(x_res)
+    scan_I.append(I)
+
+<span class=hljs-comment ># Find peaks and analyze</span>
+scan_I = np.array(scan_I)
+scan_x_res = np.array(scan_x_res)
+
+central_peak = scan_I[n_scan//<span class=hljs-number >2</span>]
+max_sidelobe = np.<span class=hljs-built_in >max</span>(scan_I[np.<span class=hljs-built_in >abs</span>(scan_x_res) &gt; <span class=hljs-number >10</span>])
+
+<span class=hljs-built_in >print</span>(<span class=hljs-string >f&quot;Central peak intensity: <span class=hljs-subst >{central_peak:<span class=hljs-number >.1</span>f}</span>&quot;</span>)
+<span class=hljs-built_in >print</span>(<span class=hljs-string >f&quot;Max sidelobe (|x| &gt; 10 res): <span class=hljs-subst >{max_sidelobe:<span class=hljs-number >.3</span>f}</span>&quot;</span>)
+<span class=hljs-built_in >print</span>(<span class=hljs-string >f&quot;Peak/sidelobe ratio: <span class=hljs-subst >{central_peak/max_sidelobe:<span class=hljs-number >.1</span>f}</span>&quot;</span>)
+
+<span class=hljs-comment ># 2D PSF</span>
+<span class=hljs-built_in >print</span>(<span class=hljs-string >&quot;\n--- 2D PSF ---&quot;</span>)
+n_2d = <span class=hljs-number >51</span>
+psf_range = <span class=hljs-number >50</span> * res_element_detector
+
+grid_x = np.zeros((n_2d, n_2d))
+grid_y = np.zeros((n_2d, n_2d))
+grid_I = np.zeros((n_2d, n_2d))
+
+<span class=hljs-keyword >for</span> iy <span class=hljs-keyword >in</span> <span class=hljs-built_in >range</span>(n_2d):
+    <span class=hljs-keyword >for</span> ix <span class=hljs-keyword >in</span> <span class=hljs-built_in >range</span>(n_2d):
+        frac_x = mpf(ix) / mpf(n_2d - <span class=hljs-number >1</span>) - mpf(<span class=hljs-string >&#x27;0.5&#x27;</span>)
+        frac_y = mpf(iy) / mpf(n_2d - <span class=hljs-number >1</span>) - mpf(<span class=hljs-string >&#x27;0.5&#x27;</span>)
+        
+        x = <span class=hljs-number >2</span> * psf_range * frac_x
+        y = <span class=hljs-number >2</span> * psf_range * frac_y
+        
+        field = calculate_field_at_detector(x, y, source_on_axis, primaries, wavelength)
+        I = <span class=hljs-built_in >float</span>(fabs(field)**<span class=hljs-number >2</span>)
+        
+        grid_x[iy, ix] = <span class=hljs-built_in >float</span>(x / res_element_detector)
+        grid_y[iy, ix] = <span class=hljs-built_in >float</span>(y / res_element_detector)
+        grid_I[iy, ix] = I
+    
+    <span class=hljs-keyword >if</span> (iy + <span class=hljs-number >1</span>) % <span class=hljs-number >10</span> == <span class=hljs-number >0</span>:
+        <span class=hljs-built_in >print</span>(<span class=hljs-string >f&quot;  Row <span class=hljs-subst >{iy+<span class=hljs-number >1</span>}</span>/<span class=hljs-subst >{n_2d}</span>&quot;</span>)
+
+<span class=hljs-comment ># Plot</span>
+fig, axes = plt.subplots(<span class=hljs-number >2</span>, <span class=hljs-number >2</span>, figsize=(<span class=hljs-number >14</span>, <span class=hljs-number >12</span>))
+
+<span class=hljs-comment ># 1D PSF (full range)</span>
+ax1 = axes[<span class=hljs-number >0</span>, <span class=hljs-number >0</span>]
+ax1.semilogy(scan_x_res, scan_I, <span class=hljs-string >&#x27;b-&#x27;</span>, linewidth=<span class=hljs-number >1</span>)
+ax1.axvline(x=<span class=hljs-number >0</span>, color=<span class=hljs-string >&#x27;red&#x27;</span>, linestyle=<span class=hljs-string >&#x27;--&#x27;</span>, alpha=<span class=hljs-number >0.5</span>)
+ax1.set_xlabel(<span class=hljs-string >&#x27;Position (resolution elements)&#x27;</span>)
+ax1.set_ylabel(<span class=hljs-string >&#x27;Intensity (log)&#x27;</span>)
+ax1.set_title(<span class=hljs-string >&#x27;1D PSF - Full Range&#x27;</span>)
+ax1.grid(<span class=hljs-literal >True</span>, alpha=<span class=hljs-number >0.3</span>)
+
+<span class=hljs-comment ># 1D PSF (zoom on center)</span>
+ax2 = axes[<span class=hljs-number >0</span>, <span class=hljs-number >1</span>]
+center_mask = np.<span class=hljs-built_in >abs</span>(scan_x_res) &lt; <span class=hljs-number >20</span>
+ax2.plot(scan_x_res[center_mask], scan_I[center_mask], <span class=hljs-string >&#x27;b-&#x27;</span>, linewidth=<span class=hljs-number >1.5</span>)
+ax2.set_xlabel(<span class=hljs-string >&#x27;Position (resolution elements)&#x27;</span>)
+ax2.set_ylabel(<span class=hljs-string >&#x27;Intensity&#x27;</span>)
+ax2.set_title(<span class=hljs-string >&#x27;1D PSF - Central Region&#x27;</span>)
+ax2.grid(<span class=hljs-literal >True</span>, alpha=<span class=hljs-number >0.3</span>)
+
+<span class=hljs-comment ># 2D PSF (linear)</span>
+ax3 = axes[<span class=hljs-number >1</span>, <span class=hljs-number >0</span>]
+c3 = ax3.pcolormesh(grid_x, grid_y, grid_I, shading=<span class=hljs-string >&#x27;auto&#x27;</span>, cmap=<span class=hljs-string >&#x27;hot&#x27;</span>)
+ax3.set_xlabel(<span class=hljs-string >&#x27;x (resolution elements)&#x27;</span>)
+ax3.set_ylabel(<span class=hljs-string >&#x27;y (resolution elements)&#x27;</span>)
+ax3.set_title(<span class=hljs-string >&#x27;2D PSF (linear scale)&#x27;</span>)
+ax3.set_aspect(<span class=hljs-string >&#x27;equal&#x27;</span>)
+plt.colorbar(c3, ax=ax3)
+
+<span class=hljs-comment ># 2D PSF (log)</span>
+ax4 = axes[<span class=hljs-number >1</span>, <span class=hljs-number >1</span>]
+c4 = ax4.pcolormesh(grid_x, grid_y, np.log10(grid_I + <span class=hljs-number >1e-10</span>), shading=<span class=hljs-string >&#x27;auto&#x27;</span>, cmap=<span class=hljs-string >&#x27;hot&#x27;</span>)
+ax4.set_xlabel(<span class=hljs-string >&#x27;x (resolution elements)&#x27;</span>)
+ax4.set_ylabel(<span class=hljs-string >&#x27;y (resolution elements)&#x27;</span>)
+ax4.set_title(<span class=hljs-string >&#x27;2D PSF (log scale)&#x27;</span>)
+ax4.set_aspect(<span class=hljs-string >&#x27;equal&#x27;</span>)
+plt.colorbar(c4, ax=ax4, label=<span class=hljs-string >&#x27;log10(I)&#x27;</span>)
+
+plt.tight_layout()
+plt.savefig(<span class=hljs-string >&#x27;/home/claude/jio_psf_analysis.png&#x27;</span>, dpi=<span class=hljs-number >150</span>)
+plt.savefig(<span class=hljs-string >&#x27;/mnt/user-data/outputs/jio_psf_analysis.png&#x27;</span>, dpi=<span class=hljs-number >150</span>)
+<span class=hljs-built_in >print</span>(<span class=hljs-string >&quot;\nPSF plot saved.&quot;</span>)</code></pre> <div class=page-foot > <div> <a href=https://subdavis.com>subdavis.com </a> <a href=http://forrestli.com>forrestli.com</a> <a href=http://adamaji.com>adamaji.com</a> <div class=copyright > &copy; Hastings Greer. Last modified: January 27, 2026. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div> </div>
