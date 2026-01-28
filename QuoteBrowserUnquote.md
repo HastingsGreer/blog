@@ -1,4 +1,4 @@
-Writing a "browser" with half a developer and ELIZA in 1 hours, 76 lines of "C"
+Writing a browser with half a developer and ELIZA in 1 hours, 76000 millilines of C
 ==============
 
 Several posts have gone by on hacker news lately assessing the capabilities of agentic development approaches via the task "Build a Web Browser." Now, building a standards compliant web browser that can be trusted with hostile content is a herculean task, which makes this sound very, very impressive. However, the task that these posts actually set out to do is make a non-standards compliant browser that doesn't promise any degree of safety, and I don't actually know how much easier that is.
