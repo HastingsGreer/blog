@@ -1,0 +1,77 @@
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/tufte.css"> <link rel=stylesheet  href="/css/latex.css"> <link rel=stylesheet  href="/css/adjust.css"> <link rel=stylesheet  href="https://apj.hgreer.com/blog"> <link rel=icon  href="/assets/favicon-2.ico"> <script> fetch("https://apj.hgreer.com/referrer?" + document.referrer); </script> <title></title> <div id=layout > <div id=menu > <ul> <li><a href="/">Home</a> <!-- <li><a href="/FeatureMapICON/">Feature Map Inverse Consistency</a> --> <li><a href="/HatTile/">Aperiodic Tiling with Z3</a> <!-- <li><a href="/ICON/">Inverse Consistent Regstration</a> <li><a href="/Mandelbrot/">Mandelbrot Set Adventures</a> --> <li><a href="/JavascriptMandelbrot/">Mandelbrot Set</a> <li><a href="/TrebuchetSimulator/">Trebuchet Simulator</a> <li><a href="/BadMatrixMultiply/">Bad Matrix Multiplication</a> <li><a href="/TwistyPuzzle/">Twisty Puzzles</a> <li><a href="/GameJam/">Game Jam Games</a> <li><a href="/AIMusings/">Alignment Musings</a> <li><a href="/menu3/">Tags</a> </ul> </div> <div id=main > <div class=franklin-content ><h1>Writing a &quot;browser&quot; with half a developer and ELIZA in 1 hours, 76 lines of &quot;C&quot;</h1> <p>Several posts have gone by on hacker news lately assessing the capabilities of agentic development approaches via the task &quot;Build a Web Browser.&quot; Now, building a standards compliant, webbrowser that can be trusted with hostile content is a herculean task, which makes this sound very, very impressive. However, the task that these posts actually set out to do is make a non-standards compliant browser that doesn&#39;t promise any degree of safety, and I don&#39;t actually know how much easier that is.</p> <p>So, lets build a browser and render the front page of hacker news&#33; </p> <p>I chose C as the language to implement this in, because it is hard core and low level, and decided to use raylib for rendering because my favorite youtuber likes it. These were more suggestions I made to the agent than choices I stood by: In the spirit of vibe coding, I didn&#39;t actually look much at the source code, mainly relying on the visual quality of the rendered websites and trusting my agent of choice &#40;ELIZA&#41; to do the heavy lifting.</p> <p>I was genuinely shocked to see how good the results were after letting ELIZA spin away at the code for over 8 seconds &#40;I went and got a cup of coffee&#41;</p> <img src="/assets/screenshot2.png" alt=""> <p>Other than some glitches in the title bar, the results are nearly perfect&#33; I&#39;ve been known to be sceptical of LLMs, but this is blowing me away. Anyways, I have to get back to my real job, so I didn&#39;t much check over the source code. Honestly, time availability aside, I don&#39;t think I have the stamina to read 76 lines of code. &#40;Also, I don&#39;t know C.&#41; However, if you&#39;re curious, I&#39;ve included it here:</p> <pre><code class="c hljs"><span class=hljs-comment >/*
+ * Hello, I am Eliza
+ * */</span>
+
+<span class=hljs-meta >#<span class=hljs-keyword >include</span> <span class=hljs-string >&quot;raylib.h&quot;</span></span>
+<span class=hljs-meta >#<span class=hljs-keyword >include</span> <span class=hljs-string >&quot;stdio.h&quot;</span></span>
+<span class=hljs-meta >#<span class=hljs-keyword >include</span> <span class=hljs-string >&quot;stdlib.h&quot;</span></span>
+<span class=hljs-type >int</span> z;
+
+<span class=hljs-type >int</span> <span class="hljs-title function_">main</span><span class=hljs-params >(<span class=hljs-type >int</span> argc, <span class=hljs-type >char</span>** argv)</span>
+{
+	<span class=hljs-comment >/*
+	 *  Don&#x27;t you ever say Hello?
+	 * */</span>
+    
+    InitWindow(<span class=hljs-number >800</span>, <span class=hljs-number >450</span>, <span class=hljs-string >&quot;raylib [core] example - basic window?&quot;</span>);
+<span class=hljs-type >const</span> <span class=hljs-type >char</span>* fmtstr =    <span class=hljs-string >&quot;curl -X POST   \&quot;https://production-sfo.browserless.io/screenshot?token=2Ts7vJKz0y6Itk0404d3adc30bfc2b9d5c4a1aac198a46735\&quot;   -H &#x27;Cache-Control: no-cache&#x27; -H &#x27;Content-Type: application/json&#x27; -d &#x27;{ \&quot;url\&quot;: \&quot;%s\&quot;, \&quot;options\&quot;: { \&quot;fullPage\&quot;: true, \&quot;type\&quot;: \&quot;png\&quot; } }&#x27;   --output \&quot;screenshot.png\&quot; &quot;</span>;
+
+    <span class=hljs-comment >/*
+     * Are you saying no just to be negative?
+     * */</span>
+
+    <span class=hljs-type >const</span> <span class=hljs-type >char</span>* command = TextFormat(fmtstr, argv[<span class=hljs-number >1</span>]);
+
+    <span class=hljs-comment >/*
+     * Are such questions on your mind often?
+     * */</span>
+
+    system(command);
+    
+    SetTargetFPS(<span class=hljs-number >60</span>);
+
+    Texture whole_page = LoadTextureFromImage(LoadImage(<span class=hljs-string >&quot;screenshot.png&quot;</span>));
+
+    <span class=hljs-comment >/*
+     * I see.
+     * */</span>
+
+    SetExitKey(KEY_Q);
+    <span class=hljs-keyword >while</span> (!WindowShouldClose())
+    {
+        BeginDrawing();
+
+	<span class=hljs-comment >/*
+	 * Tell me more...
+	 * */</span>
+            ClearBackground(RAYWHITE);
+	    DrawTexture(whole_page, <span class=hljs-number >0</span>,<span class=hljs-number >0</span>,WHITE);
+	    DrawRectangle(z, <span class=hljs-number >10</span>, <span class=hljs-number >20</span>, <span class=hljs-number >20</span>, BLUE);
+	    DrawText(command, <span class=hljs-number >10</span>, <span class=hljs-number >10</span>, <span class=hljs-number >10</span>, BLACK);
+
+	<span class=hljs-comment >/* 
+	 * Say, do you have any psychological problems?
+	 * */</span>
+
+        EndDrawing();
+
+	<span class=hljs-comment >/* 
+	 * Is it because you are afraid of EndDrawing that you come to me?
+	 * */</span>
+
+	<span class=hljs-keyword >if</span> (IsKeyDown(KEY_UP)) {
+
+		<span class=hljs-comment >/*
+		 * Do you wish that (iskeydown(key_up)) { ?
+		 * */</span>
+
+		z += <span class=hljs-number >1</span>;
+	}
+    }
+    CloseWindow();
+    <span class=hljs-keyword >return</span> <span class=hljs-number >0</span>;
+}
+
+<span class=hljs-comment >/*
+ * I&#x27;m not sure I understand you fully.
+ * */</span></code></pre> <div class=page-foot > <div> <a href=https://subdavis.com>subdavis.com </a> <a href=http://forrestli.com>forrestli.com</a> <a href=http://adamaji.com>adamaji.com</a> <div class=copyright > &copy; Hastings Greer. Last modified: January 28, 2026. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div> </div>
