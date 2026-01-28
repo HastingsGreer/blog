@@ -1,7 +1,8 @@
 Writing a "browser" with half a developer and ELIZA in 1 hours, 76 lines of "C"
 ==============
 
-Several posts have gone by on hacker news lately assessing the capabilities of agentic development approaches via the task "Build a Web Browser." Now, building a standards compliant, webbrowser that can be trusted with hostile content is a herculean task, which makes this sound very, very impressive. However, the task that these posts actually set out to do is make a non-standards compliant browser that doesn't promise any degree of safety, and I don't actually know how much easier that is.
+Several posts have gone by on hacker news lately assessing the capabilities of agentic development approaches via the task "Build a Web Browser." Now, building a standards compliant web browser that can be trusted with hostile content is a herculean task, which makes this sound very, very impressive. However, the task that these posts actually set out to do is make a non-standards compliant browser that doesn't promise any degree of safety, and I don't actually know how much easier that is.
+ 
 
 So, lets build a browser and render the front page of hacker news! 
 
@@ -57,17 +58,17 @@ const char* fmtstr =    "curl -X POST   \"https://production-sfo.browserless.io/
     {
         BeginDrawing();
 
-	/*
-	 * Tell me more...
-	 * */
-            ClearBackground(RAYWHITE);
+    	/*
+    	 * Tell me more...
+    	 * */
+        ClearBackground(RAYWHITE);
 	    DrawTexture(whole_page, 0,0,WHITE);
 	    DrawRectangle(z, 10, 20, 20, BLUE);
 	    DrawText(command, 10, 10, 10, BLACK);
 
-	/* 
-	 * Say, do you have any psychological problems?
-	 * */
+    	/* 
+    	 * Say, do you have any psychological problems?
+    	 * */
 
         EndDrawing();
 
