@@ -18,7 +18,7 @@
 
 # Part 1: Simulating a trebuchet
 
-Basically, this app follows this paper: 
+Basically, this app follows this paper: [Witkin 1997](https://www2.stat.duke.edu/~scs/Courses/Stat376/Papers/Constraints/notesf.pdf)
 
 # Part 2: Optimizing a trebuchet using a CMAES variant
 
