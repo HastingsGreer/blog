@@ -35,7 +35,7 @@ move[:stickers_in_slice, :stickers_in_slice] = slice_perms[<span class=hljs-numb
         &quot;&quot;&quot;</span>
     ret += <span class=hljs-string >&quot;&quot;&quot;
     });
-    setInterval(step, 20);</span></code></pre> <p>Now unfortunately, the cleanest way to procede here is to interleave f-strings. Since this is an interview, I ought to follow the standard design pattern: make sure the f strings are in different languages so that it&#39;s crystal clear whether each interpolated value comes from the inner or outer format.</p> <pre><code class="julia hljs"><span class=hljs-keyword >function</span> step() {
+    setInterval(step, 20);</span></code></pre> <p>Now unfortunately, the cleanest way to procede here is to interleave f-strings. Since this is an interview, I ought to follow the standard design pattern: make sure the f strings are in different languages so that it&#39;s crystal clear which scope each interpolated value comes from.</p> <pre><code class="julia hljs"><span class=hljs-keyword >function</span> step() {
         <span class=hljs-keyword >if</span> (!moves.length) <span class=hljs-keyword >return</span>;
         state = mul(state, moves.pop());
         <span class=hljs-keyword >const</span> locations = mul(state, coords);
