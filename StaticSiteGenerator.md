@@ -11,7 +11,7 @@
 
 "We may be talking past each other- I mean something like jekyll or- "
 
-"Well everyone knows the generator of jekyll and hyde is just hyde, but that's trivia, not an interview question. Ok, we'll start with the slow but simple solution, then optimize."
+"Well everyone knows the generator of jekyll and hyde is just hyde, but that's trivia, not an interview question. Um. I'll get started"
 
 My fingers lightly tap over the keyboard, stumbling a bit on the @ signs- my current position uses very little linear algebra but I'm delighted to pick it back up if that's where folks are hiring.
 
