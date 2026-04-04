@@ -15,7 +15,7 @@ slice_perms = find_rigid_permutations(sticker_coords[:stickers_in_slice])
 move = np.eye(len(sticker_coords))
 move[:stickers_in_slice, :stickers_in_slice] = slice_perms[<span class=hljs-number >3</span>]</code></pre> <p>The interviewer glances at his phone again. I suspect he is offended by the magic number 3, and make a mental note to use a named constant next time.</p> <p>I attempt to pull his attention back to my Web Tech qualifications with some inline Javascript.</p> <pre><code class="julia hljs">def np2js(arr):
     real_arr = np.block([[arr.real, arr.imag], [-arr.imag, arr.real]])
-    <span class=hljs-keyword >return</span> json.dumps(real_arr.tolist())</code></pre> <p>My interlocutor points out that there aren&#39;t any semicolons there, so how can it be Javascript? Technically I think he&#39;s even correct. &quot;We&#39;re getting to building the website&#33;&quot; I promise. &quot;Look&#33; HTML tags&#33;&quot;</p> <pre><code class="julia hljs">def cube(key_actions):
+    <span class=hljs-keyword >return</span> json.dumps(real_arr.tolist())</code></pre> <p>My interlocutor points out that there aren&#39;t any semicolons there, so how can it be Javascript? Technically I think he&#39;s even correct. &quot;We&#39;re getting to building the website&#33;&quot; I promise. &quot;Look&#33; HTML tags&#33; Event handlers&#33;&quot;</p> <pre><code class="julia hljs">def cube(key_actions):
     ret = <span class=hljs-string >f&quot;&quot;&quot;
     &lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;&lt;script&gt;
 
