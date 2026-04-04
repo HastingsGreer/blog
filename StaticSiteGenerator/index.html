@@ -8,17 +8,15 @@
     []) <span class=hljs-keyword >if</span> len(z)!=len(D)<span class=hljs-keyword >else</span>[np.eye(len(D))[z]]</code></pre> <p>&quot;Sorry about that. Is that better?&quot;</p> <p>He nods his head yes, but his body language says no. Nonetheless, the only way forward is through.</p> <p>&quot;One of my favorite toys is the rubiks cube, so that&#39;s what we&#39;ll be generating today. First we plop the stickers where they go&quot;</p> <pre><code class="julia hljs">sticker_coords = np.array([s <span class=hljs-keyword >for</span> s <span class=hljs-keyword >in</span> itertools.product(range(-<span class=hljs-number >2</span>,<span class=hljs-number >3</span>), repeat=<span class=hljs-number >3</span>) 
                            <span class=hljs-keyword >if</span> (np.abs(s)==<span class=hljs-number >2</span>).sum()==<span class=hljs-number >1</span>])
 colors = <span class=hljs-number >.5</span> + <span class=hljs-number >.5</span> * np.round(sticker_coords / <span class=hljs-number >2</span>)
-stickers_in_slice = np.sum(sticker_coords[:, <span class=hljs-number >0</span>] &lt; <span class=hljs-number >0</span>)</code></pre> <p>&quot;And then check how they spin&#33;&quot;</p> <pre><code class="julia hljs">global_perms = find_rigid_permutations(sticker_coords)
+stickers_in_slice = np.sum(sticker_coords[:, <span class=hljs-number >0</span>] &lt; <span class=hljs-number >0</span>)
+view = np.linalg.qr(np.random.randn(<span class=hljs-number >3</span>, <span class=hljs-number >3</span>))[<span class=hljs-number >0</span>]</code></pre> <p>&quot;And then check how they spin&#33;&quot;</p> <pre><code class="julia hljs">global_perms = find_rigid_permutations(sticker_coords)
 
 slice_perms = find_rigid_permutations(sticker_coords[:stickers_in_slice])
 move = np.eye(len(sticker_coords))
-move[:stickers_in_slice, :stickers_in_slice] = move[slice_perms[<span class=hljs-number >3</span>]]</code></pre> <p>The interviewer glances at his phone again. I suspect he is offended by the magic number 3, and make a mental note to use a named constant next time.</p> <p>I attempt to pull his attention back to my qualifications with some inline Javascript.</p> <pre><code class="julia hljs">def np2js(arr):
+move[:stickers_in_slice, :stickers_in_slice] = move[slice_perms[<span class=hljs-number >3</span>]]</code></pre> <p>The interviewer glances at his phone again. I suspect he is offended by the magic number 3, and make a mental note to use a named constant next time.</p> <p>I attempt to pull his attention back to my Web Tech qualifications with some inline Javascript.</p> <pre><code class="julia hljs">def np2js(arr):
     real_arr = np.block([[arr.real, arr.imag], [-arr.imag, arr.real]])
-    <span class=hljs-keyword >return</span> json.dumps(real_arr.tolist())</code></pre> <pre><code class="julia hljs">view = np.linalg.qr(np.random.randn(<span class=hljs-number >3</span>, <span class=hljs-number >3</span>))[<span class=hljs-number >0</span>]
-
-with open(<span class=hljs-string >&quot;output.html&quot;</span>, <span class=hljs-string >&quot;w&quot;</span>) as static_site:
-    static_site.write(
-        <span class=hljs-string >f&quot;&quot;&quot;
+    <span class=hljs-keyword >return</span> json.dumps(real_arr.tolist())</code></pre> <p>My interlocutor points out that there aren&#39;t any semicolons there, so how can it be Javascript? Technically I think he&#39;s even correct. We&#39;re getting to building the website&#33; I promise. Look&#33; HTML tags&#33;</p> <pre><code class="julia hljs">def cube(key_actions):
+    ret = <span class=hljs-string >f&quot;&quot;&quot;
     &lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;&lt;script&gt;
 
     let mul = (A, B) =&gt; A.map((row, i) =&gt; B[0].map((_, j) =&gt;
@@ -29,29 +27,22 @@ with open(<span class=hljs-string >&quot;output.html&quot;</span>, <span class=h
     var moves = [state]
     document.addEventListener(&quot;keypress&quot;, (event) =&gt; {{
     &quot;&quot;&quot;</span>
-    )
-    <span class=hljs-keyword >for</span> i, generator <span class=hljs-keyword >in</span> enumerate([move, global_perms[<span class=hljs-number >15</span>], global_perms[<span class=hljs-number >9</span>]]):
-        static_site.write(
-            <span class=hljs-string >f&quot;&quot;&quot;
+    <span class=hljs-keyword >for</span> i, generator <span class=hljs-keyword >in</span> enumerate():
+        ret += <span class=hljs-string >f&quot;&quot;&quot;
         if (event.key == {i}) {{
             moves = (new Array(10).fill( {np2js(expm(.1 * logm(generator)))})).concat( moves);
         }}
         &quot;&quot;&quot;</span>
-        )
-    static_site.write(
-        <span class=hljs-string >&quot;&quot;&quot;
+    ret += <span class=hljs-string >&quot;&quot;&quot;
     });
-    setInterval(step, 20);
-    function step() {
-        if (!moves.length) return;
+    setInterval(step, 20);</span></code></pre> <p>Now unfortunately, the cleanest way to procede here is to nest an f-string inside of an f-string. Since this is an interview, I ought to follow the standard design pattern: make sure the f strings are in different languages so that it&#39;s crystal clear whether each interpolated value comes from the inner or outer format.</p> <pre><code class="julia hljs"><span class=hljs-keyword >function</span> step() {
+        <span class=hljs-keyword >if</span> (!moves.length) <span class=hljs-keyword >return</span>;
         state = mul(state, moves.pop());
-        const locations = mul(state, coords);
-        document.body.innerHTML= `
-    &quot;&quot;&quot;</span>
-    )
-    <span class=hljs-keyword >for</span> i, color <span class=hljs-keyword >in</span> enumerate(sticker_colors):
-        static_site.write(
-            <span class=hljs-string >f&quot;&quot;&quot;
+        <span class=hljs-keyword >const</span> locations = mul(state, coords);
+        document.body.innerHTML= <span class=hljs-string >`
+    &quot;&quot;&quot;
+    for i, color in enumerate(sticker_colors):
+        ret += f&quot;&quot;&quot;
             &lt;div style=&#x27;
                 position: absolute; 
                 left: ${{locations[{i}][1]}}px; 
@@ -61,6 +52,7 @@ with open(<span class=hljs-string >&quot;output.html&quot;</span>, <span class=h
             &#x27;&gt;
                 &amp;#x2B24;
             &lt;/div&gt;
-        &quot;&quot;&quot;</span>
-        )
-    static_site.write(<span class=hljs-string >&quot;`;}&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span>)</code></pre> <div class=page-foot > <div> <a href=https://subdavis.com>subdavis.com </a> <a href=http://forrestli.com>forrestli.com</a> <a href=http://adamaji.com>adamaji.com</a> <div class=copyright > &copy; Hastings Greer. Last modified: February 04, 2026. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div> </div>
+        &quot;&quot;&quot;
+    return ret + &quot;`</span>;}&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;<span class=hljs-string >&quot;</span></code></pre> <p>OK, frankly I&#39;m not happy with your performance so far this interview. However, we had an hour slotted, and we have 35 minutes left that I&#39;m not getting back either way. Lets just let bygones be bygones and try from the top: Please, while keeping it as simple as possible, write a static site generator in python. If it deeply pleases you, I guess you can demonstrate it by generating a site about a Rubik&#39;s cube.</p> <pre><code class="julia hljs">generators = [move, global_perms[<span class=hljs-number >15</span>], global_perms[<span class=hljs-number >9</span>]]
+with open(<span class=hljs-string >&quot;output.html&quot;</span>, <span class=hljs-string >&quot;w&quot;</span>) as static_site:
+    static_site.write(cube(generators))</code></pre> <div class=page-foot > <div> <a href=https://subdavis.com>subdavis.com </a> <a href=http://forrestli.com>forrestli.com</a> <a href=http://adamaji.com>adamaji.com</a> <div class=copyright > &copy; Hastings Greer. Last modified: April 04, 2026. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div> </div>
