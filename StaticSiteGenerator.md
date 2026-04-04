@@ -69,7 +69,7 @@ def np2js(arr):
     return json.dumps(real_arr.tolist())
 ```
 My interlocutor points out that there aren't any semicolons there, so how can it be Javascript? Technically I think he's even correct.
-"We're getting to building the website!" I promise. "Look! HTML tags!"
+"We're getting to building the website!" I promise. "Look! HTML tags! Event handlers!"
 ```
 def cube(key_actions):
     ret = f"""
