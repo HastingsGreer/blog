@@ -121,7 +121,7 @@ Now unfortunately, the cleanest way to procede here is to nest an f-string insid
 "OK, frankly I'm not happy with your performance so far this interview. However, we had an hour slotted, and we have 35 minutes left that I'm not getting back either way. Lets just let bygones be bygones and try from the top: Please, while keeping it as simple as possible, write a static site generator in python. If it deeply pleases you, I guess you can demonstrate it by generating a site about a Rubik's cube."
 
 ```
-generators = [move, global_perms[15], global_perms[9]]
 with open("output.html", "w") as static_site:
+    generators = [move, global_perms[15], global_perms[9]]
     static_site.write(cube(generators))
 ```
