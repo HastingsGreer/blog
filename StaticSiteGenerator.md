@@ -45,7 +45,7 @@ He nods his head yes, but his body language says no. Nonetheless, the only way f
 ```
 sticker_coords = np.array([s for s in itertools.product(range(-2,3), repeat=3) 
                            if (np.abs(s)==2).sum()==1])
-colors = .5 + .5 * np.round(sticker_coords / 2)
+colors = 120 + 120 * np.round(sticker_coords / 2)
 stickers_in_slice = np.sum(sticker_coords[:, 0] < 0)
 view = np.linalg.qr(np.random.randn(3, 3))[0]
 ```
@@ -56,7 +56,7 @@ global_perms = find_rigid_permutations(sticker_coords)
 
 slice_perms = find_rigid_permutations(sticker_coords[:stickers_in_slice])
 move = np.eye(len(sticker_coords))
-move[:stickers_in_slice, :stickers_in_slice] = move[slice_perms[3]]
+move[:stickers_in_slice, :stickers_in_slice] = slice_perms[3]
 ```
 
 The interviewer glances at his phone again. I suspect he is offended by the magic number 3, and make a mental note to use a named constant next time.
