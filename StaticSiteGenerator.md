@@ -48,6 +48,7 @@ sticker_coords = np.array([s for s in itertools.product(range(-2,3), repeat=3)
                            if (np.abs(s)==2).sum()==1])
 colors = .5 + .5 * np.round(sticker_coords / 2)
 stickers_in_slice = np.sum(sticker_coords[:, 0] < 0)
+view = np.linalg.qr(np.random.randn(3, 3))[0]
 ```
 "And then check how they spin!"
 
@@ -61,22 +62,18 @@ move[:stickers_in_slice, :stickers_in_slice] = move[slice_perms[3]]
 
 The interviewer glances at his phone again. I suspect he is offended by the magic number 3, and make a mental note to use a named constant next time.
 
-I attempt to pull his attention back to my qualifications with some inline Javascript.
+I attempt to pull his attention back to my Web Tech qualifications with some inline Javascript.
 
 ```
 def np2js(arr):
     real_arr = np.block([[arr.real, arr.imag], [-arr.imag, arr.real]])
     return json.dumps(real_arr.tolist())
 ```
-
-
-
+My interlocutor points out that there aren't any semicolons there, so how can it be Javascript? Technically I think he's even correct.
+We're getting to building the website! I promise. Look! HTML tags!
 ```
-view = np.linalg.qr(np.random.randn(3, 3))[0]
-
-with open("output.html", "w") as static_site:
-    static_site.write(
-        f"""
+def cube(key_actions):
+    ret = f"""
     <!DOCTYPE html><html><body><script>
 
     let mul = (A, B) => A.map((row, i) => B[0].map((_, j) =>
@@ -87,29 +84,28 @@ with open("output.html", "w") as static_site:
     var moves = [state]
     document.addEventListener("keypress", (event) => {{
     """
-    )
-    for i, generator in enumerate([move, global_perms[15], global_perms[9]]):
-        static_site.write(
-            f"""
+    for i, generator in enumerate():
+        ret += f"""
         if (event.key == {i}) {{
             moves = (new Array(10).fill( {np2js(expm(.1 * logm(generator)))})).concat( moves);
         }}
         """
-        )
-    static_site.write(
-        """
+    ret += """
     });
     setInterval(step, 20);
+```
+
+Now unfortunately, the cleanest way to procede here is to nest an f-string inside of an f-string. Since this is an interview, I ought to follow the standard design pattern: make sure the f strings are in different languages so that it's crystal clear whether each interpolated value comes from the inner or outer format.
+
+```
     function step() {
         if (!moves.length) return;
         state = mul(state, moves.pop());
         const locations = mul(state, coords);
         document.body.innerHTML= `
     """
-    )
     for i, color in enumerate(sticker_colors):
-        static_site.write(
-            f"""
+        ret += f"""
             <div style='
                 position: absolute; 
                 left: ${{locations[{i}][1]}}px; 
@@ -120,7 +116,13 @@ with open("output.html", "w") as static_site:
                 &#x2B24;
             </div>
         """
-        )
-    static_site.write("`;}</script></body></html>")
+    return ret + "`;}</script></body></html>"
 ```
 
+OK, frankly I'm not happy with your performance so far this interview. However, we had an hour slotted, and we have 35 minutes left that I'm not getting back either way. Lets just let bygones be bygones and try from the top: Please, while keeping it as simple as possible, write a static site generator in python. If it deeply pleases you, I guess you can demonstrate it by generating a site about a Rubik's cube.
+
+```
+generators = [move, global_perms[15], global_perms[9]]
+with open("output.html", "w") as static_site:
+    static_site.write(cube(generators))
+```
