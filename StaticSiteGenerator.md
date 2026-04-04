@@ -125,3 +125,6 @@ with open("output.html", "w") as static_site:
     generators = [move, global_perms[15], global_perms[9]]
     static_site.write(cube(generators))
 ```
+
+-----------------------
+[ssg.py](https://apj.hgreer.com/ssg.py) [output.html](https://apj.hgreer.com/output.html)
