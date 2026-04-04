@@ -104,7 +104,7 @@ Now unfortunately, the cleanest way to procede here is to nest an f-string insid
         const locations = mul(state, coords);
         document.body.innerHTML= `
     """
-    for i, color in enumerate(sticker_colors):
+    for i, color in enumerate(colors):
         ret += f"""
             <div style='
                 position: absolute; 
