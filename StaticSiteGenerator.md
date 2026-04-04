@@ -93,7 +93,7 @@ def cube(key_actions):
     });
     setInterval(step, 20);
 ```
-Now unfortunately, the cleanest way to procede here is to interleave f-strings. Since this is an interview, I ought to follow the standard design pattern: make sure the f strings are in different languages so that it's crystal clear whether each interpolated value comes from the inner or outer format.
+Now unfortunately, the cleanest way to procede here is to interleave f-strings. Since this is an interview, I ought to follow the standard design pattern: make sure the f strings are in different languages so that it's crystal clear which scope each interpolated value comes from.
 
 ```
     function step() {
