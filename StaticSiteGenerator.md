@@ -84,10 +84,10 @@ def cube(key_actions):
     var moves = [state]
     document.addEventListener("keypress", (event) => {{
     """
-    for i, generator in enumerate():
+    for i, matrix in enumerate(key_actions):
         ret += f"""
         if (event.key == {i}) {{
-            moves = (new Array(10).fill( {np2js(expm(.1 * logm(generator)))})).concat( moves);
+            moves = (new Array(10).fill( {np2js(expm(.1 * logm(matrix)))})).concat( moves);
         }}
         """
     ret += """
