@@ -27,10 +27,10 @@ move[:stickers_in_slice, :stickers_in_slice] = move[slice_perms[<span class=hljs
     var moves = [state]
     document.addEventListener(&quot;keypress&quot;, (event) =&gt; {{
     &quot;&quot;&quot;</span>
-    <span class=hljs-keyword >for</span> i, generator <span class=hljs-keyword >in</span> enumerate():
+    <span class=hljs-keyword >for</span> i, matrix <span class=hljs-keyword >in</span> enumerate(key_actions):
         ret += <span class=hljs-string >f&quot;&quot;&quot;
         if (event.key == {i}) {{
-            moves = (new Array(10).fill( {np2js(expm(.1 * logm(generator)))})).concat( moves);
+            moves = (new Array(10).fill( {np2js(expm(.1 * logm(matrix)))})).concat( moves);
         }}
         &quot;&quot;&quot;</span>
     ret += <span class=hljs-string >&quot;&quot;&quot;
