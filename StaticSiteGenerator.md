@@ -17,10 +17,14 @@ My fingers lightly tap over the keyboard, stumbling a bit on the @ signs- my cur
 
 
 ```
-d = lambda D, z: sum((d(D, z+[i]) for i in range(len(D)) if np.allclose(
-        D[z+[i]]@D[i],
-        D[:len(z)+1]@D[len(z)])),
-    []) if len(z)!=len(D)else[np.eye(len(D))[z]]
+d = (lambda D , z : (sum
+                      ((d (D , z + [i]) 
+                        for i in range (len (D)) 
+                        if allclose (D [z + [i]] @ D [i],
+                                     D [: len (z) + 1] @ D [len (z)])),
+                      [])) 
+                    if len (z) != len (D)
+                    else [eye (len (D)) [z]])
 ```
 "Ah- Let me interrupt you for a moment- We want you to program in a language you are comfortable, and so have an open language policy for interviews, but it would help if you picked a language
 I'm familiar with. Could we do this interview in Go, C++, Python, or Java?"
