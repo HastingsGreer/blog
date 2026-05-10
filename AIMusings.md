@@ -5,3 +5,5 @@
 [The cats are on to something](/CatShoggoth)
 
 [Quote Browser Unquote](/QuoteBrowserUnquote)
+
+[Prosaic Pauses](/Pauses)
