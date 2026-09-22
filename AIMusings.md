@@ -7,3 +7,5 @@
 [Quote Browser Unquote](/QuoteBrowserUnquote)
 
 [Prosaic Pauses](/Pauses)
+
+[A plan for a perpetual motion research facility that runs forever](/PerpetualMotionResearchFacility)
